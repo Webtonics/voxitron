@@ -8,69 +8,97 @@ Voxitron is an **AI agent service agency** that sells three core products:
 2. **Automated Quoting Agent**: collects job details and delivers a branded, professional quote automatically. Same UK/US trades audience as Speed to Lead
 3. **WhatsApp Business Agent**: replies to customers, checks stock, books appointments, and takes orders inside WhatsApp, 24/7. Targets Nigerian retail and service businesses nationwide (fashion, food, electronics, salons), not restricted to any one city
 
-This repository is the **Voxitron marketing site**. Four static pages: a homepage that
-introduces all three agents, and a dedicated page per agent (`speed-to-lead.html`,
-`quoting-agent.html`, `whatsapp-agent.html`) that goes deep on that one product.
-The WhatsApp Business Agent's dedicated page carries Nigeria-specific detail (Naira
-pricing, testimonials spread across Lagos, Abuja, Port Harcourt); the homepage's teaser
-card for it stays general, matching how the other two agents' teaser cards work.
+This repository is the **Voxitron web platform**: marketing site plus lead capture and a
+customer dashboard, being migrated from a 4-page static HTML site into a Next.js app. The
+site has a homepage that introduces all three agents, and a dedicated page per agent
+(`/speed-to-lead`, `/quoting-agent`, `/whatsapp-agent`) that goes deep on that one
+product. The WhatsApp Business Agent's dedicated page carries Nigeria-specific detail
+(Naira pricing, testimonials spread across Lagos, Abuja, Port Harcourt); the homepage's
+teaser card for it stays general, matching how the other two agents' teaser cards work.
 
-The WhatsApp Business Agent's CTA is different from the other two agents: instead of a
-`mailto:` link, every CTA on `whatsapp-agent.html` (nav, hero, final `#cta`) is a
+The WhatsApp Business Agent's CTA is different from the other two agents: instead of
+routing to the lead form, every CTA on `/whatsapp-agent` (nav, hero, final `#cta`) is a
 `wa.me` link so a visitor can message Voxitron's own WhatsApp Business number and see the
 agent reply live. This is intentional, it's the most credible demo the product can offer.
-Don't change these back to `mailto:`.
+Don't change these to a form or `mailto:`.
 
 - **Domain:** `voxitron.com`
-- **Hosting:** Hostinger hPanel (shared hosting, no Node.js, no server-side rendering)
-- **Output:** Static files only: HTML, CSS, vanilla JS
-- **Contact:** `hello@voxitron.com` (every CTA on the site is a `mailto:` link; there is no backend, no form-processing service, no waitlist)
+- **Contact:** `hello@voxitron.com`
+
+### Migration in progress
+
+This repo is being rebuilt from a static HTML/CSS/JS site into Next.js + Supabase, per
+`MASTER_PROMPT.md` in this directory. **Read `MASTER_PROMPT.md` before starting or
+resuming any migration work.** It is the source of truth for scope, sequencing, and the
+"fully working, nothing half-done" bar every milestone must clear. This file (CLAUDE.md)
+documents the target architecture, brand system, and content once the migration lands;
+`MASTER_PROMPT.md` documents how to get there without leaving broken pieces behind.
+
+The original static site (`index.html`, `speed-to-lead.html`, `quoting-agent.html`,
+`whatsapp-agent.html`, `assets/`) remains in the repo as the content and design reference
+until the Next.js app fully replaces it end to end. Do not delete it mid-migration.
 
 ---
 
-## Tech Stack
+## Target Tech Stack
 
 | Layer | Tech |
 |---|---|
-| Markup | HTML5 (semantic), one file per page |
-| Styling | CSS3 custom properties, flexbox, grid. Single shared stylesheet, no frameworks |
-| Scripting | Vanilla JavaScript (ES6+), no jQuery, no bundlers |
-| Fonts | Google Fonts: DM Sans (body/display) + DM Mono (labels, numbers, kickers) |
+| Framework | Next.js (App Router), React, TypeScript |
+| Styling | CSS custom properties (same token system as today), ported into Next.js global CSS or Tailwind config, whichever `MASTER_PROMPT.md` has locked in. No component-level style duplication |
+| Database | Supabase (Postgres) |
+| Auth | Supabase Auth, for the customer dashboard |
+| API | Next.js Route Handlers (`app/api/**/route.ts`), no separate PHP or Node backend |
+| Fonts | Google Fonts: DM Sans (body/display) + DM Mono (labels, numbers, kickers), loaded via `next/font` |
 | Icons | Inline SVG, stroke-based, `currentColor` |
-| Animations | Intersection Observer API (scroll fade-ins via `.reveal`) |
-| Forms | None. Every conversion action is a `mailto:hello@voxitron.com` button |
-| Deployment | Upload directly to hPanel File Manager, into `public_html/` |
+| Animations | Intersection Observer API (scroll fade-ins via `.reveal`), same behavior as today, reimplemented as a small client-side hook/component |
+| Forms | Real lead-capture form(s) posting to a Route Handler, which writes to Supabase. The WhatsApp Business Agent page keeps its `wa.me` CTAs instead |
+| Hosting | Vercel. Custom domain `voxitron.com` points here via DNS |
 
-**No build tools. No npm. No frameworks. Everything must work as raw static files.**
-The one exception is `remotion/`, a one-time video-generation tool used to produce
-`assets/video/whatsapp-demo.mp4`. It is never installed, run, or referenced by the
-deployed site itself, the site only ships the resulting static `.mp4`. See "Video asset
-pipeline" below before touching it.
+**No PHP.** No separate backend service. No Hostinger hPanel static upload flow. Those
+are retired by this migration; do not reintroduce them.
+
+The `remotion/` video-generation tool is unaffected by this migration: it remains a
+one-time, never-deployed asset pipeline that produces `assets/video/whatsapp-demo.mp4`.
+See "Video asset pipeline" below.
 
 ---
 
-## File Structure
+## File Structure (target, post-migration)
 
 ```
 landing/
-├── index.html            # Homepage: hero, problem, all three services, how it works, proof, FAQ
-├── speed-to-lead.html     # Dedicated page for the Speed to Lead Agent
-├── quoting-agent.html     # Dedicated page for the Automated Quoting Agent
-├── whatsapp-agent.html    # Dedicated page for the WhatsApp Business Agent (Nigeria-targeted)
-├── assets/
-│   ├── css/main.css       # Single shared stylesheet, all 4 pages import this
-│   ├── js/main.js         # Scroll-reveal only
-│   ├── images/            # og-image, logo, whatsapp-demo-poster.png
-│   └── video/             # whatsapp-demo.mp4 (see "Video asset pipeline" below)
-├── remotion/               # Source for whatsapp-demo.mp4, NOT part of the deployed site
-│   ├── package.json
-│   └── src/                # Root.jsx, WhatsAppDemo.jsx, index.jsx
-└── CLAUDE.md               # This file
+├── app/
+│   ├── page.tsx                  # Homepage
+│   ├── speed-to-lead/page.tsx
+│   ├── quoting-agent/page.tsx
+│   ├── whatsapp-agent/page.tsx
+│   ├── login/page.tsx            # Supabase Auth login
+│   ├── dashboard/page.tsx        # Authenticated customer dashboard (+ nested routes as needed)
+│   ├── api/
+│   │   └── leads/route.ts        # Lead-capture form submit handler -> Supabase
+│   └── layout.tsx                # Shared <html>, fonts, nav/footer wrapper
+├── components/
+│   ├── Nav.tsx
+│   ├── Footer.tsx
+│   ├── WaFloat.tsx                # WhatsApp floating widget
+│   ├── Reveal.tsx                 # Intersection Observer scroll-reveal wrapper
+│   └── ...section-level components shared across pages
+├── lib/
+│   └── supabase/                  # Supabase client(s), server + browser
+├── styles/
+│   └── globals.css                # Ported design-token system from the old main.css
+├── assets/  (or app/**/*, per Next.js static asset convention)
+│   ├── images/
+│   └── video/
+├── remotion/                      # Unchanged, still not part of the deployed app
+├── CLAUDE.md                      # This file
+└── MASTER_PROMPT.md               # Migration plan and completion bar
 ```
 
-All four HTML pages share `assets/css/main.css` and `assets/js/main.js`. Any new page
-(a future niche landing page, for example) should do the same. Don't fork the stylesheet
-or duplicate inline styles.
+Shared chrome (nav, footer, WhatsApp floating widget) must be **components**, not copy-
+pasted per page, that was the biggest structural weakness of the static version and is a
+primary reason for this migration.
 
 ---
 
@@ -140,8 +168,8 @@ white text to read against it.
 ```
 
 ### Spacing
-Token scale in `main.css`: `--space-1` (4px) through `--space-10` (128px). Always use the
-tokens, never a hardcoded pixel value for margin/padding/gap.
+Token scale: `--space-1` (4px) through `--space-10` (128px). Always use the tokens, never
+a hardcoded pixel value for margin/padding/gap.
 
 ### Border Radius
 Small and consistent: `4px` on buttons/inputs, `6px` on cards, `50%` on avatars/dots.
@@ -180,14 +208,12 @@ sensory, specific detail the reader has actually lived through, then let the pro
 **No blocks of text.** This is the most important brevity rule on this page and the one
 most often broken. A landing page is scanned, not read.
 
-- **Paragraphs: 1-2 short sentences.** If a `<p>` inside `.section-body`, `.feature-body`,
-  `.service-body`, `.step-body`, `.callout-body`, or `.faq-body` runs past ~20 words,
+- **Paragraphs: 1-2 short sentences.** If a section body paragraph runs past ~20 words,
   cut it. Say the one thing that matters and stop.
-- **Never stack more than 2 paragraphs** in a single `.section-body`. If there's more to
-  say, it belongs in a bullet list (`.service-list`, `.offer-list`) or a separate card,
-  not a third paragraph.
-- **Bullets over prose.** Feature/benefit detail goes in short bullet fragments (see
-  `.service-list` on the homepage), not sentences with three subordinate clauses.
+- **Never stack more than 2 paragraphs** in a single section body. If there's more to
+  say, it belongs in a bullet list or a separate card, not a third paragraph.
+- **Bullets over prose.** Feature/benefit detail goes in short bullet fragments, not
+  sentences with three subordinate clauses.
 - **Specific beats clever.** "Under 60 seconds" not "instantly." "20-minute setup" not
   "quick and easy." Concrete numbers do the persuading.
 - **Benefit first, mechanism second.** Lead with what the business owner gets (the job,
@@ -206,10 +232,11 @@ most often broken. A landing page is scanned, not read.
 
 ## Page Structure
 
-Each page follows the same skeleton (see `index.html` for the canonical order):
+Each marketing page follows the same skeleton (see the original `index.html` for the
+canonical order, until it's ported into `app/page.tsx`):
 
 ```
-1. Nav            sticky, logo + 3 page links + "Get Started" mailto CTA
+1. Nav            sticky, logo + 3 page links + "Get Started" CTA
 2. Hero           kicker, headline (one accent word), 1-sentence subhead, CTA group, UI mockup (desktop)
 3. Industry strip one-line list of industries served (homepage only)
 4. Proof strip    3 short trust facts, pipe-separated
@@ -227,15 +254,15 @@ Each page follows the same skeleton (see `index.html` for the canonical order):
 The homepage `.services-grid` renders 3 cards at `repeat(3, 1fr)` from `900px` up (matches
 the `.testimonials-grid` breakpoint), single column below that.
 
-Every section has an `id` for anchor links between pages (e.g. `speed-to-lead.html`
-links back to `/#services`).
+Every section keeps an `id` for anchor links between pages (e.g. `/speed-to-lead` links
+back to `/#services`). With real routing, cross-page anchor links become plain Next.js
+`<Link href="/#services">`, not full-page reloads.
 
-**WhatsApp floating widget** (`.wa-float`): a fixed circular button, bottom-right corner,
-present on all 4 pages right before the closing `</body>`. Links to
+**WhatsApp floating widget**: a fixed circular button, bottom-right corner, present on
+every page as a shared `<WaFloat />` component (not copy-pasted markup). Links to
 `https://wa.me/2348120907050` with a prefilled greeting message. This is Voxitron's real
-WhatsApp Business number, opens in a new tab. Keep this markup identical across all pages,
-if the number ever changes, update it in all 4 files (there's no shared include on a
-static site).
+WhatsApp Business number, opens in a new tab. If the number ever changes, it now only
+needs to change in one component file.
 
 ---
 
@@ -245,7 +272,7 @@ static site).
 - **Kicker:** AI AGENTS FOR SERVICE BUSINESSES
 - **Headline (PAS problem, 3 short lines):** They called. No answer. Job's gone.
 - **Subhead (1 sentence, solution):** Voxitron texts them back and sends the quote while you're still mid-job.
-- **CTA 1:** Get Started (`mailto:hello@voxitron.com`)
+- **CTA 1:** Get Started (opens the lead form / links to `mailto:hello@voxitron.com`, per whatever `MASTER_PROMPT.md` locks in for the conversion action)
 - **CTA 2:** See all three agents (`#services`)
 
 ### Hero headline length rule (hard constraint)
@@ -265,19 +292,19 @@ etc.), those are much smaller and wrap harmlessly.
 
 ### Services (homepage `#services` section)
 
-**01 · Speed to Lead Agent**, links to `speed-to-lead.html`
+**01 · Speed to Lead Agent**, links to `/speed-to-lead`
 - Responds to every missed call in under 60 seconds
 - Qualifies the lead automatically, before you call back
 - Books the appointment straight into your calendar
 - Works across SMS, WhatsApp and email
 
-**02 · Automated Quoting Agent**, links to `quoting-agent.html`
+**02 · Automated Quoting Agent**, links to `/quoting-agent`
 - Builds a branded, professional quote in minutes
 - Asks the right questions to get pricing right first time
 - Delivers instantly by SMS and email
 - Syncs with your CRM, so nothing falls through the cracks
 
-**03 · WhatsApp Business Agent**, links to `whatsapp-agent.html`
+**03 · WhatsApp Business Agent**, links to `/whatsapp-agent`
 - Replies to every message in seconds, 24/7
 - Checks stock and pricing in real time
 - Books appointments and reservations in chat
@@ -293,7 +320,7 @@ etc.), those are much smaller and wrap harmlessly.
 - Hero visual: a phone-frame WhatsApp mockup (`.phone-frame`), not the `.ui-card` stack
   the other two agent pages use. The chat area plays a looping video, see "Video Asset
   Pipeline" below
-- CTAs are `wa.me` links, not `mailto:`, see the note in Project Overview above
+- CTAs are `wa.me` links, not the lead form, see the note in Project Overview above
 
 ### How It Works
 1. We audit your lead response (free)
@@ -301,58 +328,64 @@ etc.), those are much smaller and wrap harmlessly.
 3. You start capturing every lead
 
 ### Conversion action
-There is no lead-capture form. Every CTA (`nav-cta`, hero, final `#cta` band) is a
-`.btn.btn-primary` linking to `mailto:hello@voxitron.com`. Do not reintroduce an email
-waitlist form, Formspree, or any other backend-dependent input. This is a fully static
-site with zero backend by design.
+
+The static site used `mailto:hello@voxitron.com` for every CTA with no backend. This
+migration adds a real lead-capture form (Speed to Lead and Quoting Agent pages, plus the
+homepage) that posts to a Next.js Route Handler and writes to Supabase, so leads land in
+a database Voxitron can actually work from instead of an inbox. The WhatsApp Business
+Agent page is the deliberate exception and keeps its `wa.me` CTAs. Exact form fields and
+whether `mailto:` stays as a secondary option are decided in `MASTER_PROMPT.md` /
+during planning, not assumed.
 
 ---
 
-## Deployment: Hostinger hPanel
+## Customer Dashboard (new, part of this migration)
 
-1. Log in to hPanel, open File Manager
-2. Navigate to `public_html/`
-3. Upload `index.html`, `speed-to-lead.html`, `quoting-agent.html`, `whatsapp-agent.html`, and the `assets/` folder
-4. Ensure `index.html` is at the root: `public_html/index.html`
-5. No `.htaccess` changes needed for a static site
-6. Clear browser cache after upload to verify the latest version
-
-**Do not put files in subdirectories unless intentional.** The domain root must serve `index.html`.
+A logged-in area, gated by Supabase Auth, where a Voxitron customer can see activity for
+their agent(s). Scope of what the dashboard actually displays (conversation logs, quotes
+sent, lead volume, etc.) is defined in `MASTER_PROMPT.md` and should not be assumed here,
+it depends on what data the agents themselves expose, which is a separate system from
+this marketing/lead repo. Do not build dashboard UI for data that has no real source yet,
+stub screens with fake numbers are exactly the kind of "looks done but isn't" output this
+migration is trying to avoid.
 
 ---
 
-## Future Pages (Planned, Separate HTML Files)
+## Future Pages (Planned)
 
-Each niche gets its own landing page, same design system, different copy:
+Each niche gets its own landing page, same design system, different copy, as a new route
+under `app/`:
 
-| File | Niche |
+| Route | Niche |
 |---|---|
-| `hvac.html` | HVAC companies |
-| `plumbing.html` | Plumbing businesses |
-| `roofing.html` | Roofing contractors |
-| `electrical.html` | Electricians |
+| `/hvac` | HVAC companies |
+| `/plumbing` | Plumbing businesses |
+| `/roofing` | Roofing contractors |
+| `/electrical` | Electricians |
 
-These share `assets/css/main.css` and `assets/js/main.js`. Don't duplicate inline styles.
+These share the same layout, global styles, and components as the existing pages. Don't
+duplicate section markup, extend the shared components.
 
 ---
 
-## Video Asset Pipeline (whatsapp-agent.html hero)
+## Video Asset Pipeline (whatsapp-agent hero)
 
-The hero's phone-frame mockup (`.phone-frame` in `main.css`) shows a `<video>` of the
-WhatsApp conversation animating in (`assets/video/whatsapp-demo.mp4`, ~600KB, autoplay,
-muted, loop, playsinline), with `assets/images/whatsapp-demo-poster.png` as the poster.
-The phone bezel, header bar, and input bar around it are plain CSS, only the chat area
-itself is video.
+The hero's phone-frame mockup (`.phone-frame`) shows a `<video>` of the WhatsApp
+conversation animating in (`assets/video/whatsapp-demo.mp4`, ~600KB, autoplay, muted,
+loop, playsinline), with `assets/images/whatsapp-demo-poster.png` as the poster. The
+phone bezel, header bar, and input bar around it are plain CSS/markup, only the chat area
+itself is video. This is unchanged by the Next.js migration other than moving the asset
+into Next.js's static asset handling.
 
 The video is generated with [Remotion](https://remotion.dev) (React-based video
 rendering) from the source in `remotion/`. This is a one-time asset-generation step, not
-part of the deployed site:
+part of the deployed app:
 
 1. `cd remotion && npm install` (do this **outside** the `C:` drive if it's low on space,
    `@remotion/renderer` downloads a ~270MB headless Chromium into
    `node_modules/.remotion`, resolved relative to wherever `remotion/package.json` lives)
 2. `npx remotion render src/index.jsx WhatsAppDemo out/whatsapp-demo.mp4 --codec=h264`
-3. Copy the output into `assets/video/whatsapp-demo.mp4` in this repo
+3. Copy the output into `assets/video/whatsapp-demo.mp4` (or the Next.js equivalent static path) in this repo
 4. Optionally grab a poster frame: `npx remotion still src/index.jsx WhatsAppDemo out/poster.png --frame=230`, copy to `assets/images/whatsapp-demo-poster.png`
 
 To change the conversation, edit `remotion/src/WhatsAppDemo.jsx` (message text, timing,
@@ -363,37 +396,38 @@ commit them, the repo only keeps the small `.jsx` source.
 
 ## Performance Rules
 
-- No images over 200KB, compress everything
-- Lazy load any images below the fold (`loading="lazy"`)
-- Google Fonts loaded with `display=swap` to prevent layout shift
-- No render-blocking scripts: `<script defer>` before `</body>`
+- No images over 200KB, compress everything (use `next/image` for automatic optimization)
+- Lazy load any images below the fold
+- Google Fonts loaded via `next/font` with `display: swap` to prevent layout shift
 - Target Lighthouse score: 90+ on mobile
-- Page must be usable with JavaScript disabled (the site has no forms to degrade; nav and CTAs are plain links)
+- Marketing pages should be statically generated (SSG) or ISR where possible, not
+  needlessly server-rendered on every request. The dashboard (authenticated, per-user
+  data) is the exception and is expected to be dynamic
 
 ---
 
 ## Coding Standards
 
-- Semantic HTML: `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`
-- Every section has an `id` for anchor/smooth-scroll navigation
+- Semantic HTML inside JSX: `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`
+- Every section keeps an `id` for anchor/smooth-scroll navigation
 - CSS custom properties for all colors, spacing, and typography. Never hardcode a hex value or an `rgba()` outside a token
 - Mobile-first CSS: base styles for mobile, `@media (min-width: 768px)` for tablet/desktop
-- Scroll animations use `Intersection Observer` via the shared `.reveal` class, never a `scroll` event listener
+- Scroll animations use `Intersection Observer` via a shared `Reveal` component/hook, never a `scroll` event listener
 - All external links open in `_blank` with `rel="noopener noreferrer"`
+- TypeScript: no `any` used to paper over a type you haven't actually checked; prefer real types from Supabase codegen for DB rows
+- Shared markup (nav, footer, WA float, section wrappers) lives in `components/`, never copy-pasted per page. This is a hard requirement of the migration, it's the main thing wrong with the current static site
 
 ---
 
 ## What Claude Should Never Do
 
-- Do not install npm packages or suggest a build process for the deployed site itself.
-  `remotion/` is the sole, deliberate exception (see Video Asset Pipeline), and even that
-  never ships, only its rendered `.mp4` output does
-- Do not use React, Vue, Tailwind, or any CSS framework in the site's own HTML/CSS/JS
-- Do not add backend code, a form-processing service (Formspree etc.), or any kind of waitlist/email-capture form. This is a static site with `mailto:` CTAs only
-- Do not use `localStorage` or `sessionStorage`
-- Do not add cookie banners unless explicitly asked
+- Do not use PHP, or stand up a separate backend service. All server logic is Next.js Route Handlers against Supabase
+- Do not reintroduce the Hostinger hPanel static-upload deployment flow, this repo now deploys to Vercel
+- Do not leave a page, route, or button in a state where it looks finished but doesn't work (dead links, forms that don't submit anywhere, "Coming soon" placeholders not asked for). See `MASTER_PROMPT.md`'s completion bar
+- Do not copy-paste nav/footer/WA-float markup per page once componentized. One change, one file
 - Do not change the accent colour or overall palette without being asked
-- Do not write a `.section-body`, `.feature-body`, or similar paragraph longer than ~20 words, or stack more than 2 paragraphs in one block. See Copywriting Standard above
-- Do not use placeholder lorem ipsum text. Always use real Voxitron copy consistent with the tone above
-- Do not hardcode a colour (hex or rgba) in `main.css`. Add or reuse a token in `:root` instead
+- Do not write a section body paragraph longer than ~20 words, or stack more than 2 paragraphs in one block. See Copywriting Standard above
+- Do not use placeholder lorem ipsum text, or fabricated dashboard data/stats. Always use real Voxitron copy consistent with the tone above, and real data or an honest empty state
+- Do not hardcode a colour (hex or rgba) in global styles. Add or reuse a token in `:root` instead
 - Do not use em dashes (—) or arrow characters (→) anywhere, ever. See Copywriting Standard above
+- Do not delete the original static HTML site until `MASTER_PROMPT.md` says the Next.js app has fully replaced it
