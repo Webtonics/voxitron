@@ -15,9 +15,11 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://voxitron.com"),
   title: "Voxitron: AI Agents for Service Businesses",
   description:
     "Voxitron builds AI agents that respond to leads in seconds, send quotes automatically, and reply on WhatsApp 24/7.",
+  robots: "index, follow",
 };
 
 export default function RootLayout({
