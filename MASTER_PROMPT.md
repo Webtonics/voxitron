@@ -73,9 +73,49 @@ per the rule above.
 - Replace `mailto:` CTAs on homepage, Speed to Lead, and Quoting Agent with the real form (or a modal/section that opens it), per what's decided with the user. WhatsApp page is unaffected
 
 ### Phase 4: Auth and dashboard
-- Supabase Auth wired up: `/login` (and `/signup` if needed, confirm with user), session handling via Supabase's Next.js helpers
-- `/dashboard` route, protected: unauthenticated visitors are redirected to `/login`, not shown an empty or broken page
-- Dashboard content scope must be confirmed before building, do not invent metrics or screens with no real data source. If the only real data at this point is submitted leads, the dashboard's honest first version is a leads list, not a fabricated analytics view
+
+**This phase depends on a system outside this repo.** The dashboard's whole point is to
+show customers their real WhatsApp conversation history. That data currently does not
+exist anywhere: the WhatsApp agent runs as an n8n workflow (self-hosted or n8n Cloud, the
+user has admin access), and as of this planning pass, that workflow does not log
+messages anywhere. Confirmed with the user on 2026-07-28. Building dashboard UI before
+this is fixed would violate the "no fabricated data" rule below, don't do it.
+
+Sequencing within Phase 4:
+
+1. **n8n logging step (blocking, done outside this repo's codebase).** The n8n workflow
+   that runs the WhatsApp agent needs a step added that writes each inbound/outbound
+   message to Supabase (the same project this repo already uses for leads), tagged with
+   which customer's WhatsApp number the conversation belongs to. This is n8n
+   configuration work, not Next.js code. Do not attempt to build the dashboard until this
+   is confirmed working and at least one real conversation has landed in the
+   `conversations`/`messages` tables (see schema below).
+2. **Supabase schema for conversations** (can be created ahead of the n8n work, since the
+   table structure doesn't depend on n8n specifics):
+   - `customers`: `id`, `business_name`, `whatsapp_number`, `created_at`. One row per
+     Voxitron client. **Created manually by Voxitron** when onboarding a new client (no
+     public self-signup flow), confirmed with the user 2026-07-28. Each customer's
+     dashboard login (a Supabase Auth user) is linked to their `customers.id`, also set up
+     manually at onboarding time.
+   - `conversations`: `id`, `customer_id` (FK to `customers.id`), `contact_name`,
+     `contact_phone`, `started_at`. One row per WhatsApp thread with an end customer.
+     Tagged by which business's WhatsApp number received the message, since each Voxitron
+     customer has their own WhatsApp Business number (confirmed with the user 2026-07-28,
+     this is how conversations get attributed to the right dashboard).
+   - `messages`: `id`, `conversation_id` (FK to `conversations.id`), `direction`
+     (`inbound` / `outbound`), `body`, `sent_at`.
+   - RLS: a customer's Supabase Auth user can only `SELECT` conversations/messages where
+     `conversations.customer_id` matches their own linked `customers.id`. No cross-
+     customer read access, ever.
+3. **Supabase Auth wired up**: `/login`, session handling via Supabase's Next.js helpers.
+   No public `/signup`, accounts are created manually per the onboarding decision above.
+4. **`/dashboard` route, protected**: unauthenticated visitors are redirected to
+   `/login`, not shown an empty or broken page.
+5. **Dashboard content**: a real list of the logged-in customer's conversations, each
+   expandable to its message history. Do not invent metrics, analytics, or screens with
+   no real data source. If message logging isn't live yet when this phase is picked back
+   up, the honest interim version is the leads list from Phase 3, not a fabricated chat
+   UI with placeholder conversations.
 
 ### Phase 5: Cutover
 - Remove the old static `.html` files and `assets/js/main.js` once the Next.js app has full parity and has been reviewed
@@ -91,13 +131,22 @@ per the rule above.
 - Hosting: Vercel
 - Design system, brand, copy tone: unchanged, see `CLAUDE.md`
 - WhatsApp Business Agent CTAs stay as `wa.me` links, never converted to the lead form
+- Lead form fields (Phase 3): name, business name, email, phone (optional), which agent
+  they're interested in (dropdown: Speed to Lead / Quoting Agent / Both)
+- Dashboard scope (Phase 4): customers log in and see their real WhatsApp conversation
+  history (contact + message log), not a generic analytics dashboard
+- Customer/conversation mapping (Phase 4): one WhatsApp Business number per customer;
+  conversations are tagged by which customer's number received them
+- Dashboard account creation (Phase 4): manual, done by Voxitron at client onboarding, no
+  public self-signup flow
+- The WhatsApp agent runs as an n8n workflow (user has admin access), and does not
+  currently log messages anywhere. See Phase 4 above, this is a hard blocker that has to
+  be fixed in n8n, not in this repo, before dashboard UI can show real data
 
 ## Open questions to resolve with the user before the relevant phase, not guessed
 
-- Exact lead form fields and validation rules (Phase 3)
 - Whether `mailto:` remains as a fallback/secondary option anywhere (Phase 3)
-- What the dashboard actually shows, and where that data comes from if it's more than submitted leads (Phase 4)
-- Whether customers self-signup for the dashboard or accounts are created manually by Voxitron (Phase 4)
+- Exact n8n workflow changes needed to log messages to Supabase, and when that work happens (Phase 4, outside this repo)
 - Exact cutover timing for DNS (Phase 5), this is a production domain change and needs explicit go-ahead
 
 ## Working style for this migration
