@@ -87,9 +87,24 @@ Sequencing within Phase 4:
    that runs the WhatsApp agent needs a step added that writes each inbound/outbound
    message to Supabase (the same project this repo already uses for leads), tagged with
    which customer's WhatsApp number the conversation belongs to. This is n8n
-   configuration work, not Next.js code. Do not attempt to build the dashboard until this
-   is confirmed working and at least one real conversation has landed in the
-   `conversations`/`messages` tables (see schema below).
+   configuration work (an n8n Postgres/Supabase node added directly to the workflow), not
+   Next.js code. Do not attempt to build the dashboard until this is confirmed working
+   and at least one real conversation has landed in the `conversations`/`messages` tables
+   (see schema below).
+
+   The user asked (2026-07-28) whether code from a prior unrelated project,
+   `Area50app`, could be reused here. Investigated and found: Area50 has no actual n8n
+   workflow files (its workflows live on a separate n8n VPS, not as files in that repo),
+   and its own WhatsApp integration was never finished (`app/api/webhooks/whatsapp/route.ts`
+   is stubbed, returns 501; its n8n WhatsApp workflows WF11/WF12 were never built either).
+   What Area50 does have is a small reusable pattern, `lib/n8n.ts`'s `callN8n()` helper
+   (POST to an n8n webhook route with a shared-secret header, plus a workaround for
+   malformed JSON n8n sometimes returns), for when *this* Next.js app needs to call
+   *into* n8n. That's the opposite direction from message logging: logging means n8n
+   writes to Supabase directly via its own Postgres/Supabase node, this repo isn't
+   involved in that data path at all. So nothing was ported for the logging step itself;
+   keep the `callN8n()` pattern in mind only if a future feature needs this repo to call
+   an n8n webhook.
 2. **Supabase schema for conversations** (can be created ahead of the n8n work, since the
    table structure doesn't depend on n8n specifics):
    - `customers`: `id`, `business_name`, `whatsapp_number`, `created_at`. One row per
