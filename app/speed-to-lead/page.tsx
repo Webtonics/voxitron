@@ -47,7 +47,7 @@ export default function SpeedToLeadPage() {
               </p>
 
               <div className="cta-group">
-                <a href="mailto:hello@voxitron.com" className="btn btn-primary">Get Started</a>
+                <Link href="/get-started?agent=speed-to-lead" className="btn btn-primary">Get Started</Link>
                 <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
               </div>
 
@@ -445,7 +445,7 @@ export default function SpeedToLeadPage() {
             </p>
 
             <div className="cta-group">
-              <a href="mailto:hello@voxitron.com" className="btn btn-primary">Get Started</a>
+              <Link href="/get-started?agent=speed-to-lead" className="btn btn-primary">Get Started</Link>
               <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
             </div>
 

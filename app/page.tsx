@@ -47,9 +47,9 @@ export default function Home() {
               </p>
 
               <div className="cta-group">
-                <a href="mailto:hello@voxitron.com" className="btn btn-primary">
+                <Link href="/get-started" className="btn btn-primary">
                   Get Started
-                </a>
+                </Link>
                 <a href="#services" className="btn btn-secondary">
                   See all three agents
                 </a>
@@ -484,7 +484,7 @@ export default function Home() {
             </p>
 
             <div className="cta-group">
-              <a href="mailto:hello@voxitron.com" className="btn btn-primary">Get Started</a>
+              <Link href="/get-started" className="btn btn-primary">Get Started</Link>
               <a href="#services" className="btn btn-secondary">See all three agents</a>
             </div>
 

@@ -15,7 +15,7 @@ type NavProps = {
 
 export default function Nav({
   activePage,
-  ctaHref = "mailto:hello@voxitron.com",
+  ctaHref = "/get-started",
   ctaLabel = "Get Started",
   ctaExternal = false,
 }: NavProps) {
@@ -45,9 +45,9 @@ export default function Nav({
           {ctaLabel}
         </a>
       ) : (
-        <a href={ctaHref} className="nav-cta">
+        <Link href={ctaHref} className="nav-cta">
           {ctaLabel}
-        </a>
+        </Link>
       )}
     </nav>
   );

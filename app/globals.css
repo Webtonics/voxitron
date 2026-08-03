@@ -1530,3 +1530,95 @@ details[open] .faq-icon { transform: rotate(45deg); }
 
   .faq-icon { transition: none; }
 }
+
+/* =============================================
+   LEAD FORM
+   ============================================= */
+.lead-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 420px;
+}
+
+.lead-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.lead-form-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lead-form-input {
+  height: 48px;
+  padding: 0 var(--space-4);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lead-form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.lead-form-input::placeholder {
+  color: var(--text-muted);
+}
+
+select.lead-form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239AA3B8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+  padding-right: var(--space-7);
+}
+
+.lead-form .btn {
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+.lead-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lead-form-error {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: #FF6B6B;
+}
+
+.lead-form-success {
+  max-width: 420px;
+  padding: var(--space-5);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-mid);
+  border-radius: 6px;
+}
+
+.lead-form-success-title {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: var(--space-2);
+}
+
+.lead-form-success-body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
