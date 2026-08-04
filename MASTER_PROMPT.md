@@ -74,37 +74,82 @@ per the rule above.
 
 ### Phase 4: Auth and dashboard
 
-**This phase depends on a system outside this repo.** The dashboard's whole point is to
-show customers their real WhatsApp conversation history. That data currently does not
-exist anywhere: the WhatsApp agent runs as an n8n workflow (self-hosted or n8n Cloud, the
-user has admin access), and as of this planning pass, that workflow does not log
-messages anywhere. Confirmed with the user on 2026-07-28. Building dashboard UI before
-this is fixed would violate the "no fabricated data" rule below, don't do it.
+**This phase depends on a system outside this repo, and that system does not exist yet.**
+Corrected understanding as of 2026-08-04 (an earlier pass of this file assumed a WhatsApp
+n8n workflow already existed and just needed a logging step added; that was wrong):
+
+- **There is no WhatsApp automation at all yet.** The user confirmed messages sent to the
+  site's `wa.me` number (2348120907050), the one every WhatsApp Business Agent CTA links
+  to, currently go unanswered. Nothing replies. This is a real gap between what
+  `/whatsapp-agent` promises ("see the agent reply live") and what actually happens today.
+  The user was asked whether to pause and adjust that page's copy until the agent is real,
+  or add an interim manual-reply stopgap, and explicitly chose neither: build the n8n
+  workflow now, no interim fix, accept the gap in the meantime. Respect that decision, but
+  do not lose track of it either, if a future session picks this up, that gap may still be
+  open and is worth surfacing again rather than assuming it was quietly resolved.
+- **A related but separate n8n project (Area50) exists** with a working web-widget chat
+  pipeline (WF1 AI Chat, WF2 AI Suggest, WF5 KB Ingest, WF6 Knowledge Search), reviewed by
+  the user 2026-08-04. It uses Qdrant (per-company collections named `kb_{company_id}`,
+  OpenAI `text-embedding-ada-002` embeddings) for knowledge-base retrieval, and a LangChain
+  agent node for replies. It has no WhatsApp integration and its message logging goes to a
+  MongoDB `messages` collection (via something outside those 4 workflow files, never
+  located), not Supabase. The user decided: build a new, separate n8n workflow for
+  Voxitron's WhatsApp agent rather than adapt Area50's, reusing its Qdrant/KB pattern
+  where useful but logging to Supabase (the schema already migrated below), not Mongo.
+- **A hardcoded secret was spotted in Area50's WF1 export** (`x-area50-secret` header value,
+  in the "Call WF3 - Route Check" and "Call WF4 - Escalate" HTTP Request nodes). Not
+  Voxitron's problem to fix, but flagged to the user 2026-08-04; if these workflow JSON
+  exports ever get committed to a repo or shared elsewhere, that secret should be rotated
+  first.
+
+So Phase 4 is now two things, not one: **first, build the actual WhatsApp agent
+automation** (something that has never existed for Voxitron before this point), **and
+only then** the dashboard that shows its logged history. Do not let "add logging" framing
+from an earlier version of this doc undersell the size of the first part.
 
 Sequencing within Phase 4:
 
-1. **n8n logging step (blocking, done outside this repo's codebase).** The n8n workflow
-   that runs the WhatsApp agent needs a step added that writes each inbound/outbound
-   message to Supabase (the same project this repo already uses for leads), tagged with
-   which customer's WhatsApp number the conversation belongs to. This is n8n
-   configuration work (an n8n Postgres/Supabase node added directly to the workflow), not
-   Next.js code. Do not attempt to build the dashboard until this is confirmed working
-   and at least one real conversation has landed in the `conversations`/`messages` tables
-   (see schema below).
+1. **n8n WhatsApp workflow (blocking, built outside this repo's codebase, but the
+   importable file lives here).** `n8n/voxitron-whatsapp-agent.json` is a full, ready-to-
+   import n8n workflow, written 2026-08-04: handles Meta's webhook verification handshake,
+   receives inbound WhatsApp messages, looks up the customer by WhatsApp number, logs the
+   inbound message, generates a reply via an AI Agent node backed by a per-customer Qdrant
+   knowledge-base collection (same retrieval pattern as Area50's WF1), sends the reply via
+   the WhatsApp Cloud API, and logs the outbound message, all to the `customers`/
+   `conversations`/`messages` tables below. Full setup checklist (Meta app creation,
+   credentials to wire in, environment variable, webhook registration) is in
+   `n8n/README.md`, read it before importing.
 
-   The user asked (2026-07-28) whether code from a prior unrelated project,
-   `Area50app`, could be reused here. Investigated and found: Area50 has no actual n8n
-   workflow files (its workflows live on a separate n8n VPS, not as files in that repo),
-   and its own WhatsApp integration was never finished (`app/api/webhooks/whatsapp/route.ts`
-   is stubbed, returns 501; its n8n WhatsApp workflows WF11/WF12 were never built either).
-   What Area50 does have is a small reusable pattern, `lib/n8n.ts`'s `callN8n()` helper
-   (POST to an n8n webhook route with a shared-secret header, plus a workaround for
-   malformed JSON n8n sometimes returns), for when *this* Next.js app needs to call
-   *into* n8n. That's the opposite direction from message logging: logging means n8n
-   writes to Supabase directly via its own Postgres/Supabase node, this repo isn't
-   involved in that data path at all. So nothing was ported for the logging step itself;
-   keep the `callN8n()` pattern in mind only if a future feature needs this repo to call
-   an n8n webhook.
+   The user reviewed Area50's actual workflow exports (WF1 AI Chat, WF2 AI Suggest, WF5
+   KB Ingest, WF6 Knowledge Search) with the agent on 2026-08-04. Corrected understanding:
+   those workflows are the web widget's chat pipeline, not WhatsApp-specific, and use
+   Qdrant genuinely (collections named `kb_{company_id}`, OpenAI `text-embedding-ada-002`
+   embeddings) via a LangChain agent tool. Message logging in those workflows goes to a
+   MongoDB `messages` collection written by something outside those 4 files (never
+   located), not to Supabase. The user decided to build a new, separate workflow for
+   Voxitron rather than adapt Area50's, reusing the Qdrant/KB retrieval pattern but
+   logging to Supabase using the schema below. A hardcoded secret was also spotted in
+   Area50's WF1 HTTP Request nodes during this review, flagged to the user, not
+   reproduced here, worth rotating in Area50 if those exports are ever shared further.
+
+   Do not attempt to build the dashboard until this workflow is actually live (Meta app
+   created, credentials wired, imported, tested) and at least one real conversation has
+   landed in `conversations`/`messages`.
+
+   **Known gap, explicitly accepted by the user 2026-08-04, not yet resolved:** there is
+   no WhatsApp automation of any kind live today. Messages sent to the site's `wa.me`
+   number currently go unanswered, despite `/whatsapp-agent`'s copy promising a live AI
+   reply. The user was offered the choice to pause and adjust that page's claims, or add
+   an interim manual-reply stopgap, and chose neither, opting to proceed straight to
+   building this workflow instead. If a future session resumes this work, check whether
+   that gap has since been closed rather than assuming it has.
+
+   Also not yet built: a knowledge-base **ingestion** workflow (mirroring Area50's WF5)
+   that would let a Voxitron customer's product/pricing docs actually get embedded into
+   their `kb_<customers.id>` Qdrant collection. Without it, the WhatsApp agent's KB search
+   returns nothing for every customer, and the system prompt is written to have the AI
+   fall back honestly ("I'll get someone to help") rather than fabricate an answer in that
+   case, but this is not a substitute for building real ingestion.
 2. **Supabase schema for conversations.** Written and ready to run:
    `supabase/migrations/002_conversations.sql`. Message shape (`direction`/`body`/
    `sent_at`) is adapted from a proven working pattern in a prior unrelated project
@@ -160,9 +205,13 @@ Sequencing within Phase 4:
   conversations are tagged by which customer's number received them
 - Dashboard account creation (Phase 4): manual, done by Voxitron at client onboarding, no
   public self-signup flow
-- The WhatsApp agent runs as an n8n workflow (user has admin access), and does not
-  currently log messages anywhere. See Phase 4 above, this is a hard blocker that has to
-  be fixed in n8n, not in this repo, before dashboard UI can show real data
+- **Corrected 2026-08-04**: no WhatsApp automation exists yet at all, there was no
+  existing workflow to add logging to. `n8n/voxitron-whatsapp-agent.json` is the new
+  workflow built to fill that gap; see Phase 4 above for full detail and the accepted
+  interim gap (wa.me messages currently go unanswered)
+- Voxitron's WhatsApp workflow logs to Supabase directly via its own Postgres node using
+  the service role key, reusing Area50's Qdrant/KB retrieval pattern but not its Mongo-
+  based logging or its `callN8n()` helper (wrong data direction for this use case)
 
 ## Open questions to resolve with the user before the relevant phase, not guessed
 
