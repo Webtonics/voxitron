@@ -105,23 +105,29 @@ Sequencing within Phase 4:
    involved in that data path at all. So nothing was ported for the logging step itself;
    keep the `callN8n()` pattern in mind only if a future feature needs this repo to call
    an n8n webhook.
-2. **Supabase schema for conversations** (can be created ahead of the n8n work, since the
-   table structure doesn't depend on n8n specifics):
-   - `customers`: `id`, `business_name`, `whatsapp_number`, `created_at`. One row per
-     Voxitron client. **Created manually by Voxitron** when onboarding a new client (no
-     public self-signup flow), confirmed with the user 2026-07-28. Each customer's
-     dashboard login (a Supabase Auth user) is linked to their `customers.id`, also set up
-     manually at onboarding time.
-   - `conversations`: `id`, `customer_id` (FK to `customers.id`), `contact_name`,
-     `contact_phone`, `started_at`. One row per WhatsApp thread with an end customer.
-     Tagged by which business's WhatsApp number received the message, since each Voxitron
-     customer has their own WhatsApp Business number (confirmed with the user 2026-07-28,
-     this is how conversations get attributed to the right dashboard).
-   - `messages`: `id`, `conversation_id` (FK to `conversations.id`), `direction`
-     (`inbound` / `outbound`), `body`, `sent_at`.
-   - RLS: a customer's Supabase Auth user can only `SELECT` conversations/messages where
-     `conversations.customer_id` matches their own linked `customers.id`. No cross-
-     customer read access, ever.
+2. **Supabase schema for conversations.** Written and ready to run:
+   `supabase/migrations/002_conversations.sql`. Message shape (`direction`/`body`/
+   `sent_at`) is adapted from a proven working pattern in a prior unrelated project
+   (Area50app's `messages` table: `sender_type`/`content`/`created_at`), per the user's
+   2026-08-04 request to reuse that schema rather than design from scratch. Run this file
+   in the Supabase SQL Editor, same as `001_leads.sql`, before doing any n8n work.
+   - `customers`: `id`, `business_name`, `whatsapp_number` (unique), `auth_user_id` (FK to
+     `auth.users`, nullable until the dashboard login is set up), `created_at`. One row
+     per Voxitron client. **Created manually by Voxitron** when onboarding a new client
+     (no public self-signup flow), confirmed with the user 2026-07-28.
+   - `conversations`: `id`, `customer_id` (FK), `contact_name`, `contact_phone`,
+     `started_at`. One row per WhatsApp thread with an end customer, tagged by which
+     business's WhatsApp number received the message (one number per customer, confirmed
+     2026-07-28).
+   - `messages`: `id`, `conversation_id` (FK), `direction` (`inbound`/`outbound`), `body`,
+     `sent_at`.
+   - RLS: `authenticated` dashboard users can only `SELECT` their own customer row and
+     conversations/messages under it, via policies keyed on `auth.uid() = auth_user_id`.
+     **No INSERT/UPDATE/DELETE policy exists for `anon` or `authenticated` on any of the
+     three tables.** Only the n8n workflow writes to these tables, using the Supabase
+     **service role key** (never the anon key, the anon key must never be given write
+     access here). Configuring that service-role connection inside n8n (as an n8n
+     Postgres or Supabase credential/node) is the actual "n8n logging step" from item 1.
 3. **Supabase Auth wired up**: `/login`, session handling via Supabase's Next.js helpers.
    No public `/signup`, accounts are created manually per the onboarding decision above.
 4. **`/dashboard` route, protected**: unauthenticated visitors are redirected to
