@@ -209,13 +209,32 @@ Sequencing within Phase 4:
 5. **Dashboard content.** Full screen-by-screen spec is in `DASHBOARD_UI.md`, written
    2026-08-04, read it before building any of this: `/login`, `/dashboard` (stats strip +
    per-number filter/switcher + conversation list), `/dashboard/conversations/[id]`
-   (message thread), and `/dashboard/leads` (Voxitron-internal only). Every screen in
+   (message thread), `/dashboard/leads` (Voxitron-internal only), and `/dashboard/embed`
+   (embeddable website widget setup, added 2026-08-04, see item 6 below). Every screen in
    that spec is scoped to real schema columns, no invented metrics or screens with no
    data source. If message logging isn't live yet when this phase is picked back up, the
    honest interim version is the leads list from Phase 3, not a fabricated chat UI with
    placeholder conversations. `DASHBOARD_UI.md` also has open questions to resolve before
    or during implementation (login method, per-number conversation attribution needing a
-   possible schema addition, manual-reply-from-dashboard explicitly deferred).
+   possible schema addition, manual-reply-from-dashboard explicitly deferred, widget rate
+   limiting mechanism, widget chat AI backend not yet built).
+6. **Embeddable website widget (added 2026-08-04, not built).** Customers should be able
+   to embed Voxitron's chat agent on their own website, not just talk to it over
+   WhatsApp. Scoped by investigating a related project's (Area50/Zentativ) actual embed
+   implementation: a static loader script injects an iframe scoped by a `customer_id`
+   query param, resizing via `postMessage`, a good, reusable pattern. Its security is
+   not: no origin validation, no rate limiting, and the `customer_id` UUID is a bare,
+   unrotatable bearer credential, anyone can extract it from page source and call the
+   chat API from anywhere. The user confirmed 2026-08-04: reuse the loading mechanism,
+   fix the access control, customers register their website domain(s) and the widget API
+   validates `Origin` against that allowlist, plus real rate limiting. Also confirmed:
+   web-widget chat is a separate channel from WhatsApp (visitors never touch WhatsApp),
+   logged into the same `conversations`/`messages` tables via a new `channel` column
+   rather than a parallel schema. Full design (new `customer_domains` table,
+   `conversations.channel`, `/widget`, `/api/widget/chat`, `/dashboard/embed`, the public
+   embed script) is in `DASHBOARD_UI.md`'s "Embeddable website widget" section. Neither
+   the schema additions nor any widget code exist yet; write the migration and confirm
+   the rate-limiting approach before building.
 
 ### Phase 5: Cutover
 - Remove the old static `.html` files and `assets/js/main.js` once the Next.js app has full parity and has been reviewed

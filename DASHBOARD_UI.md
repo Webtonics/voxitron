@@ -6,12 +6,15 @@ relationship to Phase 4 that the rest of `MASTER_PROMPT.md` has to the whole mig
 Read `MASTER_PROMPT.md`'s Phase 4 section first, it has the schema, the multi-tenant
 model, and the current blockers (no WhatsApp automation live yet, no KB ingestion built).
 
-**Every screen below is scoped to data that actually exists in the schema.** No screen
-here shows a metric, chart, or field that doesn't map to a real column in `customers` /
-`customer_members` / `customer_whatsapp_numbers` / `conversations` / `messages` / `leads`.
-If a future request wants something beyond that, the data source has to exist first, per
-CLAUDE.md's "Customer Dashboard" section and the project's hard rule against fabricated
-data.
+**Every screen below is scoped to data that actually exists in the schema, or to a schema
+addition explicitly called out before use.** No screen here shows a metric, chart, or
+field that doesn't map to a real column in `customers` / `customer_members` /
+`customer_whatsapp_numbers` / `conversations` / `messages` / `leads`, plus two additions
+introduced by the "Embeddable website widget" section below (`conversations.channel`,
+`customer_domains`), neither of which has been written as a migration yet, write that
+migration before building against it. If a future request wants something beyond that,
+the data source has to exist first, per CLAUDE.md's "Customer Dashboard" section and the
+project's hard rule against fabricated data.
 
 ---
 
@@ -32,6 +35,9 @@ member on a client account for support purposes), see "Multi-customer switching"
 /dashboard                      Overview: stats strip + conversation list
 /dashboard/conversations/[id]   Single conversation thread
 /dashboard/leads                Leads list (only shown if the logged-in customer is Voxitron itself)
+/dashboard/embed                Embeddable website widget setup: register domains, copy snippet
+/widget                         The embeddable widget itself (public, unauthenticated, iframed on customer sites)
+/api/widget/chat                Public API the embedded widget calls (see "Embeddable website widget" below)
 ```
 
 `/dashboard` and everything under it redirects unauthenticated visitors to `/login`, not
@@ -137,6 +143,96 @@ Below the stats strip and number switcher.
 
 ---
 
+## Embeddable website widget
+
+Added to this spec 2026-08-04, per the user's request: customers should be able to embed
+Voxitron's chat agent directly on their own website, the same way Intercom/Crisp-style
+widgets work, not just talk to it over WhatsApp.
+
+**This was scoped by investigating a related project's (Area50/Zentativ) existing embed
+widget** rather than designing from nothing. Area50's mechanism (a static `embed.js`
+loader reading a `company_id` from a global JS variable, injecting an iframe pointing at
+`/widget?company_id=<uuid>`, resizing itself via `postMessage`) is a solid, standard
+pattern and worth reusing as-is. **Its access control is not worth reusing.** Area50's
+`company_id` is a bare, unrotatable UUID acting as both public identifier and the only
+credential: no origin/Referer validation, no rate limiting, so anyone who extracts that
+UUID from a page's source (trivial, it's right there in the embedded script) can call the
+chat API directly from any domain, curl, anywhere, no restriction. The only real
+consequence in Area50's case is draining the target company's AI credit balance, but the
+underlying gap (a copyable ID acting as a bearer secret with no scoping and no rotation
+story) is a real vulnerability, not a stylistic choice. The user confirmed 2026-08-04:
+reuse the iframe/postMessage loading pattern, but add the origin-allowlisting and rate
+limiting Area50 lacks.
+
+**Channel model, confirmed with the user 2026-08-04:** the website widget is a genuinely
+separate chat channel from WhatsApp, web visitors chat in-browser, they never touch
+WhatsApp at all, but everything is logged into the same `conversations`/`messages`
+tables the dashboard already reads from, distinguished by a `channel` column. This means
+the dashboard's conversation list and thread view (above) need a small addition: show
+which channel a conversation came from (a small badge, "WhatsApp" or "Web"), and the
+number filter/switcher only applies to `channel = 'whatsapp'` conversations, since web
+conversations aren't tied to any WhatsApp number.
+
+### Schema additions needed (not yet written as a migration, do that before building this)
+
+- `conversations.channel`: `text not null default 'whatsapp' check (channel in
+  ('whatsapp', 'web'))`. Existing rows default to `'whatsapp'` since that's the only
+  channel that exists today.
+- `customer_domains`: `id`, `customer_id` (FK), `domain` (e.g. `example.com`, no
+  protocol/path), `created_at`. One row per website domain a customer has registered to
+  embed the widget on. A customer can register more than one domain (staging + production,
+  or multiple sites). RLS: `authenticated` members can `SELECT` their own customer's
+  domains (shown in `/dashboard/embed`); no public read or write policy, domains are
+  managed by the customer through `/dashboard/embed`'s own authenticated UI, which uses
+  the customer's own session, not the anon key, to insert/delete rows they own.
+- `app/api/widget/chat/route.ts` (public, unauthenticated route, same pattern as Area50's
+  equivalent) is what validates the incoming request's `Origin` header against
+  `customer_domains` for the `customer_id` in the request, before doing anything else.
+  Reject with 403 if there's no match. Apply basic rate limiting per `customer_id` (exact
+  mechanism, e.g. a simple counting table or an edge-level rate limiter, TBD during
+  implementation, but do not ship this endpoint with none, that was Area50's actual gap).
+
+### `/widget` (public, unauthenticated)
+
+- Rendered inside the iframe Area50's `embed.js`-equivalent injects on the customer's
+  site. Reads `customer_id` from the `?customer_id=` query param (same pattern as
+  Area50's `?company_id=`).
+- Looks up the customer by `id` to confirm it exists and render their name/branding in
+  the widget header; 404/error bubble if not found, same as Area50's behavior, don't
+  silently render a broken widget.
+- Chat UI: message list + input, posts to `/api/widget/chat`. Visually matches Voxitron's
+  brand tokens (lime accent, navy), not Area50's Zentativ branding, this is a different
+  product with its own identity even though the mechanism is shared.
+- Starts small (launcher bubble size) and resizes via `postMessage` when opened, exactly
+  Area50's mechanism, no reason to redesign a working, standard pattern.
+
+### `/dashboard/embed`
+
+New dashboard screen, not in the original routes list above. Lets a customer set up their
+own embed:
+
+- **Domains tab**: list of registered `customer_domains` for this customer, add/remove
+  domains (validates as a bare domain, not a full URL, before insert)
+- **Embed tab**: the copy-paste snippet, generated with this customer's real `id`,
+  matching Area50's `EmbedCodeBlock` UX (two `<script>` tags, copy-to-clipboard button).
+  Show a visible warning if no domains are registered yet ("Add a domain first, the
+  widget won't respond from unregistered domains")
+- No "Appearance"/"Content"/"Features" customization tabs in the first version (Area50
+  has these; out of scope here unless asked for, don't build customization UI with no
+  corresponding backend support to actually change widget appearance per customer)
+
+### Public embed script
+
+- `public/embed-widget.js` (or similar, avoid literally shadowing Area50's `embed.js`
+  filename/global-variable names like `ZENTATIV_COMPANY_ID`, use Voxitron's own naming,
+  e.g. `window.VOXITRON_CUSTOMER_ID`) in this Next.js app's `public/` directory, served
+  statically.
+- Same core mechanic as Area50's: IIFE, reads the global variable, guards against
+  double-init, injects a fixed-position iframe at `/widget?customer_id=<id>`, listens for
+  a resize `postMessage`.
+
+---
+
 ## Shared dashboard chrome
 
 Same principle as the marketing site: shared components, not copy-pasted per page.
@@ -187,3 +283,20 @@ being viewed.
   `/dashboard/leads` gating logic above assumes "Voxitron-only" via checking
   `customer_members` against Voxitron's own fixed `customers.id`. Confirm this is right
   once Voxitron has actually onboarded itself and that ID is known.
+- **Widget rate limiting mechanism**: "Embeddable website widget" above requires rate
+  limiting `/api/widget/chat` per customer, but the exact implementation (a simple
+  request-counting table in Supabase, an in-memory limiter, an edge/middleware-level
+  limiter, or a third-party service) isn't decided. Pick this during implementation, but
+  don't ship the route without picking something, an open, unlimited public endpoint that
+  triggers paid OpenAI calls per message is a real cost/abuse risk, not just a security
+  nicety.
+- **Widget chat AI backend**: "Embeddable website widget" says `/api/widget/chat` calls
+  an n8n webhook for the reply (mirroring the WhatsApp workflow's AI Agent + Qdrant KB
+  pattern), but that n8n workflow doesn't exist yet either, same situation as the
+  WhatsApp agent itself. Building it is separate follow-up work, not assumed done by this
+  spec.
+- **Widget-to-WhatsApp handoff**: not designed. If a web widget conversation needs to
+  escalate to a human or continue over WhatsApp, that's a real feature with its own
+  questions (does it ask the visitor for their WhatsApp number? does it just notify the
+  customer's team?), out of scope for the first version, don't build a "Continue on
+  WhatsApp" button that doesn't actually do anything.
