@@ -118,7 +118,11 @@ Sequencing within Phase 4:
    the WhatsApp Cloud API, and logs the outbound message, all to the `customers`/
    `conversations`/`messages` tables below. Full setup checklist (Meta app creation,
    credentials to wire in, environment variable, webhook registration) is in
-   `n8n/README.md`, read it before importing.
+   `n8n/README.md`, read it before importing. Step-by-step Meta Business/WhatsApp
+   Platform app setup (not started as of 2026-08-04) is in
+   `n8n/meta-whatsapp-setup.md`. `supabase/onboarding-template.sql` is the copy-paste
+   template for creating a customer, granting dashboard logins, and registering WhatsApp
+   numbers, used for every customer including Voxitron's own tenant row.
 
    The user reviewed Area50's actual workflow exports (WF1 AI Chat, WF2 AI Suggest, WF5
    KB Ingest, WF6 Knowledge Search) with the agent on 2026-08-04. Corrected understanding:
@@ -150,12 +154,12 @@ Sequencing within Phase 4:
    returns nothing for every customer, and the system prompt is written to have the AI
    fall back honestly ("I'll get someone to help") rather than fabricate an answer in that
    case, but this is not a substitute for building real ingestion.
-2. **Supabase schema for conversations, genuinely multi-tenant.** Written and ready to
-   run: `supabase/migrations/002_conversations.sql`. Message shape (`direction`/`body`/
-   `sent_at`) is adapted from a proven working pattern in a prior unrelated project
-   (Area50app's `messages` table: `sender_type`/`content`/`created_at`), per the user's
-   2026-08-04 request to reuse that schema rather than design from scratch. Run this file
-   in the Supabase SQL Editor, same as `001_leads.sql`, before doing any n8n work.
+2. **Supabase schema for conversations, genuinely multi-tenant. Applied 2026-08-04.**
+   `supabase/migrations/002_conversations.sql` has been run against the live Supabase
+   project (same one `001_leads.sql` uses). Message shape (`direction`/`body`/`sent_at`)
+   is adapted from a proven working pattern in a prior unrelated project (Area50app's
+   `messages` table: `sender_type`/`content`/`created_at`), per the user's 2026-08-04
+   request to reuse that schema rather than design from scratch.
 
    **Confirmed with the user 2026-08-04: Voxitron itself is a tenant of its own
    platform**, not just the vendor selling it. Voxitron gets its own row in `customers`,
