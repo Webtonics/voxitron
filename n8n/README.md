@@ -14,7 +14,8 @@ remove the need for the Meta-side setup below.
    fast 200 or it disables the webhook), then processes in the background.
 3. Ignores non-message events (delivery/read receipts) that Meta sends on the same path.
 4. Looks up which Voxitron customer owns the WhatsApp number the message arrived on
-   (`customers.whatsapp_number` in Supabase). Stops if no match, never guesses.
+   (`customer_whatsapp_numbers` in Supabase, joined to `customers`; a customer can have
+   more than one number). Stops if no match, never guesses.
 5. Finds or creates the `conversations` row for that customer + contact phone number.
 6. Logs the inbound message to `messages` (Supabase).
 7. Generates a reply with an AI Agent node, using a per-customer Qdrant knowledge-base
@@ -27,15 +28,14 @@ remove the need for the Meta-side setup below.
 ### 1. Meta / WhatsApp Business Platform setup (outside n8n, not started yet)
 - Create a Meta Business Account and a WhatsApp Business Platform app in Meta Business
   Manager, if one doesn't already exist for Voxitron.
-- Register the WhatsApp Business number(s) there. Each Voxitron customer needs their own
-  number under the same Meta Business Account (per the one-number-per-customer decision
-  in `MASTER_PROMPT.md`).
+- Register the WhatsApp Business number(s) there, under the same Meta Business Account. A
+  customer can have more than one number (confirmed 2026-08-04); each one gets its own row
+  in `customer_whatsapp_numbers`, all pointing at the same `customer_id`.
 - Generate a permanent access token (System User token, not a 24-hour temporary one).
 - Note each number's `phone_number_id`, this is what Meta sends in the webhook payload
-  and what must match `customers.whatsapp_number` in Supabase exactly. Decide now
-  whether `customers.whatsapp_number` stores the human phone number or the
-  `phone_number_id`, and be consistent, this workflow's `Load Customer by Number` node
-  assumes it's the `phone_number_id`.
+  and what must match `customer_whatsapp_numbers.whatsapp_number` in Supabase exactly.
+  That column stores the `phone_number_id`, not the human-readable phone number, this
+  workflow's `Load Customer by Number` node assumes that.
 
 ### 2. n8n credentials to create, then wire into the placeholder node fields below
 Every node with `REPLACE_WITH_..._CREDENTIAL_ID` in `voxitron-whatsapp-agent.json` needs

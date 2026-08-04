@@ -158,7 +158,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT id, business_name, whatsapp_number\nFROM customers\nWHERE whatsapp_number = $1\n",
+        "query": "SELECT c.id, c.business_name\nFROM customers c\nJOIN customer_whatsapp_numbers wn ON wn.customer_id = c.id\nWHERE wn.whatsapp_number = $1\n",
         "options": {
           "queryReplacement": "={{ $json.phoneNumberId }}",
           "replaceEmptyStrings": true
@@ -172,7 +172,7 @@
       "credentials": {
         "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
       },
-      "notes": "phone_number_id from Meta's payload must match customers.whatsapp_number exactly. Store the same value used when the customer's number was provisioned in Meta."
+      "notes": "phone_number_id from Meta's payload must match a row in customer_whatsapp_numbers.whatsapp_number exactly. A customer can have more than one number, this join finds the owning customer regardless of which of their numbers received the message. Store the same value used when the number was provisioned in Meta."
     },
     {
       "parameters": {

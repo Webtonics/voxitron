@@ -159,36 +159,45 @@ Sequencing within Phase 4:
 
    **Confirmed with the user 2026-08-04: Voxitron itself is a tenant of its own
    platform**, not just the vendor selling it. Voxitron gets its own row in `customers`,
-   its own WhatsApp number, its own logged conversations, and its own dashboard access,
+   its own WhatsApp number(s), its own logged conversations, and its own dashboard access,
    the same tables and RLS as any client, proving the product by actually running on it.
-   The user also confirmed a customer account is not always one login: more than one
-   person on a client's team, or more than one person on Voxitron's own team, may need
-   dashboard access to the same customer's data. That ruled out a single `auth_user_id`
-   FK on `customers`; the schema uses a `customer_members` join table instead.
+   The user also confirmed two things that shaped the schema:
+   - A customer account is not always one login: more than one person on a client's team,
+     or more than one person on Voxitron's own team, may need dashboard access to the same
+     customer's data. That ruled out a single `auth_user_id` FK on `customers`; the schema
+     uses a `customer_members` join table instead.
+   - A customer is not always one WhatsApp number either (corrected 2026-08-04, an earlier
+     pass of this schema assumed exactly one number per customer). That ruled out a
+     `whatsapp_number` column directly on `customers`; numbers live in their own
+     `customer_whatsapp_numbers` table, many rows per customer.
 
-   - `customers`: `id`, `business_name`, `whatsapp_number` (unique), `created_at`. One row
-     per tenant (a client, or Voxitron itself). **Created manually by Voxitron** when
-     onboarding (no public self-signup flow), confirmed with the user 2026-07-28.
+   - `customers`: `id`, `business_name`, `created_at`. One row per tenant (a client, or
+     Voxitron itself). **Created manually by Voxitron** when onboarding (no public
+     self-signup flow), confirmed with the user 2026-07-28.
    - `customer_members`: `id`, `customer_id` (FK), `auth_user_id` (FK to `auth.users`),
      `created_at`, unique on `(customer_id, auth_user_id)`. One row per dashboard login
-     granted access to a given customer's data. A person can be a member of exactly the
-     customers they've been added to; Voxitron's own team members are added to Voxitron's
-     own `customers` row like any other membership.
+     granted access to a given customer's data. Voxitron's own team members are added to
+     Voxitron's own `customers` row like any other membership.
+   - `customer_whatsapp_numbers`: `id`, `customer_id` (FK), `whatsapp_number` (unique,
+     stores Meta's `phone_number_id`), `label`, `created_at`. One row per WhatsApp number
+     a customer operates; a customer can have several.
    - `conversations`: `id`, `customer_id` (FK), `contact_name`, `contact_phone`,
-     `started_at`. One row per WhatsApp thread with an end customer, tagged by which
-     business's WhatsApp number received the message (one number per customer, confirmed
-     2026-07-28).
+     `started_at`. One row per WhatsApp thread with an end customer. The n8n workflow
+     resolves which customer a conversation belongs to by joining the inbound message's
+     `phone_number_id` against `customer_whatsapp_numbers`, then attributes the
+     conversation to that number's `customer_id`, regardless of how many numbers that
+     customer has.
    - `messages`: `id`, `conversation_id` (FK), `direction` (`inbound`/`outbound`), `body`,
      `sent_at`.
    - RLS: `authenticated` dashboard users can only `SELECT` customers/conversations/
-     messages reachable through a `customer_members` row matching `auth.uid()`. **No
-     INSERT/UPDATE/DELETE policy exists for `anon` or `authenticated` on any of the four
-     tables.** Only the n8n workflow writes to `conversations`/`messages`, using the
-     Supabase **service role key** (never the anon key). `customers` and
-     `customer_members` rows are created manually by Voxitron at onboarding (via the
-     Supabase dashboard or a service-role script), not through any public insert path.
-     Configuring the n8n service-role connection is the actual "n8n logging step" from
-     item 1.
+     messages/WhatsApp numbers reachable through a `customer_members` row matching
+     `auth.uid()`. **No INSERT/UPDATE/DELETE policy exists for `anon` or `authenticated`
+     on any of the five tables.** Only the n8n workflow writes to `conversations`/
+     `messages`, using the Supabase **service role key** (never the anon key). `customers`,
+     `customer_members`, and `customer_whatsapp_numbers` rows are created manually by
+     Voxitron at onboarding (via the Supabase dashboard or a service-role script), not
+     through any public insert path. Configuring the n8n service-role connection is the
+     actual "n8n logging step" from item 1.
 3. **Supabase Auth wired up**: `/login`, session handling via Supabase's Next.js helpers.
    No public `/signup`, accounts are created manually per the onboarding decision above.
 4. **`/dashboard` route, protected**: unauthenticated visitors are redirected to
@@ -217,15 +226,16 @@ Sequencing within Phase 4:
   they're interested in (dropdown: Speed to Lead / Quoting Agent / Both)
 - Dashboard scope (Phase 4): customers log in and see their real WhatsApp conversation
   history (contact + message log), not a generic analytics dashboard
-- Customer/conversation mapping (Phase 4): one WhatsApp Business number per customer;
-  conversations are tagged by which customer's number received them
+- Customer/conversation mapping (Phase 4): a customer can have multiple WhatsApp Business
+  numbers (corrected 2026-08-04, not one-to-one); conversations are tagged by which
+  customer owns the number that received them, via `customer_whatsapp_numbers`
 - Dashboard account creation (Phase 4): manual, done by Voxitron at client onboarding, no
   public self-signup flow
 - **Multi-tenant, confirmed 2026-08-04**: Voxitron itself is a tenant of its own platform
-  (its own `customers` row, WhatsApp number, logged conversations, dashboard access), not
-  only a vendor selling to others. A customer account supports multiple dashboard logins
-  via `customer_members` (a client's team, or Voxitron's own team), not a single login
-  per customer. See Phase 4 schema below
+  (its own `customers` row, WhatsApp number(s), logged conversations, dashboard access),
+  not only a vendor selling to others. A customer account supports multiple dashboard
+  logins via `customer_members` (a client's team, or Voxitron's own team), not a single
+  login per customer. See Phase 4 schema below
 - **Corrected 2026-08-04**: no WhatsApp automation exists yet at all, there was no
   existing workflow to add logging to. `n8n/voxitron-whatsapp-agent.json` is the new
   workflow built to fill that gap; see Phase 4 above for full detail and the accepted
