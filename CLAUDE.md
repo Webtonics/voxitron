@@ -349,6 +349,10 @@ this marketing/lead repo. Do not build dashboard UI for data that has no real so
 stub screens with fake numbers are exactly the kind of "looks done but isn't" output this
 migration is trying to avoid.
 
+The full screen-by-screen UI plan (routes, layout, what data each screen shows and why)
+is in `DASHBOARD_UI.md`. Read it before building any dashboard route. It is a plan, not
+yet-built code, same relationship `MASTER_PROMPT.md` has to the rest of the migration.
+
 ---
 
 ## Future Pages (Planned)

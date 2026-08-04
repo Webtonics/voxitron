@@ -206,11 +206,16 @@ Sequencing within Phase 4:
    No public `/signup`, accounts are created manually per the onboarding decision above.
 4. **`/dashboard` route, protected**: unauthenticated visitors are redirected to
    `/login`, not shown an empty or broken page.
-5. **Dashboard content**: a real list of the logged-in customer's conversations, each
-   expandable to its message history. Do not invent metrics, analytics, or screens with
-   no real data source. If message logging isn't live yet when this phase is picked back
-   up, the honest interim version is the leads list from Phase 3, not a fabricated chat
-   UI with placeholder conversations.
+5. **Dashboard content.** Full screen-by-screen spec is in `DASHBOARD_UI.md`, written
+   2026-08-04, read it before building any of this: `/login`, `/dashboard` (stats strip +
+   per-number filter/switcher + conversation list), `/dashboard/conversations/[id]`
+   (message thread), and `/dashboard/leads` (Voxitron-internal only). Every screen in
+   that spec is scoped to real schema columns, no invented metrics or screens with no
+   data source. If message logging isn't live yet when this phase is picked back up, the
+   honest interim version is the leads list from Phase 3, not a fabricated chat UI with
+   placeholder conversations. `DASHBOARD_UI.md` also has open questions to resolve before
+   or during implementation (login method, per-number conversation attribution needing a
+   possible schema addition, manual-reply-from-dashboard explicitly deferred).
 
 ### Phase 5: Cutover
 - Remove the old static `.html` files and `assets/js/main.js` once the Next.js app has full parity and has been reviewed
