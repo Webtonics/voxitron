@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 export const metadata: Metadata = {
   title: "Speed to Lead Agent: Respond in Under 60 Seconds | Voxitron",
@@ -280,35 +281,40 @@ export default function SpeedToLeadPage() {
 
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
-          <div className="section-inner">
-            <span className="section-label">HOW IT WORKS</span>
-            <h2 id="how-title" className="section-title">
-              Set up once.
-              <br />
-              <span className="accent">Never miss a lead again.</span>
-            </h2>
+          <div className="section-inner-wide">
+            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+              <span className="section-label">HOW IT WORKS</span>
+              <h2 id="how-title" className="section-title">
+                Set up once.
+                <br />
+                <span className="accent">Never miss a lead again.</span>
+              </h2>
+            </div>
 
             <ol className="steps-list">
               <li className="step">
-                <span className="step-number" aria-hidden="true">01</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: agent configuration" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">We configure your agent</h3>
-                  <p className="step-body">15 minutes. We train it on your business so messages sound like you.</p>
                 </div>
+                <p className="step-body">15 minutes. We train it on your business so messages sound like you.</p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">02</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: number connection" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">Connect your phone number</h3>
-                  <p className="step-body">Your existing number. No new SIM, no new hardware.</p>
                 </div>
+                <p className="step-body">Your existing number. No new SIM, no new hardware.</p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">03</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: missed call converted to booking" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">Every missed call becomes a conversation</h3>
-                  <p className="step-body">It qualifies the lead and books the appointment. You step in only when needed.</p>
                 </div>
+                <p className="step-body">It qualifies the lead and books the appointment. You step in only when needed.</p>
               </li>
             </ol>
           </div>

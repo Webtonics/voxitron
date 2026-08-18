@@ -411,35 +411,40 @@ export default function WhatsAppAgentPage() {
 
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
-          <div className="section-inner">
-            <span className="section-label">HOW IT WORKS</span>
-            <h2 id="how-title" className="section-title">
-              Set up once.
-              <br />
-              <span className="accent">Answer every message automatically.</span>
-            </h2>
+          <div className="section-inner-wide">
+            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+              <span className="section-label">HOW IT WORKS</span>
+              <h2 id="how-title" className="section-title">
+                Set up once.
+                <br />
+                <span className="accent">Answer every message automatically.</span>
+              </h2>
+            </div>
 
             <ol className="steps-list">
               <li className="step">
-                <span className="step-number" aria-hidden="true">01</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: WhatsApp number connected" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Connect your WhatsApp Business number</h3>
-                  <p className="step-body">No new number. Customers message the one they already have.</p>
                 </div>
+                <p className="step-body">No new number. Customers message the one they already have.</p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">02</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: catalog and pricing setup" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">We train it on your catalog and prices</h3>
-                  <p className="step-body">Your products, services, and pricing, ready in a short setup session.</p>
                 </div>
+                <p className="step-body">Your products, services, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">03</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: live WhatsApp conversation" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>
-                  <p className="step-body">You step in only when a customer needs you directly.</p>
                 </div>
+                <p className="step-body">You step in only when a customer needs you directly.</p>
               </li>
             </ol>
           </div>

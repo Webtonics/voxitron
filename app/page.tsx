@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import BuiltOnStrip from "@/components/BuiltOnStrip";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 export const metadata: Metadata = {
   title: "Voxitron: AI Agents for Speed to Lead & Quoting",
@@ -274,43 +275,48 @@ export default function Home() {
 
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
-          <div className="section-inner">
-            <span className="section-label">HOW IT WORKS</span>
-            <h2 id="how-title" className="section-title">
-              Set it up once.
-              <br />
-              <span className="accent">It handles everything else.</span>
-            </h2>
+          <div className="section-inner-wide">
+            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+              <span className="section-label">HOW IT WORKS</span>
+              <h2 id="how-title" className="section-title">
+                Set it up once.
+                <br />
+                <span className="accent">It handles everything else.</span>
+              </h2>
+            </div>
 
             <ol className="steps-list">
               <li className="step">
-                <span className="step-number" aria-hidden="true">01</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: lead response audit" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">We audit your lead response (free)</h3>
-                  <p className="step-body">
-                    We find where leads are slipping through, and which agent fixes it.
-                  </p>
                 </div>
+                <p className="step-body">
+                  We find where leads are slipping through, and which agent fixes it.
+                </p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">02</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: agent setup dashboard" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">We build and configure your agent</h3>
-                  <p className="step-body">
-                    In under 48 hours. Connected to your existing number and calendar. No new
-                    hardware.
-                  </p>
                 </div>
+                <p className="step-body">
+                  In under 48 hours. Connected to your existing number and calendar. No new
+                  hardware.
+                </p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">03</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: live lead capture" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">You start capturing every lead</h3>
-                  <p className="step-body">
-                    Every missed call and every enquiry, handled automatically. You&apos;re
-                    notified only when needed.
-                  </p>
                 </div>
+                <p className="step-body">
+                  Every missed call and every enquiry, handled automatically. You&apos;re
+                  notified only when needed.
+                </p>
               </li>
             </ol>
           </div>

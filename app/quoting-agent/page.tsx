@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 export const metadata: Metadata = {
   title: "Automated Quoting Agent: Professional Quotes on Autopilot | Voxitron",
@@ -281,35 +282,40 @@ export default function QuotingAgentPage() {
 
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
-          <div className="section-inner">
-            <span className="section-label">HOW IT WORKS</span>
-            <h2 id="how-title" className="section-title">
-              Set up once.
-              <br />
-              <span className="accent">Quote every job automatically.</span>
-            </h2>
+          <div className="section-inner-wide">
+            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+              <span className="section-label">HOW IT WORKS</span>
+              <h2 id="how-title" className="section-title">
+                Set up once.
+                <br />
+                <span className="accent">Quote every job automatically.</span>
+              </h2>
+            </div>
 
             <ol className="steps-list">
               <li className="step">
-                <span className="step-number" aria-hidden="true">01</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: pricing and quote template setup" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Tell Voxitron your services and pricing</h3>
-                  <p className="step-body">20 minutes. We configure your rates and build your branded quote template.</p>
                 </div>
+                <p className="step-body">20 minutes. We configure your rates and build your branded quote template.</p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">02</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: connected channels" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">Connect your phone or WhatsApp number</h3>
-                  <p className="step-body">Call, text, WhatsApp, or web form. Voxitron picks up all of it. No new number.</p>
                 </div>
+                <p className="step-body">Call, text, WhatsApp, or web form. Voxitron picks up all of it. No new number.</p>
               </li>
               <li className="step">
-                <span className="step-number" aria-hidden="true">03</span>
-                <div>
+                <ImagePlaceholder label="Screenshot: quote sent to customer" className="step-visual" />
+                <div className="step-heading">
+                  <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">Every enquiry becomes a quote in minutes</h3>
-                  <p className="step-body">Voxitron delivers it by SMS and email. If they accept, you&apos;re notified to confirm the job.</p>
                 </div>
+                <p className="step-body">Voxitron delivers it by SMS and email. If they accept, you&apos;re notified to confirm the job.</p>
               </li>
             </ol>
           </div>
