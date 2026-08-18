@@ -31,6 +31,14 @@ export default function Footer() {
         </div>
 
         <div className="footer-col">
+          <span className="footer-col-title">Industries</span>
+          <ul className="footer-link-list">
+            <li><Link href="/real-estate">Real Estate</Link></li>
+            <li><Link href="/diagnostic-centre">Diagnostic Centres</Link></li>
+          </ul>
+        </div>
+
+        <div className="footer-col">
           <span className="footer-col-title">Learn</span>
           <ul className="footer-link-list">
             <li><Link href="/#how-it-works">How it works</Link></li>
