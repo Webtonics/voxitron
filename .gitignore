@@ -21,3 +21,12 @@ next-env.d.ts
 
 # Office lock files (created while a .docx/.xlsx is open)
 ~$*
+
+# Editor / tool config, personal to each machine
+.claude/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
