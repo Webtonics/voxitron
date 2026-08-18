@@ -152,6 +152,116 @@ a {
   font-weight: 500;
 }
 
+/* Solutions dropdown */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.nav-dropdown:hover .nav-dropdown-trigger,
+.nav-dropdown-trigger:focus-visible,
+.nav-dropdown.is-open .nav-dropdown-trigger {
+  color: var(--text-primary);
+}
+
+.nav-dropdown-trigger .is-active {
+  color: var(--accent);
+}
+
+.nav-dropdown-chevron {
+  transition: transform 0.18s ease;
+}
+
+.nav-dropdown:hover .nav-dropdown-chevron,
+.nav-dropdown.is-open .nav-dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  width: 340px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  padding: var(--space-3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+}
+
+.nav-dropdown:hover .nav-dropdown-panel,
+.nav-dropdown:focus-within .nav-dropdown-panel,
+.nav-dropdown.is-open .nav-dropdown-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.nav-dropdown-item:hover { background: var(--accent-light); }
+
+.nav-dropdown-item.is-active { background: var(--accent-light); }
+.nav-dropdown-item.is-active .nav-dropdown-item-title { color: var(--accent); }
+
+.nav-dropdown-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--accent-light);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-dropdown-item-title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.nav-dropdown-item-desc {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
 .nav-cta {
   display: inline-flex;
   align-items: center;
@@ -193,11 +303,40 @@ a {
    HERO: 2-col on desktop, single col mobile
    ============================================= */
 #hero {
+  position: relative;
   min-height: 100svh;
   padding: calc(56px + var(--space-9)) var(--gutter) var(--space-9);
   display: flex;
   align-items: center;
   background-color: var(--bg-primary);
+  overflow: hidden;
+}
+
+/* Soft animated gradient mesh, confined to the hero, quiet enough not to
+   fight the restrained palette elsewhere on the page */
+#hero::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 130%;
+  z-index: 0;
+  background:
+    radial-gradient(38% 45% at 78% 22%, rgba(36, 86, 229, 0.16) 0%, transparent 70%),
+    radial-gradient(30% 38% at 92% 55%, rgba(111, 92, 255, 0.12) 0%, transparent 70%),
+    radial-gradient(26% 30% at 60% 8%, rgba(36, 86, 229, 0.08) 0%, transparent 70%);
+  filter: blur(4px);
+  animation: hero-mesh-drift 22s ease-in-out infinite alternate;
+}
+
+#hero > * { position: relative; z-index: 1; }
+
+@keyframes hero-mesh-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-2%, 2%, 0) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hero::before { animation: none; }
 }
 
 .hero-inner {
@@ -288,6 +427,25 @@ a {
   border-radius: 6px;
   padding: var(--space-4) var(--space-5);
   box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: ui-card-in 0.6s ease-out forwards;
+}
+
+.hero-ui .ui-card:nth-child(1) { animation-delay: 0.15s; }
+.hero-ui .ui-card:nth-child(2) { animation-delay: 0.4s; }
+.hero-ui .ui-card:nth-child(3) { animation-delay: 0.75s; }
+
+@keyframes ui-card-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-card {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 
 /* Card 1: Incoming call */
@@ -674,6 +832,62 @@ a {
 .industry-sep {
   color: var(--border-mid);
   user-select: none;
+}
+
+/* =============================================
+   BUILT ON: quiet infrastructure trust strip
+   ============================================= */
+.built-on-strip {
+  background: var(--bg-primary);
+  padding: var(--space-5) var(--gutter);
+}
+
+.built-on-inner {
+  max-width: var(--container-full);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+@media (min-width: 700px) {
+  .built-on-inner {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-6);
+  }
+}
+
+.built-on-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.built-on-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+}
+
+.built-on-item {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.built-on-item:hover {
+  opacity: 1;
+  color: var(--text-secondary);
 }
 
 /* =============================================

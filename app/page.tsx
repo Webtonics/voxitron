@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
+import BuiltOnStrip from "@/components/BuiltOnStrip";
 
 export const metadata: Metadata = {
   title: "Voxitron: AI Agents for Speed to Lead & Quoting",
@@ -141,6 +142,8 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <BuiltOnStrip />
 
         {/* PROOF STRIP */}
         <Reveal className="proof-strip" role="region" aria-label="Key facts">
