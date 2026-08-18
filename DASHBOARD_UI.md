@@ -101,7 +101,12 @@ Below the stats strip and number switcher.
 - Each row: `contact_name` (fall back to `contact_phone` if no name), a preview of the
   most recent message's `body` (truncated), and a relative timestamp of that message's
   `sent_at`
-- Sorted by most recent message first
+- Sorted by most recent message first, **except** rows where `needs_human = true` (added
+  by `supabase/migrations/003_conversation_escalation.sql`, 2026-08-12) float to the top
+  regardless of recency, with a visible "Needs you" badge. This column is real and
+  already written to by the WhatsApp agent workflow's escalation branch (video/document/
+  sticker messages it can't handle), see `n8n/README.md`, so this is not a hypothetical
+  future column, build against it directly
 - Empty state (no conversations yet): a real, honest message, e.g. "No conversations
   yet. Once your WhatsApp agent is live, conversations will show up here." Not a
   fabricated example conversation, not a loading spinner that never resolves

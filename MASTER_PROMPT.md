@@ -116,8 +116,40 @@ Sequencing within Phase 4:
    inbound message, generates a reply via an AI Agent node backed by a per-customer Qdrant
    knowledge-base collection (same retrieval pattern as Area50's WF1), sends the reply via
    the WhatsApp Cloud API, and logs the outbound message, all to the `customers`/
-   `conversations`/`messages` tables below. Full setup checklist (Meta app creation,
-   credentials to wire in, environment variable, webhook registration) is in
+   `conversations`/`messages` tables below. **Extended 2026-08-12 to handle images and
+   voice notes, not just text:** photos are described via GPT-4o vision, voice notes are
+   transcribed via Whisper, and either result stands in for the customer's message through
+   the rest of the pipeline (logging, AI Agent input), matching the "processes images and
+   voice" capability CLAUDE.md's stats section already claims. **Also extended 2026-08-12
+   with escalation for unsupported message types** (video, document, sticker, etc.):
+   instead of silently dropping them, the workflow flags the conversation
+   (`conversations.needs_human` / `escalation_reason`, new columns from
+   `supabase/migrations/003_conversation_escalation.sql`) and sends the customer a fixed
+   reply that a human will follow up. Deliberately does not notify the business owner
+   directly yet (no email/WhatsApp alert), no schema field exists for "where to send that
+   alert" and the user chose not to guess one, that's a distinct follow-up decision, not
+   built here. **Audited 2026-08-13 for edge cases before going live; found and fixed
+   several real gaps**, not just the escalation-notification one already known:
+   deduplication of Meta's at-least-once webhook retries (`messages.wa_message_id`,
+   `005_message_dedup.sql`), a race condition in the find-or-create-conversation query
+   that could create duplicate conversation rows (`006_conversation_uniqueness.sql`,
+   query reworked to an atomic `ON CONFLICT` upsert), silent data loss when Meta batches
+   multiple messages into one webhook call (was hardcoded to `messages[0]` only), and no
+   retry/fallback when the AI Agent itself fails (now retries 3 times, then falls back to
+   a fixed apology reply and flags the conversation). Also fixed the KB ingest workflow's
+   re-ingestion duplication (deletes old chunks by title before inserting new ones) and
+   its chunking (now prefers paragraph/sentence boundaries over a blind character cut).
+   **Also extended 2026-08-13: `n8n/voxitron-kb-ingest.json` now accepts 4 source types**,
+   not just pasted text, per the user's request that the knowledge base "be fed by other
+   sources": a specific website URL (fetched directly, confirmed with the user as
+   deliberately not crawling the rest of the site), a PDF or Word file upload (`.docx`
+   converted to PDF via CloudConvert first, since n8n's built-in extractor doesn't support
+   Word documents), or a Google Sheet (rows flattened to text, useful for a spreadsheet-
+   based price list/catalog). All 4 source types converge into the same chunk/delete/
+   embed/upsert pipeline. Full details, including the CloudConvert and Google Sheets OAuth2
+   credentials this requires, are in `n8n/KB_INGEST_README.md`.
+   Full setup checklist (Meta app creation, credentials to wire in, environment
+   variable, webhook registration) is in
    `n8n/README.md`, read it before importing. Step-by-step Meta Business/WhatsApp
    Platform app setup (not started as of 2026-08-04) is in
    `n8n/meta-whatsapp-setup.md`. `supabase/onboarding-template.sql` is the copy-paste
@@ -148,12 +180,20 @@ Sequencing within Phase 4:
    building this workflow instead. If a future session resumes this work, check whether
    that gap has since been closed rather than assuming it has.
 
-   Also not yet built: a knowledge-base **ingestion** workflow (mirroring Area50's WF5)
-   that would let a Voxitron customer's product/pricing docs actually get embedded into
-   their `kb_<customers.id>` Qdrant collection. Without it, the WhatsApp agent's KB search
-   returns nothing for every customer, and the system prompt is written to have the AI
-   fall back honestly ("I'll get someone to help") rather than fabricate an answer in that
-   case, but this is not a substitute for building real ingestion.
+   **Knowledge-base ingestion workflow: written 2026-08-12, not yet imported or run.**
+   `n8n/voxitron-kb-ingest.json` (mirroring Area50's WF5 pattern) is a ready-to-import n8n
+   workflow: an n8n Form Trigger (Customer ID, document title, content) validates the
+   customer exists in Supabase, chunks the pasted text, embeds it with the same
+   `text-embedding-ada-002` model the WhatsApp agent workflow queries with, and upserts
+   into that customer's `kb_<customers.id>` Qdrant collection. Full setup (credentials to
+   wire in, how to use it per customer, known limitations like no file upload and no
+   duplicate/update handling) is in `n8n/KB_INGEST_README.md`. It reuses the same
+   Supabase/Qdrant/OpenAI n8n credentials as `voxitron-whatsapp-agent.json`, no new
+   credential types needed. Until this is actually imported, credentialed, and run for a
+   customer, their `kb_<customers.id>` collection stays empty and the WhatsApp agent's KB
+   search still returns nothing for them, same honest fallback behavior as before, this
+   entry just marks that the missing workflow itself has now been built, not that any
+   customer's knowledge base has been populated yet.
 2. **Supabase schema for conversations, genuinely multi-tenant. Applied 2026-08-04.**
    `supabase/migrations/002_conversations.sql` has been run against the live Supabase
    project (same one `001_leads.sql` uses). Message shape (`direction`/`body`/`sent_at`)

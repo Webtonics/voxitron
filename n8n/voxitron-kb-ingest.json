@@ -1,0 +1,720 @@
+{
+  "name": "Voxitron KB Ingest",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Voxitron: Add to Customer Knowledge Base",
+        "formDescription": "Add a customer's product, pricing, or policy info from pasted text, a website page, a PDF/Word file, or a Google Sheet. It gets embedded into their WhatsApp agent's knowledge base so the agent can answer from it instead of guessing. Fill in Customer ID, Document title, a Source Type, and only the field(s) that source type needs, leave the others blank.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Customer ID",
+              "fieldType": "text",
+              "placeholder": "the customers.id UUID from Supabase, see supabase/onboarding-template.sql",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Document title",
+              "fieldType": "text",
+              "placeholder": "e.g. Price List, Delivery Policy, Product Catalog",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Source Type",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  { "option": "Paste text" },
+                  { "option": "Website page" },
+                  { "option": "File (PDF or Word)" },
+                  { "option": "Google Sheet" }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Content",
+              "fieldType": "textarea",
+              "placeholder": "Only if Source Type is 'Paste text': the raw text, prices, stock policy, FAQs, whatever the WhatsApp agent should know.",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Page URL",
+              "fieldType": "text",
+              "placeholder": "Only if Source Type is 'Website page': one exact URL, e.g. https://example.com/pricing. Fetches just this page, does not crawl the rest of the site.",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf,.docx",
+              "multipleFiles": false,
+              "placeholder": "Only if Source Type is 'File (PDF or Word)'. Word files are converted to PDF first, then text is extracted, see KB_INGEST_README.md.",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Google Sheet URL",
+              "fieldType": "text",
+              "placeholder": "Only if Source Type is 'Google Sheet': the full sheet URL, e.g. https://docs.google.com/spreadsheets/d/.../edit. The sheet must already be shared with Voxitron's Google service account, see KB_INGEST_README.md.",
+              "requiredField": false
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Ingest"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [-1600, 0],
+      "id": "kb-form-trigger",
+      "name": "KB Upload Form",
+      "webhookId": "voxitron-kb-ingest",
+      "notes": "Manual, Voxitron-team-only entry point for now. No self-serve customer upload UI exists yet (that's /dashboard/embed's future 'Content' tab, explicitly out of scope in DASHBOARD_UI.md until asked for). Extended 2026-08-13 to accept 4 source types (paste, website URL, PDF/DOCX file, Google Sheet), not just pasted text. All source-specific fields are always visible and optional; only the ones matching the selected Source Type are read downstream. n8n's Form Trigger doesn't support conditionally hiding fields based on another field's value within one form (confirmed 2026-08-13, that needs a separate multi-page n8n-nodes-base.form node chained after the trigger, more complexity than warranted here), so the form relies on the description/placeholders to guide which fields to fill in, and Validate Source Fields below rejects a submission that's missing the field its own Source Type needs."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 3 },
+          "conditions": [
+            {
+              "id": "customer-id-looks-like-uuid",
+              "leftValue": "={{ $json['Customer ID'] }}",
+              "rightValue": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "operator": { "type": "string", "operation": "regex" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-1392, 0],
+      "id": "validate-customer-id-format",
+      "name": "Customer ID Looks Valid?",
+      "notes": "Cheap format check before hitting the database. Catches copy-paste mistakes (pasting the business name, a phone_number_id, or nothing) early with a clear error instead of a confusing downstream failure."
+    },
+    {
+      "parameters": {
+        "jsCode": "const sourceType = $json['Source Type'];\nconst content = ($json['Content'] || '').trim();\nconst pageUrl = ($json['Page URL'] || '').trim();\nconst sheetUrl = ($json['Google Sheet URL'] || '').trim();\nconst hasFile = Boolean($binary && $binary['File'] && $binary['File'].fileName);\n\nlet valid = false;\nlet reason = '';\n\nif (sourceType === 'Paste text') {\n  valid = content.length > 0;\n  reason = 'Source Type is \"Paste text\" but the Content field is empty.';\n} else if (sourceType === 'Website page') {\n  valid = /^https?:\\/\\//.test(pageUrl);\n  reason = 'Source Type is \"Website page\" but Page URL is empty or not a valid http(s) URL.';\n} else if (sourceType === 'File (PDF or Word)') {\n  valid = hasFile;\n  reason = 'Source Type is \"File (PDF or Word)\" but no file was attached.';\n} else if (sourceType === 'Google Sheet') {\n  valid = /^https?:\\/\\/docs\\.google\\.com\\/spreadsheets\\//.test(sheetUrl);\n  reason = 'Source Type is \"Google Sheet\" but Google Sheet URL is empty or not a docs.google.com/spreadsheets link.';\n} else {\n  reason = 'Unrecognized Source Type: ' + sourceType;\n}\n\nreturn [{ json: { ...$json, sourceValid: valid, sourceValidationReason: reason } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1392, -192],
+      "id": "validate-source-fields",
+      "name": "Validate Source Fields",
+      "notes": "Added 2026-08-13. Since the form always shows all 4 source-specific fields regardless of which Source Type is picked (Form Trigger has no conditional field visibility, see the note on KB Upload Form), this confirms the field the chosen Source Type actually needs was filled in, before wasting a Postgres lookup or, worse, silently ingesting an empty document."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 },
+          "conditions": [
+            {
+              "id": "source-is-valid",
+              "leftValue": "={{ $json.sourceValid }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-1392, -320],
+      "id": "source-valid-check",
+      "name": "Source Fields Valid?",
+      "notes": "Added 2026-08-13. True branch continues to the customer lookup. False branch responds with the specific reason from Validate Source Fields, so a mistake (e.g. picking 'Website page' but leaving Page URL blank) gets a clear, actionable error instead of a confusing downstream failure or a silently empty ingest."
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ 'Nothing was ingested: ' + $json.sourceValidationReason }}",
+        "options": { "responseCode": 400 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [-1184, -448],
+      "id": "respond-invalid-source",
+      "name": "Respond: Invalid Source Fields",
+      "notes": "Added 2026-08-13."
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "That doesn't look like a valid Customer ID (should be a UUID from the customers table, e.g. 8 hyphen-separated groups). Nothing was ingested. Copy the id from Supabase and try again.",
+        "options": { "responseCode": 400 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [-1184, 128],
+      "id": "respond-bad-id-format",
+      "name": "Respond: Bad ID Format"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, business_name FROM customers WHERE id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $json['Customer ID'] }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [-1184, -64],
+      "id": "load-customer",
+      "name": "Load Customer",
+      "credentials": {
+        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
+      },
+      "notes": "Confirms the customer actually exists before writing anything into Qdrant under their name. Same service-role credential the WhatsApp agent workflow uses, reused here rather than duplicated as a second credential entry."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 },
+          "conditions": [
+            {
+              "id": "customer-exists",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-976, -64],
+      "id": "customer-found-check",
+      "name": "Customer Found?",
+      "notes": "Never create a Qdrant collection for a customer_id that doesn't exist in Supabase. Stops silent typos from quietly building an orphaned knowledge base nothing will ever query."
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ 'No customer found with id ' + $('KB Upload Form').item.json['Customer ID'] + '. Check the id in Supabase (select id, business_name from customers) and try again. Nothing was ingested.' }}",
+        "options": { "responseCode": 404 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [-768, 64],
+      "id": "respond-customer-not-found",
+      "name": "Respond: Customer Not Found"
+    },
+    {
+      "parameters": {
+        "jsCode": "const title = $('KB Upload Form').item.json['Document title'];\nconst content = $('Merge Content Sources').item.json.resolvedContent;\nconst customerId = $('Load Customer').item.json.id;\nconst businessName = $('Load Customer').item.json.business_name;\n\nconst MAX_CHARS = 1200;\nconst OVERLAP = 150;\nconst MIN_CHUNK = 400; // don't hunt for a boundary so far back that a chunk becomes tiny\n\n// Prefer breaking at a paragraph gap, then a sentence end, then a line break,\n// only falling back to a hard character cut if none exist near the target\n// size. Added 2026-08-13: the previous version sliced at a fixed character\n// count with no regard for word/sentence boundaries, so a price line or\n// sentence could be split in half across two chunks, degrading retrieval\n// (the model sees half a fact per chunk instead of a whole one).\nfunction findBreakPoint(text, idealEnd) {\n  const windowStart = Math.max(MIN_CHUNK, idealEnd - 300);\n  const window = text.slice(windowStart, idealEnd);\n\n  const paraBreak = window.lastIndexOf('\\n\\n');\n  if (paraBreak !== -1) return windowStart + paraBreak + 2;\n\n  const sentenceMatch = [...window.matchAll(/[.!?]\\s/g)].pop();\n  if (sentenceMatch) return windowStart + sentenceMatch.index + sentenceMatch[0].length;\n\n  const lineBreak = window.lastIndexOf('\\n');\n  if (lineBreak !== -1) return windowStart + lineBreak + 1;\n\n  return idealEnd; // no natural boundary found, hard cut as last resort\n}\n\nfunction chunk(text) {\n  const clean = text.replace(/\\r\\n/g, '\\n').trim();\n  if (clean.length <= MAX_CHARS) return [clean];\n\n  const chunks = [];\n  let start = 0;\n  while (start < clean.length) {\n    const idealEnd = Math.min(start + MAX_CHARS, clean.length);\n    const end = idealEnd === clean.length ? idealEnd : findBreakPoint(clean, idealEnd);\n    chunks.push(clean.slice(start, end).trim());\n    if (end >= clean.length) break;\n    start = Math.max(end - OVERLAP, start + 1); // always advance, even if OVERLAP would otherwise stall on a short boundary\n  }\n  return chunks;\n}\n\nconst chunks = chunk(content);\n\nreturn chunks.map((text, i) => ({\n  json: {\n    customerId,\n    businessName,\n    title,\n    chunkIndex: i,\n    chunkCount: chunks.length,\n    text: `${title}\\n\\n${text}`,\n  },\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-560, -64],
+      "id": "chunk-document",
+      "name": "Chunk Document",
+      "notes": "Simple fixed-size character chunking with overlap, matching the granularity Qdrant retrieval expects (short passages, not whole documents). Each chunk is prefixed with the document title so retrieval keeps that context even mid-document. One input item (the form submission) becomes N output items (one per chunk), each embedded and upserted separately below."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 3 },
+          "conditions": [
+            {
+              "leftValue": "={{ $json['Source Type'] }}",
+              "rightValue": "Paste text",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-960, -192],
+      "id": "is-paste-text",
+      "name": "Is Paste Text?",
+      "notes": "Added 2026-08-13. First of a chain of IF nodes routing by Source Type, deliberately chosen over a single Switch node: the Switch node's output-to-connection indexing convention wasn't verifiable with confidence, and getting it wrong would silently misroute every submission. IF's true/false contract is unambiguous and already used correctly throughout both workflows. True branch: content is already plain text, skip straight to Chunk Document. False branch: check the next source type."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 3 },
+          "conditions": [
+            {
+              "leftValue": "={{ $json['Source Type'] }}",
+              "rightValue": "Website page",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-960, -64],
+      "id": "is-website-page",
+      "name": "Is Website Page?",
+      "notes": "Added 2026-08-13."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 3 },
+          "conditions": [
+            {
+              "leftValue": "={{ $json['Source Type'] }}",
+              "rightValue": "File (PDF or Word)",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-960, 64],
+      "id": "is-file-upload",
+      "name": "Is File Upload?",
+      "notes": "Added 2026-08-13. False branch here means Source Type must be 'Google Sheet' (Validate Source Fields already confirmed it's one of the 4 recognized types), so no further check is needed, the false branch goes straight to the Google Sheets read node."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "resolved-content-paste",
+              "name": "resolvedContent",
+              "type": "string",
+              "value": "={{ $json['Content'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-752, -320],
+      "id": "resolve-content-paste",
+      "name": "Resolve Content (Paste)",
+      "notes": "Added 2026-08-13. Trivial pass-through, kept as its own node so every branch produces the same resolvedContent field for Merge Content Sources below, same pattern as the WhatsApp workflow's Resolve Message Text (Text)/(Media) split."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json['Page URL'] }}",
+        "options": { "response": { "response": { "neverError": true } } }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [-752, -64],
+      "id": "fetch-webpage",
+      "name": "Fetch Webpage",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "notes": "Added 2026-08-13. Fetches exactly the one URL entered, no crawling of other pages on the domain, confirmed with the user 2026-08-13 as the intended scope. neverError is set so a 404/500 response body still reaches the next node as data rather than throwing, letting Webpage Fetch OK? give a clear error instead of a generic HTTP failure. Does not render JavaScript, static HTML only, a page whose content loads via client-side JS will return an empty or near-empty body, a known limitation, not fixed here."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 200,
+              "operator": { "type": "number", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-560, -320],
+      "id": "webpage-fetch-ok",
+      "name": "Webpage Fetch OK?",
+      "notes": "Added 2026-08-13. Catches a wrong/dead URL with a clear error instead of trying to extract HTML from an error page's body and silently ingesting a 404 page's text as if it were real content."
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ 'Nothing was ingested: could not fetch ' + $('KB Upload Form').item.json['Page URL'] + ' (HTTP ' + $json.statusCode + '). Check the URL and try again.' }}",
+        "options": { "responseCode": 400 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [-352, 32],
+      "id": "respond-webpage-fetch-failed",
+      "name": "Respond: Webpage Fetch Failed",
+      "notes": "Added 2026-08-13."
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "pageText",
+              "cssSelector": "body",
+              "returnValue": "text"
+            }
+          ]
+        },
+        "options": { "trimValues": true }
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [-352, -160],
+      "id": "extract-webpage-text",
+      "name": "Extract Webpage Text",
+      "notes": "Added 2026-08-13. Pulls all visible text from <body> via a CSS selector, not the full HTML markup. Simple and reliable for typical business pages (pricing, FAQ, about); pages with heavy nav/footer boilerplate will carry that boilerplate into the chunk too, a known tradeoff for staying simple, revisit with a more targeted selector per customer if retrieval quality suffers."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "resolved-content-website",
+              "name": "resolvedContent",
+              "type": "string",
+              "value": "={{ $json.pageText }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-176, -160],
+      "id": "resolve-content-website",
+      "name": "Resolve Content (Website)",
+      "notes": "Added 2026-08-13."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "loose", "version": 3 },
+          "conditions": [
+            {
+              "leftValue": "={{ $binary['File'].fileName }}",
+              "rightValue": ".pdf",
+              "operator": { "type": "string", "operation": "endsWith" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-752, 64],
+      "id": "is-pdf-file",
+      "name": "Is PDF?",
+      "notes": "Added 2026-08-13. True: already a PDF, extract text directly. False: must be .docx (the form's File field only accepts .pdf,.docx), convert to PDF first via CloudConvert, then extract."
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "File",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [-560, 32],
+      "id": "extract-pdf-text",
+      "name": "Extract PDF Text",
+      "notes": "Added 2026-08-13. n8n's built-in Extract From File node, PDF operation. Output lands in $json.text."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://sync.api.cloudconvert.com/v2/jobs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tasks\": {\n    \"import-file\": {\n      \"operation\": \"import/base64\",\n      \"file\": \"{{ $binary['File'].data }}\",\n      \"filename\": \"{{ $binary['File'].fileName }}\"\n    },\n    \"convert-file\": {\n      \"operation\": \"convert\",\n      \"input\": \"import-file\",\n      \"input_format\": \"docx\",\n      \"output_format\": \"pdf\"\n    },\n    \"export-file\": {\n      \"operation\": \"export/url\",\n      \"input\": \"convert-file\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [-560, 128],
+      "id": "convert-docx-to-pdf",
+      "name": "Convert DOCX to PDF (CloudConvert)",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "httpHeaderAuth": { "id": "REPLACE_WITH_CLOUDCONVERT_CREDENTIAL_ID", "name": "CloudConvert API Key (Header Auth)" }
+      },
+      "notes": "Added 2026-08-13, confirmed with the user 2026-08-13: n8n's built-in Extract From File node does not support DOCX (only PDF, CSV, HTML, JSON, ICS, ODS, RTF, text, XLS, XLSX are documented), so DOCX is converted to PDF via CloudConvert's synchronous jobs API first, then extracted the same way as a native PDF upload. Uses the synchronous endpoint (sync.api.cloudconvert.com) so the converted file's download URL comes back in this same call, no separate polling/webhook step. REQUIRES a CloudConvert account and API key (Header Auth, Authorization: Bearer <key>), a new external dependency and cost per conversion, this was a deliberate tradeoff the user chose over leaving DOCX unsupported."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.data.tasks.find(t => t.name === 'export-file').result.files[0].url }}",
+        "options": { "response": { "response": { "responseFormat": "file" } } }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [-368, 128],
+      "id": "download-converted-pdf",
+      "name": "Download Converted PDF",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "notes": "Added 2026-08-13. CloudConvert's synchronous job response includes the export task's result with a download URL for the converted PDF; this fetches the actual PDF bytes so Extract PDF Text (DOCX Path) can read them, same as the direct-PDF-upload path."
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [-176, 128],
+      "id": "extract-pdf-text-from-docx",
+      "name": "Extract PDF Text (DOCX Path)",
+      "notes": "Added 2026-08-13. Same extraction operation as Extract PDF Text, applied to the CloudConvert-converted file instead of a directly uploaded PDF."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "resolved-content-file",
+              "name": "resolvedContent",
+              "type": "string",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [16, 64],
+      "id": "resolve-content-file",
+      "name": "Resolve Content (File)",
+      "notes": "Added 2026-08-13. Single convergence point for both the direct-PDF and converted-from-DOCX paths, both of which land the extracted text in $json.text via Extract From File."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json['Google Sheet URL'].match(/\\/spreadsheets\\/d\\/([a-zA-Z0-9-_]+)/)?.[1] }}",
+          "mode": "id"
+        },
+        "sheetName": { "__rl": true, "value": "gid=0", "mode": "list" },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [-752, 256],
+      "id": "read-google-sheet",
+      "name": "Read Google Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "REPLACE_WITH_GOOGLE_SHEETS_OAUTH_CREDENTIAL_ID", "name": "Voxitron Google Sheets" }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "notes": "Added 2026-08-13. Reads the first sheet (gid=0) of whichever spreadsheet the URL points at, all rows, using the header row as column names. REQUIRES the target spreadsheet be shared with (or owned by) whatever Google account the OAuth2 credential authenticates as, a private sheet a customer hasn't shared will read as empty rather than erroring clearly, document this for whoever ingests a customer's sheet. Google Sheets uses OAuth2, a different credential setup flow (a Google Cloud project + consent screen) than the API-key credentials used everywhere else in these two workflows, see KB_INGEST_README.md."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all().map(item => item.json);\nif (rows.length === 0) {\n  return [{ json: { resolvedContent: '' } }];\n}\n\nconst columns = Object.keys(rows[0]).filter(k => k !== 'row_number');\n\n// Flatten each row into a plain-text line, e.g. \"Product: Widget | Price: 5000 | Stock: 12\"\n// rather than dumping raw JSON, since this text is what the AI reads at answer time,\n// not parsed as structured data downstream.\nconst lines = rows.map(row => columns.map(col => `${col}: ${row[col]}`).join(' | '));\n\nreturn [{ json: { resolvedContent: lines.join('\\n') } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-560, 256],
+      "id": "resolve-content-sheet",
+      "name": "Resolve Content (Sheet)",
+      "notes": "Added 2026-08-13. Flattens every row into one text line per row (column: value pairs), joined into a single document, then chunked exactly like any other source. A very large sheet (hundreds of rows) will still get split into multiple chunks downstream by Chunk Document, each chunk covering a contiguous block of rows, retrieval quality for 'what's the price of X' style questions depends on X's row landing inside a single chunk, works well for typical small business catalogs, may need a smarter per-row-chunk strategy later for very large sheets."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Added 2026-08-13. Deliberately not a Merge node here: n8n's Merge node\n// modes (chooseBranch, combine/position, etc.) are documented and confirmed\n// as fundamentally 2-input concepts, or as waiting on ALL connected inputs\n// before proceeding. With 4 branches where only one ever actually produces\n// data (the other 3 are dead-end IF branches with zero items), that risks\n// either a hang or unpredictable field-merging behavior. Using\n// $('NodeName').isExecuted (confirmed safe, does not throw) to check each\n// candidate node directly instead, no ambiguity, no wait semantics.\nconst candidates = [\n  'Resolve Content (Paste)',\n  'Resolve Content (Website)',\n  'Resolve Content (File)',\n  'Resolve Content (Sheet)',\n];\n\nfor (const name of candidates) {\n  if ($(name).isExecuted) {\n    return [{ json: { resolvedContent: $(name).item.json.resolvedContent } }];\n  }\n}\n\nthrow new Error('Merge Content Sources: none of the 4 Resolve Content branches executed, this should be unreachable given Validate Source Fields already ran.');"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [208, -64],
+      "id": "merge-content-sources",
+      "name": "Merge Content Sources",
+      "notes": "Added 2026-08-13. Single convergence point for all 4 source branches. See in-code comment for why this is a Code node checking isExecuted rather than an n8n Merge node."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://YOUR_QDRANT_HOST/collections/kb_{{ $('Load Customer').item.json.id }}/points/delete",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"must\": [\n      { \"key\": \"title\", \"match\": { \"value\": \"{{ $('KB Upload Form').item.json['Document title'] }}\" } }\n    ]\n  }\n}",
+        "options": { "ignoreHttpStatusErrors": true }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [-768, -192],
+      "id": "delete-existing-chunks",
+      "name": "Delete Existing Chunks for This Title",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REPLACE_WITH_QDRANT_HTTP_HEADER_CREDENTIAL_ID", "name": "Qdrant API Key (Header Auth)" }
+      },
+      "notes": "Added 2026-08-13 after an audit found re-ingesting the same document title created duplicate chunks in Qdrant rather than replacing them, since n8n's LangChain Qdrant node doesn't expose custom point IDs or a delete mode, upserting can't overwrite by itself. Runs once, before Chunk Document fans the submission out into N chunk items (deliberately placed here rather than after chunking, to avoid firing the same delete call N times). Calls Qdrant's REST API directly (POST /collections/{name}/points/delete with a payload filter on title). REQUIRES: (1) replacing YOUR_QDRANT_HOST in the URL with the actual Qdrant instance host (same one the Qdrant Vector Store credential below points at), and (2) a separate Header Auth credential carrying the Qdrant API key (header name typically 'api-key'), since n8n's QdrantApi credential type isn't usable by a plain HTTP Request node. ignoreHttpStatusErrors is set because a fresh customer's collection may not exist yet on first ingest, a 404 here is expected and harmless, not a real failure."
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "=kb_{{ $json.customerId }}",
+          "mode": "id"
+        },
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              { "name": "title", "value": "={{ $json.title }}" },
+              { "name": "chunk_index", "value": "={{ $json.chunkIndex }}" },
+              { "name": "business_name", "value": "={{ $json.businessName }}" }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [-352, -64],
+      "id": "qdrant-upsert",
+      "name": "Upsert to Qdrant",
+      "credentials": {
+        "qdrantApi": { "id": "REPLACE_WITH_QDRANT_CREDENTIAL_ID", "name": "QdrantApi account" }
+      },
+      "notes": "Same collection naming convention the WhatsApp agent workflow reads from: kb_<customers.id>. Qdrant auto-creates the collection on first insert if it doesn't exist yet, so no separate 'create collection' step is needed for a brand new customer."
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-ada-002",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [-352, 128],
+      "id": "embeddings-openai",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": { "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID", "name": "OpenAi account" }
+      },
+      "notes": "Same embedding model as the WhatsApp agent workflow's Qdrant search (text-embedding-ada-002). Must match: embeddings written with a different model than the one used at query time would not be comparable."
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemStemFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [-144, -64],
+      "id": "aggregate-chunks",
+      "name": "Aggregate Chunk Results",
+      "notes": "Collapses the N chunk items back into one item so the response node reports a single summary, not one HTTP response per chunk."
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ 'Ingested \"' + $('KB Upload Form').item.json['Document title'] + '\" for ' + $('Load Customer').item.json.business_name + ' (' + $('Chunk Document').all().length + ' chunk(s)). Their WhatsApp agent can now answer from it.' }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [64, -64],
+      "id": "respond-success",
+      "name": "Respond: Success"
+    }
+  ],
+  "connections": {
+    "KB Upload Form": { "main": [[{ "node": "Customer ID Looks Valid?", "type": "main", "index": 0 }]] },
+    "Customer ID Looks Valid?": {
+      "main": [
+        [{ "node": "Validate Source Fields", "type": "main", "index": 0 }],
+        [{ "node": "Respond: Bad ID Format", "type": "main", "index": 0 }]
+      ]
+    },
+    "Validate Source Fields": { "main": [[{ "node": "Source Fields Valid?", "type": "main", "index": 0 }]] },
+    "Source Fields Valid?": {
+      "main": [
+        [{ "node": "Load Customer", "type": "main", "index": 0 }],
+        [{ "node": "Respond: Invalid Source Fields", "type": "main", "index": 0 }]
+      ]
+    },
+    "Load Customer": { "main": [[{ "node": "Customer Found?", "type": "main", "index": 0 }]] },
+    "Customer Found?": {
+      "main": [
+        [{ "node": "Is Paste Text?", "type": "main", "index": 0 }],
+        [{ "node": "Respond: Customer Not Found", "type": "main", "index": 0 }]
+      ]
+    },
+    "Is Paste Text?": {
+      "main": [
+        [{ "node": "Resolve Content (Paste)", "type": "main", "index": 0 }],
+        [{ "node": "Is Website Page?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Is Website Page?": {
+      "main": [
+        [{ "node": "Fetch Webpage", "type": "main", "index": 0 }],
+        [{ "node": "Is File Upload?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Is File Upload?": {
+      "main": [
+        [{ "node": "Is PDF?", "type": "main", "index": 0 }],
+        [{ "node": "Read Google Sheet", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fetch Webpage": { "main": [[{ "node": "Webpage Fetch OK?", "type": "main", "index": 0 }]] },
+    "Webpage Fetch OK?": {
+      "main": [
+        [{ "node": "Extract Webpage Text", "type": "main", "index": 0 }],
+        [{ "node": "Respond: Webpage Fetch Failed", "type": "main", "index": 0 }]
+      ]
+    },
+    "Extract Webpage Text": { "main": [[{ "node": "Resolve Content (Website)", "type": "main", "index": 0 }]] },
+    "Is PDF?": {
+      "main": [
+        [{ "node": "Extract PDF Text", "type": "main", "index": 0 }],
+        [{ "node": "Convert DOCX to PDF (CloudConvert)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Extract PDF Text": { "main": [[{ "node": "Resolve Content (File)", "type": "main", "index": 0 }]] },
+    "Convert DOCX to PDF (CloudConvert)": { "main": [[{ "node": "Download Converted PDF", "type": "main", "index": 0 }]] },
+    "Download Converted PDF": { "main": [[{ "node": "Extract PDF Text (DOCX Path)", "type": "main", "index": 0 }]] },
+    "Extract PDF Text (DOCX Path)": { "main": [[{ "node": "Resolve Content (File)", "type": "main", "index": 0 }]] },
+    "Read Google Sheet": { "main": [[{ "node": "Resolve Content (Sheet)", "type": "main", "index": 0 }]] },
+    "Resolve Content (Paste)": { "main": [[{ "node": "Merge Content Sources", "type": "main", "index": 0 }]] },
+    "Resolve Content (Website)": { "main": [[{ "node": "Merge Content Sources", "type": "main", "index": 0 }]] },
+    "Resolve Content (File)": { "main": [[{ "node": "Merge Content Sources", "type": "main", "index": 0 }]] },
+    "Resolve Content (Sheet)": { "main": [[{ "node": "Merge Content Sources", "type": "main", "index": 0 }]] },
+    "Merge Content Sources": { "main": [[{ "node": "Delete Existing Chunks for This Title", "type": "main", "index": 0 }]] },
+    "Delete Existing Chunks for This Title": { "main": [[{ "node": "Chunk Document", "type": "main", "index": 0 }]] },
+    "Chunk Document": { "main": [[{ "node": "Upsert to Qdrant", "type": "main", "index": 0 }]] },
+    "Embeddings OpenAI": { "ai_embedding": [[{ "node": "Upsert to Qdrant", "type": "ai_embedding", "index": 0 }]] },
+    "Upsert to Qdrant": { "main": [[{ "node": "Aggregate Chunk Results", "type": "main", "index": 0 }]] },
+    "Aggregate Chunk Results": { "main": [[{ "node": "Respond: Success", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": ["voxitron", "knowledge-base"]
+}

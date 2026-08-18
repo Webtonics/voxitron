@@ -6,6 +6,15 @@ cannot go live yet**: no WhatsApp Business Cloud API app exists for Voxitron as 
 any messages to it. This file gets the workflow logic right and ready; it does not
 remove the need for the Meta-side setup below.
 
+**Requires these Supabase migrations applied, in order:**
+`supabase/migrations/002_conversations.sql` (the base `customers`/`conversations`/
+`messages` schema), `003_conversation_escalation.sql` (adds `conversations.needs_human` /
+`escalation_reason`, used by the escalation branch below), `004_conversation_number_attribution.sql`
+(adds `conversations.whatsapp_number_id`), `005_message_dedup.sql` (adds
+`messages.wa_message_id`, used by the deduplication check below), and
+`006_conversation_uniqueness.sql` (adds a unique constraint backing the atomic
+find-or-create conversation query below).
+
 ## What it does
 
 1. Handles Meta's webhook verification handshake (`GET`, checks `hub.verify_token`,
@@ -13,15 +22,73 @@ remove the need for the Meta-side setup below.
 2. Receives inbound WhatsApp messages (`POST`), acknowledges immediately (Meta requires a
    fast 200 or it disables the webhook), then processes in the background.
 3. Ignores non-message events (delivery/read receipts) that Meta sends on the same path.
-4. Looks up which Voxitron customer owns the WhatsApp number the message arrived on
+4. **Splits multi-message payloads into one item per message.** Added 2026-08-13. Meta's
+   webhook can legitimately batch more than one message into a single `POST` (documented
+   behavior, not rare, e.g. after a connectivity gap is resolved and queued messages
+   arrive together). Every extraction node previously hardcoded `messages[0]`, silently
+   dropping `messages[1]`, `messages[2]`, etc. A `Split Out` node now turns the array into
+   one n8n item per message before any extraction happens, so every message in a batch
+   gets processed and replied to.
+5. **Deduplicates retried webhook deliveries.** Added 2026-08-13. Meta's Cloud API uses
+   at-least-once delivery and retries for up to 7 days with backoff if a delivery is slow
+   or fails, meaning the same message can legitimately arrive more than once. `Check for
+   Duplicate Delivery` looks up Meta's own message id (`wa_message_id`, requires
+   `005_message_dedup.sql`) against already-logged messages before doing anything else; if
+   found, the execution stops there rather than generating and sending a second AI reply.
+6. Looks up which Voxitron customer owns the WhatsApp number the message arrived on
    (`customer_whatsapp_numbers` in Supabase, joined to `customers`; a customer can have
    more than one number). Stops if no match, never guesses.
-5. Finds or creates the `conversations` row for that customer + contact phone number.
-6. Logs the inbound message to `messages` (Supabase).
-7. Generates a reply with an AI Agent node, using a per-customer Qdrant knowledge-base
-   collection (`kb_<customers.id>`) as a retrieval tool, same pattern as Area50's WF1.
-8. Sends the reply back through the WhatsApp Cloud API.
-9. Logs the outbound message to `messages` (Supabase).
+7. **Handles text, image, and voice note (audio) messages.** Added 2026-08-12, this
+   workflow previously only read `messages[0].text.body` and silently dropped anything
+   else. Now:
+   - Text messages pass straight through unchanged.
+   - Image messages: downloads the photo via the WhatsApp Cloud API's two-step media
+     fetch (`GET /{media-id}` for a short-lived URL, then `GET` that URL, both with the
+     same bearer token), then describes it with GPT-4o vision. Any caption the customer
+     sent alongside the photo is appended to the description, so "here's the shoe, do you
+     have it in size 42?" isn't lost.
+   - Voice notes: same two-step download, then transcribed with Whisper (`whisper-1`).
+     WhatsApp voice notes are Opus-encoded `.ogg`, which Whisper accepts directly.
+   - Either way, the result replaces `messageText` before the rest of the pipeline runs,
+     so logging and the AI Agent see one consistent field regardless of how the customer
+     actually messaged.
+   - **Video, document, sticker, and other unsupported message types: escalated to a
+     human, not silently dropped.** Added 2026-08-12. `Is Text?` catches anything that's
+     neither plain text nor an image/audio message, flags the conversation
+     (`conversations.needs_human = true`, `escalation_reason` set to e.g.
+     `unsupported_message_type:video`, needs `supabase/migrations/003_conversation_escalation.sql`
+     applied first), logs a placeholder inbound message, and sends the customer a fixed
+     reply: "I can't view that kind of file yet, sorry. I've let our team know, they'll
+     follow up with you shortly." That reply is not AI-generated, there's nothing to
+     reason about. Matches the promise already on `/whatsapp-agent`'s FAQ ("It flags the
+     chat with the full conversation. You take over."). **No direct notification to the
+     business owner is sent** (no email, no internal WhatsApp alert), this was scoped
+     deliberately: there's no field anywhere yet for "which number/email to alert",
+     confirmed with the user 2026-08-12 as a later decision, not an oversight. The
+     dashboard's future conversation list (`DASHBOARD_UI.md`) is where this flag is meant
+     to surface once built.
+8. **Finds or creates the `conversations` row atomically.** Reworked 2026-08-13: the
+   original find-or-create query (`INSERT ... WHERE NOT EXISTS`) had a race, two messages
+   from the same contact arriving close together could both pass the existence check
+   before either INSERT committed, creating duplicate conversation rows. Now an
+   `INSERT ... ON CONFLICT (customer_id, contact_phone) DO UPDATE` upsert, backed by a real
+   unique constraint (`006_conversation_uniqueness.sql`), so Postgres itself serializes
+   this, no race possible regardless of timing.
+9. Logs the inbound message to `messages` (Supabase): the typed text, or the image
+   description / voice transcript for media messages, plus `wa_message_id` for the
+   deduplication check above.
+10. Generates a reply with an AI Agent node, using a per-customer Qdrant knowledge-base
+    collection (`kb_<customers.id>`) as a retrieval tool, same pattern as Area50's WF1.
+    **If this fails after retrying** (OpenAI outage, Qdrant down, etc., added 2026-08-13):
+    routes to a fixed fallback reply ("Sorry, I'm having trouble right now...") and flags
+    the conversation `needs_human`, instead of the customer getting silence with no record
+    of why.
+11. Sends the reply back through the WhatsApp Cloud API.
+12. Logs the outbound message to `messages` (Supabase).
+
+**Error handling, added 2026-08-13:** every Postgres write, the Meta HTTP calls, and the
+OpenAI/vision/transcription calls now retry up to 3 times (2 second gaps) on failure
+before giving up, rather than the workflow dying silently on the first transient error.
 
 ## Before this can be imported and turned on
 
@@ -46,7 +113,7 @@ a real n8n credential selected after import:
 | `REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID` | Postgres | Host/port/db/user/password from Supabase project settings, using the **service role** connection, not the anon key. This is what lets the workflow write to `customers`/`conversations`/`messages` despite RLS. Never use this credential anywhere outside n8n. |
 | `REPLACE_WITH_OPENAI_CREDENTIAL_ID` | OpenAI API | Same OpenAI account/key pattern as Area50's workflows. |
 | `REPLACE_WITH_QDRANT_CREDENTIAL_ID` | QdrantApi | Points at wherever Qdrant is hosted. Confirm with the user whether Voxitron gets its own Qdrant instance/collection namespace or shares infrastructure with Area50, not yet decided. |
-| `REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID` | Header Auth | Header name `Authorization`, value `Bearer <permanent Meta access token>` from step 1. |
+| `REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID` | Header Auth | Header name `Authorization`, value `Bearer <permanent Meta access token>` from step 1. Used by `Send WhatsApp Reply` and, as of the image/voice note support above, also by `Get Media URL` and `Download Media Binary`, same token, same scopes, nothing extra to provision. |
 
 ### 3. n8n environment variable
 - `VOXITRON_WA_VERIFY_TOKEN`: any string you choose. Set it in n8n's environment, and
@@ -61,15 +128,15 @@ Once imported and credentials are set, the workflow's production webhook URL (bo
 Manager's WhatsApp app configuration as the callback URL, alongside the verify token from
 step 3.
 
-### 5. Knowledge base ingestion: not built yet
+### 5. Knowledge base ingestion: workflow written, not yet run for any customer
 This workflow's Qdrant search step assumes a `kb_<customers.id>` collection already has
-each customer's product/pricing/policy documents embedded into it. No ingestion workflow
-exists yet for Voxitron (Area50's WF5 is the closest reference pattern, but it's scoped
-to Area50's own company/document model). Until an ingestion workflow exists and has been
-run for a customer, their Qdrant search will simply return nothing and the AI Agent
-should fall back to its "I'll get someone to help" behavior rather than fabricate an
-answer, per the system prompt's rule. Building that ingestion workflow is separate,
-follow-up work.
+each customer's product/pricing/policy documents embedded into it. `n8n/voxitron-kb-ingest.json`
+(see `n8n/KB_INGEST_README.md`) is the ingestion workflow that populates it, written
+2026-08-12, mirroring Area50's WF5 pattern. It reuses this workflow's Supabase/Qdrant/
+OpenAI credentials, no new credential types to create. Until it's imported and actually
+run for a given customer, that customer's Qdrant search still returns nothing and the AI
+Agent falls back to its "I'll get someone to help" behavior rather than fabricate an
+answer, per the system prompt's rule, same as before.
 
 ## Known gap this does not fix
 

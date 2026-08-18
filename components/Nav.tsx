@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const NAV_LINKS = [
-  { href: "/speed-to-lead", label: "Speed to Lead", key: "speed-to-lead" },
-  { href: "/quoting-agent", label: "Quoting Agent", key: "quoting-agent" },
-  { href: "/whatsapp-agent", label: "WhatsApp Agent", key: "whatsapp-agent" },
+  { href: "/speed-to-lead", label: "Never Miss a Call", key: "speed-to-lead" },
+  { href: "/quoting-agent", label: "Instant Quotes", key: "quoting-agent" },
+  { href: "/whatsapp-agent", label: "WhatsApp Sales", key: "whatsapp-agent" },
 ] as const;
 
 type NavProps = {

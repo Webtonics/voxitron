@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -178,6 +179,88 @@ export default function WhatsAppAgentPage() {
           </div>
         </Reveal>
 
+        {/* COMPARISON: old way vs new way */}
+        <Reveal as="section" id="comparison" aria-labelledby="comparison-title">
+          <div className="section-inner-wide">
+            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+              <span className="section-label">BEFORE AND AFTER</span>
+              <h2 id="comparison-title" className="section-title">
+                What changes when
+                <br />
+                <span className="accent">WhatsApp runs itself.</span>
+              </h2>
+            </div>
+
+            <div className="comparison-table" role="table" aria-label="Manual replies compared to the WhatsApp Business Agent">
+              <div className="comparison-header" role="row">
+                <span className="comparison-header-cell" role="columnheader"></span>
+                <span className="comparison-header-cell is-old" role="columnheader">Manual replies</span>
+                <span className="comparison-header-cell is-new" role="columnheader">Voxitron WhatsApp Agent</span>
+              </div>
+
+              <div className="comparison-row" role="row">
+                <span className="comparison-row-title">Reply time</span>
+                <div className="comparison-cell is-old" role="cell">
+                  <span className="comparison-cell-label">Manual replies</span>
+                  <span className="comparison-cell-value">Minutes to hours, faster only while you&apos;re free</span>
+                </div>
+                <div className="comparison-cell is-new" role="cell">
+                  <span className="comparison-cell-label">Voxitron WhatsApp Agent</span>
+                  <span className="comparison-cell-value">Seconds, day or night</span>
+                </div>
+              </div>
+
+              <div className="comparison-row" role="row">
+                <span className="comparison-row-title">Overnight messages</span>
+                <div className="comparison-cell is-old" role="cell">
+                  <span className="comparison-cell-label">Manual replies</span>
+                  <span className="comparison-cell-value">Sit unread until morning</span>
+                </div>
+                <div className="comparison-cell is-new" role="cell">
+                  <span className="comparison-cell-label">Voxitron WhatsApp Agent</span>
+                  <span className="comparison-cell-value">Answered the moment they arrive</span>
+                </div>
+              </div>
+
+              <div className="comparison-row" role="row">
+                <span className="comparison-row-title">Repeat questions</span>
+                <div className="comparison-cell is-old" role="cell">
+                  <span className="comparison-cell-label">Manual replies</span>
+                  <span className="comparison-cell-value">You type the same price and stock answer, every time</span>
+                </div>
+                <div className="comparison-cell is-new" role="cell">
+                  <span className="comparison-cell-label">Voxitron WhatsApp Agent</span>
+                  <span className="comparison-cell-value">Answered automatically, you never retype it</span>
+                </div>
+              </div>
+
+              <div className="comparison-row" role="row">
+                <span className="comparison-row-title">When you&apos;re mid-job</span>
+                <div className="comparison-cell is-old" role="cell">
+                  <span className="comparison-cell-label">Manual replies</span>
+                  <span className="comparison-cell-value">Customer waits, or messages someone else</span>
+                </div>
+                <div className="comparison-cell is-new" role="cell">
+                  <span className="comparison-cell-label">Voxitron WhatsApp Agent</span>
+                  <span className="comparison-cell-value">Order taken, you see it once you&apos;re free</span>
+                </div>
+              </div>
+
+              <div className="comparison-row" role="row">
+                <span className="comparison-row-title">Complex requests</span>
+                <div className="comparison-cell is-old" role="cell">
+                  <span className="comparison-cell-label">Manual replies</span>
+                  <span className="comparison-cell-value">You handle everything yourself</span>
+                </div>
+                <div className="comparison-cell is-new" role="cell">
+                  <span className="comparison-cell-label">Voxitron WhatsApp Agent</span>
+                  <span className="comparison-cell-value">Flagged with full context, you step in only when needed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
         {/* FEATURES */}
         <Reveal as="section" id="features" aria-labelledby="features-title">
           <div className="section-inner-wide">
@@ -285,6 +368,43 @@ export default function WhatsAppAgentPage() {
                   phrasing, straight to the point. Professional, never robotic.
                 </p>
               </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* PRODUCT FRAME: dashboard/chat showcase */}
+        <Reveal as="section" id="product-frame" aria-labelledby="product-frame-title">
+          <div className="product-frame-inner">
+            <div className="product-frame-visual">
+              <ImagePlaceholder label="Product screenshot: live chat view coming soon" />
+            </div>
+
+            <div>
+              <span className="section-label">SEE IT WORKING</span>
+              <h2 id="product-frame-title" className="section-title">
+                Every conversation,
+                <br />
+                <span className="accent">in one place.</span>
+              </h2>
+              <p className="section-body">
+                Watch replies go out in real time. Nothing gets buried in your phone&apos;s
+                regular WhatsApp inbox.
+              </p>
+
+              <ul className="product-frame-list">
+                <li>
+                  <span className="product-frame-bullet" aria-hidden="true">&#9679;</span>
+                  <span><strong>Live message log</strong>, every reply the agent sends, timestamped</span>
+                </li>
+                <li>
+                  <span className="product-frame-bullet" aria-hidden="true">&#9679;</span>
+                  <span><strong>Order and stock checks</strong>, visible as they happen, not after the fact</span>
+                </li>
+                <li>
+                  <span className="product-frame-bullet" aria-hidden="true">&#9679;</span>
+                  <span><strong>Handoff flags</strong>, so you know exactly which chats need you</span>
+                </li>
+              </ul>
             </div>
           </div>
         </Reveal>

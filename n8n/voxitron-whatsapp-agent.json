@@ -10,7 +10,10 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [-1600, -320],
+      "position": [
+        -1600,
+        -320
+      ],
       "id": "verify-webhook",
       "name": "Meta Verify Webhook",
       "webhookId": "voxitron-wa-verify"
@@ -18,13 +21,21 @@
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 3 },
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
             {
               "id": "verify-token-match",
               "leftValue": "={{ $json.query['hub.verify_token'] }}",
               "rightValue": "={{ $env.VOXITRON_WA_VERIFY_TOKEN }}",
-              "operator": { "type": "string", "operation": "equals" }
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"
@@ -33,7 +44,10 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [-1392, -320],
+      "position": [
+        -1392,
+        -320
+      ],
       "id": "check-verify-token",
       "name": "Verify Token Matches?"
     },
@@ -41,11 +55,16 @@
       "parameters": {
         "respondWith": "text",
         "responseBody": "={{ $json.query['hub.challenge'] }}",
-        "options": { "responseCode": 200 }
+        "options": {
+          "responseCode": 200
+        }
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [-1184, -384],
+      "position": [
+        -1184,
+        -384
+      ],
       "id": "respond-challenge",
       "name": "Respond With Challenge"
     },
@@ -53,11 +72,16 @@
       "parameters": {
         "respondWith": "text",
         "responseBody": "Forbidden",
-        "options": { "responseCode": 403 }
+        "options": {
+          "responseCode": 403
+        }
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [-1184, -256],
+      "position": [
+        -1184,
+        -256
+      ],
       "id": "respond-forbidden",
       "name": "Respond Forbidden"
     },
@@ -70,7 +94,10 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [-1600, 0],
+      "position": [
+        -1600,
+        0
+      ],
       "id": "receive-message",
       "name": "Receive WhatsApp Message",
       "webhookId": "voxitron-wa-receive"
@@ -79,11 +106,16 @@
       "parameters": {
         "respondWith": "text",
         "responseBody": "EVENT_RECEIVED",
-        "options": { "responseCode": 200 }
+        "options": {
+          "responseCode": 200
+        }
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [-1392, 0],
+      "position": [
+        -1392,
+        0
+      ],
       "id": "ack-immediately",
       "name": "Acknowledge Immediately",
       "notes": "Meta requires a 200 within a few seconds or it retries/disables the webhook. Ack first, then keep processing in the background execution."
@@ -91,13 +123,21 @@
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 },
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
           "conditions": [
             {
               "id": "has-message",
               "leftValue": "={{ $json.body.entry[0].changes[0].value.messages }}",
               "rightValue": "",
-              "operator": { "type": "array", "operation": "notEmpty" }
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty"
+              }
             }
           ],
           "combinator": "and"
@@ -106,10 +146,26 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [-1392, 128],
+      "position": [
+        -1392,
+        128
+      ],
       "id": "has-inbound-message",
       "name": "Has Inbound Message?",
       "notes": "Meta also sends 'statuses' webhook events (delivered/read receipts) on the same path. Only proceed for actual inbound messages, ignore status callbacks."
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.entry[0].changes[0].value.messages",
+        "include": "allOtherFields",
+        "options": { "destinationFieldName": "message" }
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [-1280, 128],
+      "id": "split-messages",
+      "name": "Split Into One Message Per Item",
+      "notes": "Added 2026-08-13 after an audit found every downstream node hardcoded messages[0], silently dropping messages[1], messages[2] etc. Meta's webhook payload can legitimately batch more than one message in a single call (e.g. after a connectivity gap is resolved and queued messages are delivered together). This node turns that array into one n8n item per message (in field 'message'), with include set to allOtherFields so contacts/metadata/phone_number_id stay available on every split item (Split Out's default is to drop everything except the split field, easy to miss)."
     },
     {
       "parameters": {
@@ -125,25 +181,43 @@
               "id": "from",
               "name": "fromNumber",
               "type": "string",
-              "value": "={{ $json.body.entry[0].changes[0].value.messages[0].from }}"
+              "value": "={{ $json.message.from }}"
             },
             {
               "id": "contact-name",
               "name": "contactName",
               "type": "string",
-              "value": "={{ $json.body.entry[0].changes[0].value.contacts[0]?.profile?.name || '' }}"
+              "value": "={{ ($json.body.entry[0].changes[0].value.contacts || []).find(c => c.wa_id === $json.message.from)?.profile?.name || '' }}"
+            },
+            {
+              "id": "message-type",
+              "name": "messageType",
+              "type": "string",
+              "value": "={{ $json.message.type }}"
             },
             {
               "id": "message-text",
               "name": "messageText",
               "type": "string",
-              "value": "={{ $json.body.entry[0].changes[0].value.messages[0].text?.body || '' }}"
+              "value": "={{ $json.message.text?.body || '' }}"
+            },
+            {
+              "id": "media-id",
+              "name": "mediaId",
+              "type": "string",
+              "value": "={{ $json.message.image?.id || $json.message.audio?.id || $json.message.voice?.id || '' }}"
+            },
+            {
+              "id": "media-caption",
+              "name": "mediaCaption",
+              "type": "string",
+              "value": "={{ $json.message.image?.caption || '' }}"
             },
             {
               "id": "wa-message-id",
               "name": "waMessageId",
               "type": "string",
-              "value": "={{ $json.body.entry[0].changes[0].value.messages[0].id }}"
+              "value": "={{ $json.message.id }}"
             }
           ]
         },
@@ -151,39 +225,60 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [-1184, 128],
+      "position": [
+        -1184,
+        128
+      ],
       "id": "extract-message-fields",
-      "name": "Extract Message Fields"
+      "name": "Extract Message Fields",
+      "notes": "messageType is one of 'text', 'image', 'audio' (voice notes arrive as type 'audio' with voice=true inside the audio object, same media/id shape). mediaId is populated for image or audio messages, empty for text. Sticker, video, and document messages are not handled here yet, same 'unsupported type' fallback below covers them."
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT c.id, c.business_name\nFROM customers c\nJOIN customer_whatsapp_numbers wn ON wn.customer_id = c.id\nWHERE wn.whatsapp_number = $1\n",
+        "query": "SELECT id FROM messages WHERE wa_message_id = $1",
         "options": {
-          "queryReplacement": "={{ $json.phoneNumberId }}",
+          "queryReplacement": "={{ $('Extract Message Fields').item.json.waMessageId }}",
           "replaceEmptyStrings": true
         }
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [-976, 128],
-      "id": "load-customer",
-      "name": "Load Customer by Number",
+      "position": [
+        -976,
+        -64
+      ],
+      "id": "check-duplicate-message",
+      "name": "Check for Duplicate Delivery",
       "credentials": {
-        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
       },
-      "notes": "phone_number_id from Meta's payload must match a row in customer_whatsapp_numbers.whatsapp_number exactly. A customer can have more than one number, this join finds the owning customer regardless of which of their numbers received the message. Store the same value used when the number was provisioned in Meta."
+      "notes": "Added 2026-08-13 after an audit found Meta's Cloud API uses at-least-once webhook delivery (retries for up to 7 days on any slow/failed response), meaning the same inbound message can legitimately arrive twice. wa_message_id (requires supabase/migrations/005_message_dedup.sql) is Meta's own dedup key. If a message with this id was already logged, stop here rather than generating and sending a second AI reply.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 },
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
           "conditions": [
             {
-              "id": "customer-found",
+              "id": "already-processed",
               "leftValue": "={{ $json.id }}",
               "rightValue": "",
-              "operator": { "type": "string", "operation": "notEmpty" }
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
             }
           ],
           "combinator": "and"
@@ -192,75 +287,678 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [-768, 128],
+      "position": [
+        -976,
+        -192
+      ],
+      "id": "is-duplicate-check",
+      "name": "Already Processed?",
+      "notes": "True branch (duplicate found): dead-ends intentionally, Meta already got its 200 from Acknowledge Immediately, nothing more to do. False branch (new message): continues to the normal pipeline."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT c.id, c.business_name, wn.id AS whatsapp_number_id\nFROM customers c\nJOIN customer_whatsapp_numbers wn ON wn.customer_id = c.id\nWHERE wn.whatsapp_number = $1\n",
+        "options": {
+          "queryReplacement": "={{ $json.phoneNumberId }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -976,
+        128
+      ],
+      "id": "load-customer",
+      "name": "Load Customer by Number",
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "phone_number_id from Meta's payload must match a row in customer_whatsapp_numbers.whatsapp_number exactly. A customer can have more than one number, this join finds the owning customer regardless of which of their numbers received the message. whatsapp_number_id (added 2026-08-12, requires supabase/migrations/004_conversation_number_attribution.sql) is this specific number's own row id, used below to attribute the conversation to it, not just to the customer as a whole.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "customer-found",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -768,
+        128
+      ],
       "id": "customer-found-check",
       "name": "Customer Found?",
       "notes": "If no customer row matches this WhatsApp number, stop. Don't guess or default to some other customer's data."
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "INSERT INTO conversations (customer_id, contact_name, contact_phone)\nSELECT $1::uuid, $2, $3\nWHERE NOT EXISTS (\n  SELECT 1 FROM conversations\n  WHERE customer_id = $1::uuid AND contact_phone = $3\n)\nRETURNING id;\n\nSELECT id FROM conversations\nWHERE customer_id = $1::uuid AND contact_phone = $3\nORDER BY started_at DESC\nLIMIT 1;\n",
-        "options": {
-          "queryReplacement": "={{ $('Load Customer by Number').item.json.id }},{{ $('Extract Message Fields').item.json.contactName }},{{ $('Extract Message Fields').item.json.fromNumber }}",
-          "replaceEmptyStrings": true
-        }
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "has-media-id",
+              "leftValue": "={{ $('Extract Message Fields').item.json.mediaId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [-560, 64],
-      "id": "get-or-create-conversation",
-      "name": "Get or Create Conversation",
-      "credentials": {
-        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -560,
+        128
+      ],
+      "id": "has-media-check",
+      "name": "Is Image or Voice Note?",
+      "notes": "Text messages skip straight to the existing pipeline unchanged. Image and audio messages route through the download-and-transcribe/describe branch below before rejoining at Get or Create Conversation."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "is-plain-text",
+              "leftValue": "={{ $('Extract Message Fields').item.json.messageType }}",
+              "rightValue": "text",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
-      "notes": "One conversation row per (customer, contact_phone) pair. Reuses the existing thread instead of creating a new one per message."
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -560,
+        576
+      ],
+      "id": "is-supported-type-check",
+      "name": "Is Text?",
+      "notes": "Reached only when Is Image or Voice Note? found no mediaId, meaning the message is either plain text or an unsupported type this workflow doesn't handle at all (video, document, sticker, location, contact card, etc., added 2026-08-12). True branch is the existing text path. False branch escalates to a human instead of silently dropping the message the way it did before this check existed."
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO messages (conversation_id, direction, body)\nVALUES ($1::uuid, 'inbound', $2)\n",
+        "query": "INSERT INTO conversations (customer_id, contact_name, contact_phone, whatsapp_number_id)\nVALUES ($1::uuid, $2, $3, $4::uuid)\nON CONFLICT (customer_id, contact_phone)\nDO UPDATE SET whatsapp_number_id = $4::uuid\nRETURNING id;\n",
         "options": {
-          "queryReplacement": "={{ $('Get or Create Conversation').item.json.id }},{{ $('Extract Message Fields').item.json.messageText }}",
+          "queryReplacement": "={{ $('Load Customer by Number').item.json.id }},{{ $('Extract Message Fields').item.json.contactName }},{{ $('Extract Message Fields').item.json.fromNumber }},{{ $('Load Customer by Number').item.json.whatsapp_number_id }}",
           "replaceEmptyStrings": true
         }
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [-352, 64],
+      "position": [
+        -352,
+        704
+      ],
+      "id": "get-or-create-conversation-escalation",
+      "name": "Get or Create Conversation (Escalation)",
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "Same atomic upsert as 'Get or Create Conversation' on the normal path (see its note for why ON CONFLICT replaced the old racy pattern), duplicated as its own node rather than shared, because n8n connections are per-node: sharing one node between both branches would also merge their downstream routing (this branch must not flow into Log Inbound Message / AI Agent Reply). Both nodes independently converge on the same underlying conversations row (same customer_id + contact_phone), so no duplicate conversation is created.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE conversations\nSET needs_human = true,\n    escalation_reason = $2\nWHERE id = $1::uuid\n",
+        "options": {
+          "queryReplacement": "={{ $('Get or Create Conversation (Escalation)').item.json.id }},{{ 'unsupported_message_type:' + $('Extract Message Fields').item.json.messageType }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -144,
+        704
+      ],
+      "id": "flag-conversation-needs-human",
+      "name": "Flag Conversation: Needs Human",
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "Requires supabase/migrations/003_conversation_escalation.sql to be applied first (adds conversations.needs_human, conversations.escalation_reason). No business-owner notification is sent here, confirmed with the user 2026-08-12 as explicitly out of scope for this pass: the dashboard's future conversation list is the only place this flag surfaces today, per DASHBOARD_UI.md.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO messages (conversation_id, direction, body, wa_message_id)\nVALUES ($1::uuid, 'inbound', $2, $3)\n",
+        "options": {
+          "queryReplacement": "={{ $('Get or Create Conversation (Escalation)').item.json.id }},{{ '[' + $('Extract Message Fields').item.json.messageType + ' message, not yet supported]' }},{{ $('Extract Message Fields').item.json.waMessageId }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        64,
+        704
+      ],
+      "id": "log-unsupported-inbound",
+      "name": "Log Unsupported Inbound Message",
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "Logs a placeholder body so the conversation thread shows something arrived, instead of a gap. The real content (a video/document/etc.) is never transcribed or described, unlike the image/voice note path above, this type genuinely isn't handled yet. Stores wa_message_id for the same dedup reason as Log Inbound Message.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Extract Message Fields').item.json.phoneNumberId }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $('Extract Message Fields').item.json.fromNumber }}\",\n  \"type\": \"text\",\n  \"text\": { \"body\": \"I can't view that kind of file yet, sorry. I've let our team know, they'll follow up with you shortly.\" }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        704
+      ],
+      "id": "send-escalation-reply",
+      "name": "Send Escalation Reply",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID",
+          "name": "WhatsApp Cloud API token"
+        }
+      },
+      "notes": "Fixed, non-AI-generated reply, deliberately not routed through the AI Agent since there's nothing for it to reason about (no text, no describable media). Matches the /whatsapp-agent page's existing promise: 'It flags the chat with the full conversation. You take over, and the customer never feels ignored.'",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO messages (conversation_id, direction, body)\nVALUES ($1::uuid, 'outbound', $2)\n",
+        "options": {
+          "queryReplacement": "={{ $('Get or Create Conversation (Escalation)').item.json.id }},{{ \"I can't view that kind of file yet, sorry. I've let our team know, they'll follow up with you shortly.\" }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        480,
+        704
+      ],
+      "id": "log-escalation-reply",
+      "name": "Log Escalation Reply",
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "Same outbound-logging pattern as Log Outbound Message at the end of the normal AI reply path, kept as a separate node since this branch never reaches AI Agent Reply's output to reuse that node's query.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Extract Message Fields').item.json.mediaId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -560,
+        320
+      ],
+      "id": "get-media-url",
+      "name": "Get Media URL",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID",
+          "name": "WhatsApp Cloud API token"
+        }
+      },
+      "notes": "Returns { url, mime_type, sha256, file_size, id }. The url is Meta's lookaside CDN and expires 5 minutes after this call, download it immediately in the next node, don't store or delay on this URL.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -352,
+        320
+      ],
+      "id": "download-media",
+      "name": "Download Media Binary",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID",
+          "name": "WhatsApp Cloud API token"
+        }
+      },
+      "notes": "Same bearer token as Get Media URL, Meta's CDN checks auth on this request too, it's not a plain pre-signed URL. Output is binary data (this node's response format is 'file'), consumed by whichever of the two nodes below matches the message type.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "is-image",
+              "leftValue": "={{ $('Extract Message Fields').item.json.messageType }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        320
+      ],
+      "id": "is-image-check",
+      "name": "Image or Audio?",
+      "notes": "Splits the downloaded binary to the vision-description path (image) or the transcription path (audio/voice note)."
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "inputType": "base64",
+        "text": "=Describe what's in this photo in one or two plain sentences, focused on anything relevant to a customer inquiry: product, item, damage, quantity, or written text visible in the image. This description will stand in for the customer's message, so be concrete and specific, not vague.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        64,
+        224
+      ],
+      "id": "describe-image",
+      "name": "Describe Image (GPT-4o Vision)",
+      "credentials": {
+        "openAiApi": {
+          "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      },
+      "notes": "Turns the photo into a text description, which Set Media As Message Text below treats exactly like a typed message. If the customer also sent a caption with the image, that's appended too (see mediaCaption field), so 'here's the shoe I want, do you have size 42?' isn't lost.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "modelId": {
+          "__rl": true,
+          "value": "whisper-1",
+          "mode": "list",
+          "cachedResultName": "whisper-1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        64,
+        416
+      ],
+      "id": "transcribe-voice-note",
+      "name": "Transcribe Voice Note (Whisper)",
+      "credentials": {
+        "openAiApi": {
+          "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      },
+      "notes": "WhatsApp voice notes are Opus-encoded .ogg files, Whisper accepts this format directly, no transcoding step needed.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-message-text-from-media",
+              "name": "messageText",
+              "type": "string",
+              "value": "={{ $('Extract Message Fields').item.json.messageType === 'image' ? ($json.content || $json.text || '') + ($('Extract Message Fields').item.json.mediaCaption ? ' Caption from customer: ' + $('Extract Message Fields').item.json.mediaCaption : '') : ($json.text || $json.content || '') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        320
+      ],
+      "id": "resolve-message-text-media",
+      "name": "Resolve Message Text (Media)",
+      "notes": "Overwrites messageText with the image description or voice transcript. Feeds into Merge Message Text below, which is the single node downstream code actually references by name, since only one of this node or 'Resolve Message Text (Text)' runs on a given execution."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pass-through-text",
+              "name": "messageText",
+              "type": "string",
+              "value": "={{ $('Extract Message Fields').item.json.messageText }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        448
+      ],
+      "id": "resolve-message-text-text",
+      "name": "Resolve Message Text (Text)",
+      "notes": "Plain-text messages skip the media pipeline but still pass through a same-shaped node, so both branches can feed the same Merge node below."
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        480,
+        320
+      ],
+      "id": "merge-message-text",
+      "name": "Merge Message Text",
+      "notes": "Only one of the two inputs ever has data on a given execution (text messages take input 2, image/audio take input 1, IF nodes send the other branch an empty item set), so 'chooseBranch' safely passes through whichever one actually ran. This single node is what every downstream node (Get or Create Conversation, Log Inbound Message, AI Agent Reply) references by name for messageText, avoiding n8n's 'Referenced node is unexecuted' error that would happen referencing either resolve node directly, since only one of them runs per execution."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO conversations (customer_id, contact_name, contact_phone, whatsapp_number_id)\nVALUES ($1::uuid, $2, $3, $4::uuid)\nON CONFLICT (customer_id, contact_phone)\nDO UPDATE SET whatsapp_number_id = $4::uuid\nRETURNING id;\n",
+        "options": {
+          "queryReplacement": "={{ $('Load Customer by Number').item.json.id }},{{ $('Extract Message Fields').item.json.contactName }},{{ $('Extract Message Fields').item.json.fromNumber }},{{ $('Load Customer by Number').item.json.whatsapp_number_id }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -560,
+        64
+      ],
+      "id": "get-or-create-conversation",
+      "name": "Get or Create Conversation",
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "Atomic upsert on the (customer_id, contact_phone) unique constraint from supabase/migrations/006_conversation_uniqueness.sql, added 2026-08-13 after an audit found the prior INSERT-WHERE-NOT-EXISTS pattern had a race: two messages from the same contact arriving close together could both pass the existence check before either INSERT committed, creating duplicate conversation rows. ON CONFLICT makes Postgres itself serialize this, no race possible regardless of timing. whatsapp_number_id is refreshed on every message via DO UPDATE, so it always reflects whichever of the customer's numbers most recently received a message from this contact.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO messages (conversation_id, direction, body, wa_message_id)\nVALUES ($1::uuid, 'inbound', $2, $3)\n",
+        "options": {
+          "queryReplacement": "={{ $('Get or Create Conversation').item.json.id }},{{ $('Merge Message Text').item.json.messageText }},{{ $('Extract Message Fields').item.json.waMessageId }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -352,
+        64
+      ],
       "id": "log-inbound-message",
       "name": "Log Inbound Message",
       "credentials": {
-        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
-      }
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "notes": "Reads messageText from Merge Message Text, the single node both the text and media branches converge through, so this logs the typed text for text messages and the image description / voice transcript for media messages, whichever branch produced this item. Stores wa_message_id (requires supabase/migrations/005_message_dedup.sql) so Check for Duplicate Delivery can catch a retried webhook for this same message.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Extract Message Fields').item.json.messageText }}",
+        "text": "={{ $('Merge Message Text').item.json.messageText }}",
         "options": {
           "systemMessage": "=You are the WhatsApp assistant for {{ $('Load Customer by Number').item.json.business_name }}, a Voxitron customer.\n\nAlways search the knowledge base before answering. Only answer from verified knowledge base content, never guess prices, stock, or policies. If the answer isn't in the knowledge base, say you'll have someone from the team follow up.\n\nWrite like a real person texting on WhatsApp: short sentences, no markdown formatting, no bullet points, no em dashes. Two to three sentences per reply unless the question genuinely needs more."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
-      "position": [-144, 64],
+      "position": [
+        -144,
+        64
+      ],
       "id": "ai-agent-reply",
-      "name": "AI Agent Reply"
+      "name": "AI Agent Reply",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput",
+      "notes": "Added 2026-08-13: onError continueErrorOutput plus retryOnFail means a transient failure (OpenAI rate limit, Qdrant briefly down, etc.) retries 3 times, and if it still fails, routes to the AI Failure Fallback branch below instead of silently dying mid-execution and leaving the customer with no reply and no record of why."
     },
     {
       "parameters": {
-        "model": { "__rl": true, "value": "gpt-4o", "mode": "list", "cachedResultName": "gpt-4o" },
+        "operation": "executeQuery",
+        "query": "UPDATE conversations\nSET needs_human = true,\n    escalation_reason = 'ai_reply_failed'\nWHERE id = $1::uuid\n",
+        "options": {
+          "queryReplacement": "={{ $('Get or Create Conversation').item.json.id }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [-144, 480],
+      "id": "flag-ai-failure",
+      "name": "Flag Conversation: AI Failed",
+      "credentials": {
+        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "notes": "Added 2026-08-13. Reached only when AI Agent Reply exhausts its 3 retries and still fails (OpenAI outage, Qdrant down, etc.). Flags the conversation the same way an unsupported message type does, so it surfaces on the dashboard's future 'needs attention' list."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Extract Message Fields').item.json.phoneNumberId }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $('Extract Message Fields').item.json.fromNumber }}\",\n  \"type\": \"text\",\n  \"text\": { \"body\": \"Sorry, I'm having trouble right now. I've let our team know, they'll follow up with you shortly.\" }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [64, 480],
+      "id": "send-ai-failure-reply",
+      "name": "Send AI Failure Reply",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID", "name": "WhatsApp Cloud API token" }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "notes": "Added 2026-08-13. Fixed, non-AI-generated apology, since the AI Agent is exactly what just failed. Ensures the customer gets some response rather than silence when the underlying AI call couldn't complete."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO messages (conversation_id, direction, body)\nVALUES ($1::uuid, 'outbound', $2)\n",
+        "options": {
+          "queryReplacement": "={{ $('Get or Create Conversation').item.json.id }},{{ \"Sorry, I'm having trouble right now. I've let our team know, they'll follow up with you shortly.\" }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [272, 480],
+      "id": "log-ai-failure-reply",
+      "name": "Log AI Failure Reply",
+      "credentials": {
+        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "notes": "Added 2026-08-13. Same outbound-logging pattern as Log Outbound Message, kept separate since this branch never reaches AI Agent Reply's successful output."
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
         "builtInTools": {},
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
-      "position": [-256, 240],
+      "position": [
+        -256,
+        240
+      ],
       "id": "openai-chat-model",
       "name": "OpenAI Chat Model",
       "credentials": {
-        "openAiApi": { "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID", "name": "OpenAi account" }
+        "openAiApi": {
+          "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
       }
     },
     {
@@ -277,11 +975,17 @@
       },
       "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
       "typeVersion": 1.3,
-      "position": [-32, 240],
+      "position": [
+        -32,
+        240
+      ],
       "id": "qdrant-kb-search",
       "name": "Qdrant Vector Store",
       "credentials": {
-        "qdrantApi": { "id": "REPLACE_WITH_QDRANT_CREDENTIAL_ID", "name": "QdrantApi account" }
+        "qdrantApi": {
+          "id": "REPLACE_WITH_QDRANT_CREDENTIAL_ID",
+          "name": "QdrantApi account"
+        }
       },
       "notes": "Collection is namespaced per Voxitron customer (kb_<customers.id>), same pattern as Area50's WF1/WF5/WF6. A separate ingest workflow (mirroring Area50's WF5) is needed later to actually populate each customer's collection with their product/pricing docs. Not built yet, out of scope for this logging-focused pass."
     },
@@ -292,11 +996,17 @@
       },
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
-      "position": [-160, 384],
+      "position": [
+        -160,
+        384
+      ],
       "id": "embeddings-openai",
       "name": "Embeddings OpenAI",
       "credentials": {
-        "openAiApi": { "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID", "name": "OpenAi account" }
+        "openAiApi": {
+          "id": "REPLACE_WITH_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
       }
     },
     {
@@ -312,13 +1022,22 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [128, 64],
+      "position": [
+        128,
+        64
+      ],
       "id": "send-whatsapp-reply",
       "name": "Send WhatsApp Reply",
       "credentials": {
-        "httpHeaderAuth": { "id": "REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID", "name": "WhatsApp Cloud API token" }
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_META_ACCESS_TOKEN_CREDENTIAL_ID",
+          "name": "WhatsApp Cloud API token"
+        }
       },
-      "notes": "Header credential should send 'Authorization: Bearer <permanent Meta access token>'. Token is per Meta app, not per customer, since all customer numbers are typically under one Meta Business Account / WABA."
+      "notes": "Header credential should send 'Authorization: Bearer <permanent Meta access token>'. Token is per Meta app, not per customer, since all customer numbers are typically under one Meta Business Account / WABA.",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
     },
     {
       "parameters": {
@@ -331,45 +1050,441 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [320, 64],
+      "position": [
+        320,
+        64
+      ],
       "id": "log-outbound-message",
       "name": "Log Outbound Message",
       "credentials": {
-        "postgres": { "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID", "name": "Postgres - Supabase Voxitron (service role)" }
-      }
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_SERVICE_ROLE_CREDENTIAL_ID",
+          "name": "Postgres - Supabase Voxitron (service role)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
     }
   ],
   "connections": {
-    "Meta Verify Webhook": { "main": [[{ "node": "Verify Token Matches?", "type": "main", "index": 0 }]] },
+    "Meta Verify Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify Token Matches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Verify Token Matches?": {
       "main": [
-        [{ "node": "Respond With Challenge", "type": "main", "index": 0 }],
-        [{ "node": "Respond Forbidden", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Respond With Challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Forbidden",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Receive WhatsApp Message": {
       "main": [
         [
-          { "node": "Acknowledge Immediately", "type": "main", "index": 0 },
-          { "node": "Has Inbound Message?", "type": "main", "index": 0 }
+          {
+            "node": "Acknowledge Immediately",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Has Inbound Message?",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
-    "Has Inbound Message?": { "main": [[{ "node": "Extract Message Fields", "type": "main", "index": 0 }], []] },
-    "Extract Message Fields": { "main": [[{ "node": "Load Customer by Number", "type": "main", "index": 0 }]] },
-    "Load Customer by Number": { "main": [[{ "node": "Customer Found?", "type": "main", "index": 0 }]] },
-    "Customer Found?": { "main": [[{ "node": "Get or Create Conversation", "type": "main", "index": 0 }], []] },
-    "Get or Create Conversation": { "main": [[{ "node": "Log Inbound Message", "type": "main", "index": 0 }]] },
-    "Log Inbound Message": { "main": [[{ "node": "AI Agent Reply", "type": "main", "index": 0 }]] },
-    "OpenAI Chat Model": { "ai_languageModel": [[{ "node": "AI Agent Reply", "type": "ai_languageModel", "index": 0 }]] },
-    "Qdrant Vector Store": { "ai_tool": [[{ "node": "AI Agent Reply", "type": "ai_tool", "index": 0 }]] },
-    "Embeddings OpenAI": { "ai_embedding": [[{ "node": "Qdrant Vector Store", "type": "ai_embedding", "index": 0 }]] },
-    "AI Agent Reply": { "main": [[{ "node": "Send WhatsApp Reply", "type": "main", "index": 0 }]] },
-    "Send WhatsApp Reply": { "main": [[{ "node": "Log Outbound Message", "type": "main", "index": 0 }]] }
+    "Has Inbound Message?": {
+      "main": [
+        [
+          {
+            "node": "Split Into One Message Per Item",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Split Into One Message Per Item": {
+      "main": [
+        [
+          {
+            "node": "Extract Message Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Message Fields": {
+      "main": [
+        [
+          {
+            "node": "Check for Duplicate Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Duplicate Delivery": {
+      "main": [
+        [
+          {
+            "node": "Already Processed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already Processed?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Load Customer by Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Customer by Number": {
+      "main": [
+        [
+          {
+            "node": "Customer Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Found?": {
+      "main": [
+        [
+          {
+            "node": "Is Image or Voice Note?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Is Image or Voice Note?": {
+      "main": [
+        [
+          {
+            "node": "Get Media URL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Text?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Text?": {
+      "main": [
+        [
+          {
+            "node": "Resolve Message Text (Text)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get or Create Conversation (Escalation)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Media URL": {
+      "main": [
+        [
+          {
+            "node": "Download Media Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Media Binary": {
+      "main": [
+        [
+          {
+            "node": "Image or Audio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image or Audio?": {
+      "main": [
+        [
+          {
+            "node": "Describe Image (GPT-4o Vision)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transcribe Voice Note (Whisper)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Describe Image (GPT-4o Vision)": {
+      "main": [
+        [
+          {
+            "node": "Resolve Message Text (Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Voice Note (Whisper)": {
+      "main": [
+        [
+          {
+            "node": "Resolve Message Text (Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Message Text (Media)": {
+      "main": [
+        [
+          {
+            "node": "Merge Message Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Message Text (Text)": {
+      "main": [
+        [
+          {
+            "node": "Merge Message Text",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Message Text": {
+      "main": [
+        [
+          {
+            "node": "Get or Create Conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get or Create Conversation (Escalation)": {
+      "main": [
+        [
+          {
+            "node": "Flag Conversation: Needs Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag Conversation: Needs Human": {
+      "main": [
+        [
+          {
+            "node": "Log Unsupported Inbound Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Unsupported Inbound Message": {
+      "main": [
+        [
+          {
+            "node": "Send Escalation Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Escalation Reply": {
+      "main": [
+        [
+          {
+            "node": "Log Escalation Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get or Create Conversation": {
+      "main": [
+        [
+          {
+            "node": "Log Inbound Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Inbound Message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Reply",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Reply",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Reply": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag Conversation: AI Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag Conversation: AI Failed": {
+      "main": [
+        [
+          {
+            "node": "Send AI Failure Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send AI Failure Reply": {
+      "main": [
+        [
+          {
+            "node": "Log AI Failure Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Reply": {
+      "main": [
+        [
+          {
+            "node": "Log Outbound Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
   "pinData": {},
   "active": false,
-  "settings": { "executionOrder": "v1" },
-  "meta": { "templateCredsSetupCompleted": false },
-  "tags": ["voxitron", "whatsapp"]
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    "voxitron",
+    "whatsapp"
+  ]
 }
