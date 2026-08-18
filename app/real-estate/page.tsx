@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -31,8 +32,23 @@ export default function RealEstatePage() {
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
+          <div className="hero-photo" aria-hidden="true">
+            <Image
+              src="https://images.unsplash.com/photo-1628133287836-40bd5453bed1?fm=jpg&q=80&w=1920&auto=format&fit=crop"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+            />
+          </div>
+
           <div className="hero-inner">
             <div className="hero-content">
+              <span className="hero-trust-pill">
+                <span className="dot" aria-hidden="true"></span>
+                Live &amp; replying for agents right now
+              </span>
+
               <span className="hero-kicker">AI AGENTS FOR REAL ESTATE</span>
 
               <h1 id="hero-title" className="hero-title">
