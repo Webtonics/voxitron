@@ -169,20 +169,25 @@ export default function DiagnosticCentrePage() {
 
         {/* THE PAIN */}
         <Reveal as="section" id="pain" aria-labelledby="pain-title">
-          <div className="section-inner">
-            <span className="section-label">THE PROBLEM</span>
-            <h2 id="pain-title" className="section-title">
-              A patient asked about a test.
-              <br />
-              <span className="accent">Your front desk was closed.</span>
-            </h2>
-            <div className="section-body">
-              <p>
-                A patient messages asking how much a scan costs and whether they need to
-                fast beforehand. It&apos;s past closing time, or your one receptionist is
-                on a call.
-              </p>
-              <p>They don&apos;t wait. They book at the lab down the road instead.</p>
+          <div className="pain-split">
+            <div className="pain-split-text">
+              <span className="section-label">THE PROBLEM</span>
+              <h2 id="pain-title" className="section-title">
+                A patient asked about a test.
+                <br />
+                <span className="accent">Your front desk was closed.</span>
+              </h2>
+              <div className="section-body">
+                <p>
+                  A patient messages asking how much a scan costs and whether they need to
+                  fast beforehand. It&apos;s past closing time, or your one receptionist is
+                  on a call.
+                </p>
+                <p>They don&apos;t wait. They book at the lab down the road instead.</p>
+              </div>
+            </div>
+            <div className="pain-photo">
+              <ImagePlaceholder label="A patient's booking question left unanswered after hours" />
             </div>
           </div>
         </Reveal>

@@ -167,19 +167,24 @@ export default function SpeedToLeadPage() {
 
         {/* THE PAIN */}
         <Reveal as="section" id="pain" aria-labelledby="pain-title">
-          <div className="section-inner">
-            <span className="section-label">THE PROBLEM</span>
-            <h2 id="pain-title" className="section-title">
-              You missed the call.
-              <br />
-              <span className="accent">You probably missed the job.</span>
-            </h2>
-            <div className="section-body">
-              <p>
-                The phone rang out while you were up a ladder or under a car. They scrolled
-                to the next name and called instead.
-              </p>
-              <p>Voxitron replies before they&apos;ve even finished scrolling.</p>
+          <div className="pain-split">
+            <div className="pain-split-text">
+              <span className="section-label">THE PROBLEM</span>
+              <h2 id="pain-title" className="section-title">
+                You missed the call.
+                <br />
+                <span className="accent">You probably missed the job.</span>
+              </h2>
+              <div className="section-body">
+                <p>
+                  The phone rang out while you were up a ladder or under a car. They scrolled
+                  to the next name and called instead.
+                </p>
+                <p>Voxitron replies before they&apos;ve even finished scrolling.</p>
+              </div>
+            </div>
+            <div className="pain-photo">
+              <ImagePlaceholder label="A phone ringing unanswered while a tradesperson is mid-job" />
             </div>
           </div>
         </Reveal>

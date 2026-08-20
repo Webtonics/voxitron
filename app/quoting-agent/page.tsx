@@ -169,19 +169,24 @@ export default function QuotingAgentPage() {
 
         {/* THE PAIN */}
         <Reveal as="section" id="pain" aria-labelledby="pain-title">
-          <div className="section-inner">
-            <span className="section-label">THE PROBLEM</span>
-            <h2 id="pain-title" className="section-title">
-              Every delayed quote is money
-              <br />
-              <span className="accent">someone else is making.</span>
-            </h2>
-            <div className="section-body">
-              <p>
-                You said you&apos;d send the quote tonight. Tonight became tomorrow, and by
-                then they&apos;d already accepted someone else&apos;s.
-              </p>
-              <p>Voxitron sends it the moment they ask, so tonight never happens.</p>
+          <div className="pain-split">
+            <div className="pain-split-text">
+              <span className="section-label">THE PROBLEM</span>
+              <h2 id="pain-title" className="section-title">
+                Every delayed quote is money
+                <br />
+                <span className="accent">someone else is making.</span>
+              </h2>
+              <div className="section-body">
+                <p>
+                  You said you&apos;d send the quote tonight. Tonight became tomorrow, and by
+                  then they&apos;d already accepted someone else&apos;s.
+                </p>
+                <p>Voxitron sends it the moment they ask, so tonight never happens.</p>
+              </div>
+            </div>
+            <div className="pain-photo">
+              <ImagePlaceholder label="A quote request sitting unanswered at the end of a busy day" />
             </div>
           </div>
         </Reveal>

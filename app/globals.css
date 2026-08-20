@@ -1235,6 +1235,52 @@ a {
 .section-body p + p { margin-top: var(--space-4); }
 
 /* =============================================
+   PAIN SECTION: text + supporting photo split
+   ============================================= */
+.pain-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  align-items: center;
+  max-width: var(--container-full);
+  margin: 0 auto;
+}
+
+@media (min-width: 860px) {
+  .pain-split {
+    grid-template-columns: 1fr 0.9fr;
+    gap: var(--space-8);
+  }
+}
+
+.pain-split-text {
+  max-width: var(--container);
+}
+
+.pain-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.pain-photo .img-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+}
+
+@media (min-width: 860px) {
+  .pain-photo { order: 2; }
+  .pain-split-text { order: 1; }
+}
+
+/* =============================================
    THE PAIN
    ============================================= */
 #pain {

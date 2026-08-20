@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20know%20more%20about%20the%20team";
@@ -44,25 +45,30 @@ export default function AboutPage() {
 
         {/* NARRATIVE */}
         <Reveal as="section" id="story" aria-labelledby="story-title">
-          <div className="section-inner">
-            <span className="section-label">WHY OWNED INFRASTRUCTURE BEATS RENTED SAAS</span>
-            <h2 id="story-title" className="section-title">
-              Founded by
-              <br />
-              <span className="accent">Emmanuel Ezema.</span>
-            </h2>
-            <div className="section-body">
-              <p>
-                Emmanuel Ezema started Voxitron after watching Lagos businesses lose
-                customers to a problem that had nothing to do with their product: a reply
-                that came too late.
-              </p>
-              <p>
-                Most fixes on offer were rented chatbot seats on foreign platforms, with no
-                real ownership and no fluency in how Nigerians actually message. Voxitron
-                was built as the alternative: self-hosted, bespoke, and accountable to the
-                business that owns it.
-              </p>
+          <div className="pain-split">
+            <div className="pain-split-text">
+              <span className="section-label">WHY OWNED INFRASTRUCTURE BEATS RENTED SAAS</span>
+              <h2 id="story-title" className="section-title">
+                Founded by
+                <br />
+                <span className="accent">Emmanuel Ezema.</span>
+              </h2>
+              <div className="section-body">
+                <p>
+                  Emmanuel Ezema started Voxitron after watching Lagos businesses lose
+                  customers to a problem that had nothing to do with their product: a reply
+                  that came too late.
+                </p>
+                <p>
+                  Most fixes on offer were rented chatbot seats on foreign platforms, with no
+                  real ownership and no fluency in how Nigerians actually message. Voxitron
+                  was built as the alternative: self-hosted, bespoke, and accountable to the
+                  business that owns it.
+                </p>
+              </div>
+            </div>
+            <div className="pain-photo">
+              <ImagePlaceholder label="Founder photo: Emmanuel Ezema" />
             </div>
           </div>
         </Reveal>

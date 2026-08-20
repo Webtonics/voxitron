@@ -179,19 +179,24 @@ export default function WhatsAppAgentPage() {
 
         {/* THE PAIN */}
         <Reveal as="section" id="pain" aria-labelledby="pain-title">
-          <div className="section-inner">
-            <span className="section-label">THE PROBLEM</span>
-            <h2 id="pain-title" className="section-title">
-              You were busy.
-              <br />
-              <span className="accent">They messaged someone else.</span>
-            </h2>
-            <div className="section-body">
-              <p>
-                A customer messages asking if the blue fabric&apos;s still available.
-                You&apos;re serving someone else, or it&apos;s 1am and you&apos;re asleep.
-              </p>
-              <p>They don&apos;t wait. They message the next seller and buy from them instead.</p>
+          <div className="pain-split">
+            <div className="pain-split-text">
+              <span className="section-label">THE PROBLEM</span>
+              <h2 id="pain-title" className="section-title">
+                You were busy.
+                <br />
+                <span className="accent">They messaged someone else.</span>
+              </h2>
+              <div className="section-body">
+                <p>
+                  A customer messages asking if the blue fabric&apos;s still available.
+                  You&apos;re serving someone else, or it&apos;s 1am and you&apos;re asleep.
+                </p>
+                <p>They don&apos;t wait. They message the next seller and buy from them instead.</p>
+              </div>
+            </div>
+            <div className="pain-photo">
+              <ImagePlaceholder label="A WhatsApp message left unread while the seller is busy with another customer" />
             </div>
           </div>
         </Reveal>

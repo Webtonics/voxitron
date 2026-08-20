@@ -169,19 +169,24 @@ export default function RealEstatePage() {
 
         {/* THE PAIN */}
         <Reveal as="section" id="pain" aria-labelledby="pain-title">
-          <div className="section-inner">
-            <span className="section-label">THE PROBLEM</span>
-            <h2 id="pain-title" className="section-title">
-              You were mid-viewing.
-              <br />
-              <span className="accent">They called the next listing.</span>
-            </h2>
-            <div className="section-body">
-              <p>
-                A buyer messages about a listing while you&apos;re showing another property.
-                By the time you&apos;re free, they&apos;ve booked with someone else.
-              </p>
-              <p>Voxitron replies before they even put the phone down.</p>
+          <div className="pain-split">
+            <div className="pain-split-text">
+              <span className="section-label">THE PROBLEM</span>
+              <h2 id="pain-title" className="section-title">
+                You were mid-viewing.
+                <br />
+                <span className="accent">They called the next listing.</span>
+              </h2>
+              <div className="section-body">
+                <p>
+                  A buyer messages about a listing while you&apos;re showing another property.
+                  By the time you&apos;re free, they&apos;ve booked with someone else.
+                </p>
+                <p>Voxitron replies before they even put the phone down.</p>
+              </div>
+            </div>
+            <div className="pain-photo">
+              <ImagePlaceholder label="A buyer enquiry arriving on WhatsApp while the agent is mid-viewing" />
             </div>
           </div>
         </Reveal>
