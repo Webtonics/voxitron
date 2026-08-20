@@ -94,13 +94,22 @@ export default function Nav({
 }: NavProps) {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
+  const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
 
   const isSolutionsActive = SOLUTIONS.some((item) => item.key === activePage);
   const isIndustriesActive = INDUSTRIES.some((item) => item.key === activePage);
 
+  const closeMobile = () => {
+    setMobileOpen(false);
+    setMobileSolutionsOpen(false);
+    setMobileIndustriesOpen(false);
+  };
+
   return (
     <nav className="site-nav" aria-label="Site navigation">
-      <Link href="/" className="nav-brand" aria-label="Voxitron home">
+      <Link href="/" className="nav-brand" aria-label="Voxitron home" onClick={closeMobile}>
         VOXITRON
       </Link>
       <div className="nav-links">
@@ -204,7 +213,103 @@ export default function Nav({
             {ctaLabel}
           </Link>
         )}
+        <button
+          type="button"
+          className="nav-mobile-toggle"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((v) => !v)}
+        >
+          {mobileOpen ? (
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M3 5H15M3 9H15M3 13H15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
       </div>
+
+      {mobileOpen && (
+        <div className="nav-mobile-panel" role="menu">
+          <button
+            type="button"
+            className="nav-mobile-group-trigger"
+            aria-expanded={mobileSolutionsOpen}
+            onClick={() => setMobileSolutionsOpen((v) => !v)}
+          >
+            <span className={isSolutionsActive ? "is-active" : undefined}>Solutions</span>
+            <svg
+              className={`nav-dropdown-chevron${mobileSolutionsOpen ? " is-open" : ""}`}
+              width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+            >
+              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          {mobileSolutionsOpen && (
+            <div className="nav-mobile-sublist">
+              {SOLUTIONS.map((item) => (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  className={`nav-mobile-sublink${activePage === item.key ? " is-active" : ""}`}
+                  role="menuitem"
+                  onClick={closeMobile}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="nav-mobile-group-trigger"
+            aria-expanded={mobileIndustriesOpen}
+            onClick={() => setMobileIndustriesOpen((v) => !v)}
+          >
+            <span className={isIndustriesActive ? "is-active" : undefined}>Industries</span>
+            <svg
+              className={`nav-dropdown-chevron${mobileIndustriesOpen ? " is-open" : ""}`}
+              width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+            >
+              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          {mobileIndustriesOpen && (
+            <div className="nav-mobile-sublist">
+              {INDUSTRIES.map((item) => (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  className={`nav-mobile-sublink${activePage === item.key ? " is-active" : ""}`}
+                  role="menuitem"
+                  onClick={closeMobile}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <Link href="/pricing" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Pricing</Link>
+          <Link href="/blog" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Blog</Link>
+
+          {showWhatsAppCta && (
+            <a
+              href={WA_NAV_HREF}
+              className="nav-mobile-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMobile}
+            >
+              WhatsApp Us
+            </a>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
