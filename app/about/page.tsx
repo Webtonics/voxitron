@@ -30,12 +30,12 @@ export default function AboutPage() {
         >
           <div className="section-inner">
             <span className="hero-kicker">LAGOS-BASED</span>
-            <h1 id="hero-title" className="section-title">
-              Not an offshore
+            <h1 id="hero-title" className="hero-title">
+              Not an agency
               <br />
-              <span className="accent">agency with a Lagos page.</span>
+              <span className="accent">with a Lagos page.</span>
             </h1>
-            <p className="section-body">
+            <p className="hero-sub">
               Voxitron is built and run in Lagos, by a founder who saw slow WhatsApp
               replies costing businesses real money every day.
             </p>

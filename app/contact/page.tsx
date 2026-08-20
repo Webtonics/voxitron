@@ -30,12 +30,12 @@ export default function ContactPage() {
         >
           <div className="section-inner">
             <span className="hero-kicker">LET&apos;S TALK</span>
-            <h1 id="hero-title" className="section-title">
+            <h1 id="hero-title" className="hero-title">
               Book a
               <br />
               <span className="accent">discovery call.</span>
             </h1>
-            <p className="section-body">
+            <p className="hero-sub">
               Tell us about your business. We reply on WhatsApp first, usually within a
               few hours.
             </p>

@@ -32,12 +32,12 @@ export default function MissedLeadCalculatorPage() {
         >
           <div className="section-inner">
             <span className="hero-kicker">FREE TOOL, NO SIGNUP REQUIRED</span>
-            <h1 id="hero-title" className="section-title">
-              How much are slow
+            <h1 id="hero-title" className="hero-title">
+              What are slow
               <br />
-              <span className="accent">WhatsApp replies costing you?</span>
+              <span className="accent">replies costing you?</span>
             </h1>
-            <p className="section-body">
+            <p className="hero-sub">
               Fill in four numbers about your business. See an honest estimate, with the
               math shown, not hidden.
             </p>

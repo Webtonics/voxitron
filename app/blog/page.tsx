@@ -58,7 +58,7 @@ export default function BlogIndexPage() {
       <main>
         <div className="blog-hero">
           <span className="section-label">RESEARCH &amp; DATA</span>
-          <h1 className="section-title">The Voxitron Blog</h1>
+          <h1 className="hero-title">The Voxitron Blog</h1>
           <p className="section-body" style={{ maxWidth: "560px", margin: "0 auto" }}>
             Real numbers on WhatsApp automation, Lagos real estate, diagnostic centres, and Nigeria&apos;s
             data protection law, for businesses deciding whether to automate customer response.

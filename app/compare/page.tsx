@@ -31,12 +31,12 @@ export default function ComparePage() {
         >
           <div className="section-inner">
             <span className="hero-kicker">HONEST COMPARISONS</span>
-            <h1 id="hero-title" className="section-title">
-              Choose the right way
+            <h1 id="hero-title" className="hero-title">
+              Compared
               <br />
-              <span className="accent">to stop missing leads.</span>
+              <span className="accent">honestly.</span>
             </h1>
-            <p className="section-body">
+            <p className="hero-sub">
               Four common alternatives, compared honestly. No strawmen, just what each one
               is actually good at and where it falls short.
             </p>

@@ -31,12 +31,12 @@ export default function PricingPage() {
         >
           <div className="section-inner">
             <span className="hero-kicker">NO HIDDEN PLANS OR LOCKED FEATURES</span>
-            <h1 id="hero-title" className="section-title">
-              Transparent pricing
+            <h1 id="hero-title" className="hero-title">
+              Simple pricing.
               <br />
-              <span className="accent">for an asset you own.</span>
+              <span className="accent">You own the result.</span>
             </h1>
-            <p className="section-body">
+            <p className="hero-sub">
               A one-time setup fee, then a simple monthly retainer. No platform markup, no
               per-seat pricing, no surprise line items.
             </p>
