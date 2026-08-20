@@ -23,10 +23,10 @@ export default function Footer() {
         <div className="footer-col">
           <span className="footer-col-title">Solutions</span>
           <ul className="footer-link-list">
+            <li><Link href="/whatsapp-agent">WhatsApp Sales</Link></li>
             <li><Link href="/speed-to-lead">Never Miss a Call</Link></li>
             <li><Link href="/quoting-agent">Instant Quotes</Link></li>
-            <li><Link href="/whatsapp-agent">WhatsApp Sales</Link></li>
-            <li><Link href="/#services">Compare all solutions</Link></li>
+            <li><Link href="/pricing">Pricing</Link></li>
           </ul>
         </div>
 
@@ -39,18 +39,19 @@ export default function Footer() {
         </div>
 
         <div className="footer-col">
-          <span className="footer-col-title">Learn</span>
+          <span className="footer-col-title">Tools &amp; More</span>
           <ul className="footer-link-list">
-            <li><Link href="/#how-it-works">How it works</Link></li>
-            <li><Link href="/#testimonials">Customer results</Link></li>
-            <li><Link href="/#faq">FAQ</Link></li>
-            <li><Link href="/get-started">Get started</Link></li>
+            <li><Link href="/compare">Compare</Link></li>
+            <li><Link href="/tools/missed-lead-calculator">Lead Calculator</Link></li>
+            <li><Link href="/blog">Blog</Link></li>
+            <li><Link href="/about">About</Link></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <span className="footer-col-title">Contact</span>
+          <span className="footer-col-title">Get in Touch</span>
           <ul className="footer-link-list">
+            <li><Link href="/contact">Contact us</Link></li>
             <li><a href="mailto:hello@voxitron.com">hello@voxitron.com</a></li>
             <li>
               <a href={WA_CONTACT_HREF} target="_blank" rel="noopener noreferrer">

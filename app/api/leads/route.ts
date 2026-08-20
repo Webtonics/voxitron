@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
-const VALID_AGENTS = ["speed-to-lead", "quoting-agent", "both"] as const;
+const VALID_AGENTS = [
+  "speed-to-lead",
+  "quoting-agent",
+  "both",
+  "whatsapp-agent",
+  "real-estate",
+  "diagnostic-centre",
+  "general",
+] as const;
 type Agent = (typeof VALID_AGENTS)[number];
 
 function isValidAgent(value: unknown): value is Agent {
@@ -20,7 +28,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, businessName, email, phone, interestedAgent } = body as Record<string, unknown>;
+  const { name, businessName, email, phone, interestedAgent, businessType, monthlyWhatsappLeads, notes } =
+    body as Record<string, unknown>;
 
   if (typeof name !== "string" || name.trim().length === 0) {
     return NextResponse.json({ error: "Name is required." }, { status: 400 });
@@ -37,6 +46,15 @@ export async function POST(request: Request) {
   if (!isValidAgent(interestedAgent)) {
     return NextResponse.json({ error: "Please select which agent you're interested in." }, { status: 400 });
   }
+  for (const [field, value] of [
+    ["businessType", businessType],
+    ["monthlyWhatsappLeads", monthlyWhatsappLeads],
+    ["notes", notes],
+  ] as const) {
+    if (value !== undefined && value !== null && value !== "" && typeof value !== "string") {
+      return NextResponse.json({ error: `Invalid ${field}.` }, { status: 400 });
+    }
+  }
 
   const supabase = createServerClient();
 
@@ -46,6 +64,12 @@ export async function POST(request: Request) {
     email: email.trim(),
     phone: typeof phone === "string" && phone.trim().length > 0 ? phone.trim() : null,
     interested_agent: interestedAgent,
+    business_type: typeof businessType === "string" && businessType.trim().length > 0 ? businessType.trim() : null,
+    monthly_whatsapp_leads:
+      typeof monthlyWhatsappLeads === "string" && monthlyWhatsappLeads.trim().length > 0
+        ? monthlyWhatsappLeads.trim()
+        : null,
+    notes: typeof notes === "string" && notes.trim().length > 0 ? notes.trim() : null,
   });
 
   if (error) {

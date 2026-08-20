@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function RealEstatePage() {
   return (
     <>
-      <Nav ctaHref="/get-started?agent=both" ctaLabel="Get Started" />
+      <Nav activePage="real-estate" ctaHref="/get-started?agent=both" ctaLabel="Get Started" />
 
       <main>
         {/* HERO */}

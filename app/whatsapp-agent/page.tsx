@@ -35,6 +35,7 @@ export default function WhatsAppAgentPage() {
         ctaHref={WA_CTA_HREF}
         ctaLabel="Chat on WhatsApp"
         ctaExternal
+        showWhatsAppCta={false}
       />
 
       <main>

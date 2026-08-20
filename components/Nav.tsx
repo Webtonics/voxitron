@@ -3,7 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 
+const WA_NAV_HREF =
+  "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20know%20more";
+
 const SOLUTIONS = [
+  {
+    href: "/whatsapp-agent",
+    key: "whatsapp-agent",
+    title: "WhatsApp Sales",
+    description: "Replies, checks stock, and takes orders inside WhatsApp.",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 2a6 6 0 0 0-5.15 9.05L2 14l3.06-.8A6 6 0 1 0 8 2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+        <path d="M5.8 5.9c.1-.3.4-.3.6-.3h.4c.2 0 .3.1.4.3l.4.9c.1.2 0 .4-.1.5l-.4.4c.4.8 1 1.4 1.8 1.8l.4-.4c.1-.1.3-.2.5-.1l.9.4c.2.1.3.2.3.4v.4c0 .2-.1.5-.3.6-.4.3-.9.4-1.4.3-1.6-.4-2.9-1.7-3.3-3.3-.1-.5 0-1 .3-1.4Z" fill="currentColor" />
+      </svg>
+    ),
+  },
   {
     href: "/speed-to-lead",
     key: "speed-to-lead",
@@ -28,34 +43,60 @@ const SOLUTIONS = [
       </svg>
     ),
   },
+] as const;
+
+const INDUSTRIES = [
   {
-    href: "/whatsapp-agent",
-    key: "whatsapp-agent",
-    title: "WhatsApp Sales",
-    description: "Replies, checks stock, and takes orders inside WhatsApp.",
+    href: "/real-estate",
+    key: "real-estate",
+    title: "Real Estate",
+    description: "Replies to enquiries and books viewings automatically.",
     icon: (
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 2a6 6 0 0 0-5.15 9.05L2 14l3.06-.8A6 6 0 1 0 8 2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-        <path d="M5.8 5.9c.1-.3.4-.3.6-.3h.4c.2 0 .3.1.4.3l.4.9c.1.2 0 .4-.1.5l-.4.4c.4.8 1 1.4 1.8 1.8l.4-.4c.1-.1.3-.2.5-.1l.9.4c.2.1.3.2.3.4v.4c0 .2-.1.5-.3.6-.4.3-.9.4-1.4.3-1.6-.4-2.9-1.7-3.3-3.3-.1-.5 0-1 .3-1.4Z" fill="currentColor" />
+        <path d="M2.5 7.5L8 3L13.5 7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 6.5V13H12V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+        <path d="M6.5 13V9.5H9.5V13" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    href: "/diagnostic-centre",
+    key: "diagnostic-centre",
+    title: "Diagnostic Centres",
+    description: "Books tests and follows up on results, inside WhatsApp.",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.5 2H9.5V5.2L12.5 10.2C13 11.05 12.38 12 11.4 12H4.6C3.62 12 3 11.05 3.5 10.2L6.5 5.2V2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+        <path d="M5.5 2H10.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        <path d="M5.8 9H10.2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
       </svg>
     ),
   },
 ] as const;
 
+type ActivePage = (typeof SOLUTIONS)[number]["key"] | (typeof INDUSTRIES)[number]["key"];
+
 type NavProps = {
-  activePage?: (typeof SOLUTIONS)[number]["key"];
+  activePage?: ActivePage;
   ctaHref?: string;
   ctaLabel?: string;
   ctaExternal?: boolean;
+  /** Hide the secondary "WhatsApp Us" nav CTA, for pages whose primary CTA is already a wa.me link. */
+  showWhatsAppCta?: boolean;
 };
 
 export default function Nav({
   activePage,
   ctaHref = "/get-started",
-  ctaLabel = "Get Started",
+  ctaLabel = "Free Trial",
   ctaExternal = false,
+  showWhatsAppCta = true,
 }: NavProps) {
-  const [open, setOpen] = useState(false);
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const [industriesOpen, setIndustriesOpen] = useState(false);
+
+  const isSolutionsActive = SOLUTIONS.some((item) => item.key === activePage);
+  const isIndustriesActive = INDUSTRIES.some((item) => item.key === activePage);
 
   return (
     <nav className="site-nav" aria-label="Site navigation">
@@ -64,18 +105,18 @@ export default function Nav({
       </Link>
       <div className="nav-links">
         <div
-          className={`nav-dropdown${open ? " is-open" : ""}`}
-          onMouseLeave={() => setOpen(false)}
+          className={`nav-dropdown${solutionsOpen ? " is-open" : ""}`}
+          onMouseLeave={() => setSolutionsOpen(false)}
         >
           <button
             type="button"
             className="nav-dropdown-trigger"
-            aria-expanded={open}
+            aria-expanded={solutionsOpen}
             aria-haspopup="true"
-            onClick={() => setOpen((v) => !v)}
-            onMouseEnter={() => setOpen(true)}
+            onClick={() => setSolutionsOpen((v) => !v)}
+            onMouseEnter={() => setSolutionsOpen(true)}
           >
-            <span className={activePage ? "is-active" : undefined}>Solutions</span>
+            <span className={isSolutionsActive ? "is-active" : undefined}>Solutions</span>
             <svg className="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -87,7 +128,7 @@ export default function Nav({
                 href={item.href}
                 className={`nav-dropdown-item${activePage === item.key ? " is-active" : ""}`}
                 role="menuitem"
-                onClick={() => setOpen(false)}
+                onClick={() => setSolutionsOpen(false)}
               >
                 <span className="nav-dropdown-icon" aria-hidden="true">{item.icon}</span>
                 <span>
@@ -98,23 +139,72 @@ export default function Nav({
             ))}
           </div>
         </div>
-        <Link href="/#how-it-works" className="nav-link">How It Works</Link>
-        <Link href="/#faq" className="nav-link">FAQ</Link>
-      </div>
-      {ctaExternal ? (
-        <a
-          href={ctaHref}
-          className="nav-cta"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <div
+          className={`nav-dropdown${industriesOpen ? " is-open" : ""}`}
+          onMouseLeave={() => setIndustriesOpen(false)}
         >
-          {ctaLabel}
-        </a>
-      ) : (
-        <Link href={ctaHref} className="nav-cta">
-          {ctaLabel}
-        </Link>
-      )}
+          <button
+            type="button"
+            className="nav-dropdown-trigger"
+            aria-expanded={industriesOpen}
+            aria-haspopup="true"
+            onClick={() => setIndustriesOpen((v) => !v)}
+            onMouseEnter={() => setIndustriesOpen(true)}
+          >
+            <span className={isIndustriesActive ? "is-active" : undefined}>Industries</span>
+            <svg className="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <div className="nav-dropdown-panel" role="menu">
+            {INDUSTRIES.map((item) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                className={`nav-dropdown-item${activePage === item.key ? " is-active" : ""}`}
+                role="menuitem"
+                onClick={() => setIndustriesOpen(false)}
+              >
+                <span className="nav-dropdown-icon" aria-hidden="true">{item.icon}</span>
+                <span>
+                  <span className="nav-dropdown-item-title">{item.title}</span>
+                  <span className="nav-dropdown-item-desc">{item.description}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <Link href="/pricing" className="nav-link">Pricing</Link>
+        <Link href="/blog" className="nav-link">Blog</Link>
+      </div>
+      <div className="nav-cta-group">
+        {showWhatsAppCta && (
+          <a
+            href={WA_NAV_HREF}
+            className="nav-cta nav-cta-secondary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp Us
+          </a>
+        )}
+        {ctaExternal ? (
+          <a
+            href={ctaHref}
+            className="nav-cta"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {ctaLabel}
+          </a>
+        ) : (
+          <Link href={ctaHref} className="nav-cta">
+            {ctaLabel}
+          </Link>
+        )}
+      </div>
     </nav>
   );
 }
