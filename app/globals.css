@@ -107,9 +107,7 @@ a {
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--gutter);
-  background: rgba(247, 249, 252, 0.97);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
 }
 
@@ -1145,11 +1143,11 @@ a {
 
 .stat-number {
   font-family: var(--font-mono);
-  font-size: var(--text-2xl);
-  font-weight: 500;
+  font-size: var(--text-xl);
+  font-weight: 400;
   color: var(--accent);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 .stat-label {
@@ -2680,7 +2678,7 @@ textarea.lead-form-input {
 .pricing-card-range {
   font-family: var(--font-mono);
   font-size: var(--text-xl);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--accent);
 }
 
@@ -3023,7 +3021,7 @@ textarea.lead-form-input {
 .calculator-result-value {
   font-family: var(--font-mono);
   font-size: var(--text-xl);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--accent);
 }
 
