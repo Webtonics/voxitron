@@ -11,9 +11,10 @@ remove the need for the Meta-side setup below.
 `messages` schema), `003_conversation_escalation.sql` (adds `conversations.needs_human` /
 `escalation_reason`, used by the escalation branch below), `004_conversation_number_attribution.sql`
 (adds `conversations.whatsapp_number_id`), `005_message_dedup.sql` (adds
-`messages.wa_message_id`, used by the deduplication check below), and
+`messages.wa_message_id`, used by the deduplication check below),
 `006_conversation_uniqueness.sql` (adds a unique constraint backing the atomic
-find-or-create conversation query below).
+find-or-create conversation query below), and `009_customer_config.sql` (adds
+`customers.industry` / `customers.config`, used by the per-customer system prompt below).
 
 ## What it does
 
@@ -77,14 +78,23 @@ find-or-create conversation query below).
 9. Logs the inbound message to `messages` (Supabase): the typed text, or the image
    description / voice transcript for media messages, plus `wa_message_id` for the
    deduplication check above.
-10. Generates a reply with an AI Agent node, using a per-customer Qdrant knowledge-base
-    collection (`kb_<customers.id>`) as a retrieval tool, same pattern as Area50's WF1.
-    **If this fails after retrying** (OpenAI outage, Qdrant down, etc., added 2026-08-13):
-    routes to a fixed fallback reply ("Sorry, I'm having trouble right now...") and flags
-    the conversation `needs_human`, instead of the customer getting silence with no record
-    of why.
-11. Sends the reply back through the WhatsApp Cloud API.
-12. Logs the outbound message to `messages` (Supabase).
+10. **Builds a per-customer system prompt.** Added 2026-08-21. `customers.config`
+    (`009_customer_config.sql`) holds each customer's qualification questions, booking/
+    ordering flow instructions, tone notes, and escalation triggers, filled in by Voxitron
+    at onboarding (`supabase/onboarding-template.sql` Step 1.5, starting points in
+    `supabase/industry-templates.md`). The `Build System Prompt` node assembles these into
+    one prompt string, so `AI Agent Reply` below behaves differently per customer/industry
+    instead of running one hardcoded prompt for everyone. A customer with no config set
+    yet falls back gracefully to just the business name plus the fixed platform-level
+    rules (knowledge-base-first, WhatsApp-texting style).
+11. Generates a reply with an AI Agent node, using that per-customer system prompt and a
+    per-customer Qdrant knowledge-base collection (`kb_<customers.id>`) as a retrieval
+    tool, same KB pattern as Area50's WF1. **If this fails after retrying** (OpenAI
+    outage, Qdrant down, etc., added 2026-08-13): routes to a fixed fallback reply
+    ("Sorry, I'm having trouble right now...") and flags the conversation `needs_human`,
+    instead of the customer getting silence with no record of why.
+12. Sends the reply back through the WhatsApp Cloud API.
+13. Logs the outbound message to `messages` (Supabase).
 
 **Error handling, added 2026-08-13:** every Postgres write, the Meta HTTP calls, and the
 OpenAI/vision/transcription calls now retry up to 3 times (2 second gaps) on failure

@@ -19,6 +19,19 @@ returning id;
 -- (Or wrap this whole file in a single `with` chain if you prefer, see the
 -- worked example at the bottom of this file.)
 
+-- STEP 1.5: set the customer's industry and AI agent config.
+-- Requires 009_customer_config.sql to already be applied.
+-- Copy a starting config blob for this industry from
+-- supabase/industry-templates.md, adjust the wording and specifics for this
+-- actual business, then paste the adjusted JSON below. Do not skip this step,
+-- an un-configured customer (industry/config left null/default) falls back
+-- to the agent's generic platform-level behavior only, no qualification
+-- questions or booking flow tailored to their business.
+update customers
+set industry = '<<one of: whatsapp-agent, real-estate, diagnostic-centre, retail, ecommerce, general>>',
+    config = '<<PASTE_ADJUSTED_CONFIG_JSON_FROM_industry-templates.md_HERE>>'::jsonb
+where id = '<<CUSTOMER_ID_FROM_STEP_1>>';
+
 -- STEP 2: grant a dashboard login access to this customer.
 -- auth_user_id is the UUID from Step 0.
 insert into customer_members (customer_id, auth_user_id)
@@ -39,8 +52,8 @@ values ('<<CUSTOMER_ID_FROM_STEP_1>>', '<<META_PHONE_NUMBER_ID>>', '<<OPTIONAL_L
 
 
 -- ─────────────────────────────────────────────────────────────
--- WORKED EXAMPLE: all three SQL steps chained in one statement,
--- so you only need to paste in the auth_user_id once. Still requires
+-- WORKED EXAMPLE: Steps 1, 1.5, 2, and 3 chained in one statement, so you
+-- only need to paste in the auth_user_id and config once. Still requires
 -- Step 0 (creating the auth user) to have been done first in the dashboard.
 -- ─────────────────────────────────────────────────────────────
 
@@ -48,6 +61,13 @@ values ('<<CUSTOMER_ID_FROM_STEP_1>>', '<<META_PHONE_NUMBER_ID>>', '<<OPTIONAL_L
 --   insert into customers (business_name)
 --   values ('Voxitron')
 --   returning id
+-- ),
+-- configured_customer as (
+--   update customers
+--   set industry = 'whatsapp-agent',
+--       config = '{"tone_notes": "Warm, direct, straight to the point.", "qualification_questions": ["What product or service are they asking about?"], "booking_flow": {"type": "order", "instructions": "Confirm the item and price, then take order details in the same chat."}, "escalation_triggers": ["Customer wants to negotiate the price"]}'::jsonb
+--   from new_customer
+--   where customers.id = new_customer.id
 -- ),
 -- new_member as (
 --   insert into customer_members (customer_id, auth_user_id)

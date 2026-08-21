@@ -298,7 +298,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT c.id, c.business_name, wn.id AS whatsapp_number_id\nFROM customers c\nJOIN customer_whatsapp_numbers wn ON wn.customer_id = c.id\nWHERE wn.whatsapp_number = $1\n",
+        "query": "SELECT c.id, c.business_name, c.industry, c.config, wn.id AS whatsapp_number_id\nFROM customers c\nJOIN customer_whatsapp_numbers wn ON wn.customer_id = c.id\nWHERE wn.whatsapp_number = $1\n",
         "options": {
           "queryReplacement": "={{ $json.phoneNumberId }}",
           "replaceEmptyStrings": true
@@ -318,7 +318,7 @@
           "name": "Postgres - Supabase Voxitron (service role)"
         }
       },
-      "notes": "phone_number_id from Meta's payload must match a row in customer_whatsapp_numbers.whatsapp_number exactly. A customer can have more than one number, this join finds the owning customer regardless of which of their numbers received the message. whatsapp_number_id (added 2026-08-12, requires supabase/migrations/004_conversation_number_attribution.sql) is this specific number's own row id, used below to attribute the conversation to it, not just to the customer as a whole.",
+      "notes": "phone_number_id from Meta's payload must match a row in customer_whatsapp_numbers.whatsapp_number exactly. A customer can have more than one number, this join finds the owning customer regardless of which of their numbers received the message. whatsapp_number_id (added 2026-08-12, requires supabase/migrations/004_conversation_number_attribution.sql) is this specific number's own row id, used below to attribute the conversation to it, not just to the customer as a whole. industry and config (added 2026-08-21, requires supabase/migrations/009_customer_config.sql) feed Build System Prompt below; config defaults to '{}'::jsonb for any customer not yet configured at onboarding.",
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 2000
@@ -356,6 +356,30 @@
       "id": "customer-found-check",
       "name": "Customer Found?",
       "notes": "If no customer row matches this WhatsApp number, stop. Don't guess or default to some other customer's data."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "build-system-prompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "={{ [ 'You are the WhatsApp assistant for ' + $('Load Customer by Number').item.json.business_name + ', a Voxitron customer.', ($('Load Customer by Number').item.json.config || {}).tone_notes ? 'Tone: ' + $('Load Customer by Number').item.json.config.tone_notes : null, Array.isArray(($('Load Customer by Number').item.json.config || {}).qualification_questions) && $('Load Customer by Number').item.json.config.qualification_questions.length ? 'Before helping further, try to learn:\\n' + $('Load Customer by Number').item.json.config.qualification_questions.map(q => '- ' + q).join('\\n') : null, (($('Load Customer by Number').item.json.config || {}).booking_flow || {}).instructions ? 'Booking/ordering: ' + $('Load Customer by Number').item.json.config.booking_flow.instructions : null, Array.isArray(($('Load Customer by Number').item.json.config || {}).escalation_triggers) && $('Load Customer by Number').item.json.config.escalation_triggers.length ? 'Hand off to a human (do not attempt to answer yourself) if:\\n' + $('Load Customer by Number').item.json.config.escalation_triggers.map(t => '- ' + t).join('\\n') : null, 'Always search the knowledge base before answering. Only answer from verified knowledge base content, never guess prices, stock, or policies. If the answer is not in the knowledge base, say you will have someone from the team follow up.', 'Write like a real person texting on WhatsApp: short sentences, no markdown formatting, no bullet points, no em dashes. Two to three sentences per reply unless the question genuinely needs more.' ].filter(Boolean).join('\\n\\n') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -768,
+        320
+      ],
+      "id": "build-system-prompt",
+      "name": "Build System Prompt",
+      "notes": "Added 2026-08-21. Assembles this customer's system prompt from customers.config (supabase/migrations/009_customer_config.sql), so AI Agent Reply's behavior is per-customer/per-industry instead of one hardcoded string for everyone. config defaults to '{}'::jsonb for a customer not yet configured at onboarding (see supabase/onboarding-template.sql Step 1.5), every field access is guarded so that degrades to just the business name plus the fixed platform-level rules (KB-first, WhatsApp-texting style), never to literal 'undefined' text in the prompt. Fires once per message on the Customer Found? true branch, before the media/text split, so both branches can reference it by name the same way they already reference Merge Message Text."
     },
     {
       "parameters": {
@@ -850,7 +874,7 @@
         "promptType": "define",
         "text": "={{ $('Merge Message Text').item.json.messageText }}",
         "options": {
-          "systemMessage": "=You are the WhatsApp assistant for {{ $('Load Customer by Number').item.json.business_name }}, a Voxitron customer.\n\nAlways search the knowledge base before answering. Only answer from verified knowledge base content, never guess prices, stock, or policies. If the answer isn't in the knowledge base, say you'll have someone from the team follow up.\n\nWrite like a real person texting on WhatsApp: short sentences, no markdown formatting, no bullet points, no em dashes. Two to three sentences per reply unless the question genuinely needs more."
+          "systemMessage": "={{ $('Build System Prompt').item.json.systemPrompt }}"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -865,7 +889,7 @@
       "maxTries": 3,
       "waitBetweenTries": 2000,
       "onError": "continueErrorOutput",
-      "notes": "Added 2026-08-13: onError continueErrorOutput plus retryOnFail means a transient failure (OpenAI rate limit, Qdrant briefly down, etc.) retries 3 times, and if it still fails, routes to the AI Failure Fallback branch below instead of silently dying mid-execution and leaving the customer with no reply and no record of why."
+      "notes": "Added 2026-08-13: onError continueErrorOutput plus retryOnFail means a transient failure (OpenAI rate limit, Qdrant briefly down, etc.) retries 3 times, and if it still fails, routes to the AI Failure Fallback branch below instead of silently dying mid-execution and leaving the customer with no reply and no record of why. systemMessage changed 2026-08-21 to read from Build System Prompt (per-customer config) instead of a hardcoded string, see that node's notes."
     },
     {
       "parameters": {
@@ -1185,12 +1209,23 @@
       "main": [
         [
           {
-            "node": "Is Image or Voice Note?",
+            "node": "Build System Prompt",
             "type": "main",
             "index": 0
           }
         ],
         []
+      ]
+    },
+    "Build System Prompt": {
+      "main": [
+        [
+          {
+            "node": "Is Image or Voice Note?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Is Image or Voice Note?": {

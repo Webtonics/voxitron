@@ -148,13 +148,33 @@ Sequencing within Phase 4:
    based price list/catalog). All 4 source types converge into the same chunk/delete/
    embed/upsert pipeline. Full details, including the CloudConvert and Google Sheets OAuth2
    credentials this requires, are in `n8n/KB_INGEST_README.md`.
+   **Also extended 2026-08-21: the AI Agent's system prompt is now per-customer, not one
+   hardcoded string for everyone.** Before this, every customer's agent had identical
+   qualification logic, tone, and booking behavior regardless of industry, the only
+   variable was `business_name`. `customers` gained `industry` and `config` columns
+   (`009_customer_config.sql`), where `config` is a jsonb blob holding qualification
+   questions, booking/ordering flow instructions, tone notes, and escalation triggers.
+   Filled in by Voxitron by hand at onboarding (`supabase/onboarding-template.sql` new
+   Step 1.5), never by the customer, no dashboard write path to these columns exists or
+   is planned until self-serve config is explicitly scoped as its own piece of work.
+   `supabase/industry-templates.md` has a starting-point config for each of the 5
+   industries the site sells to (whatsapp-agent, real-estate, diagnostic-centre, retail,
+   ecommerce), directly grounded in what each industry's page already promises, not
+   invented. A new `Build System Prompt` node in `n8n/voxitron-whatsapp-agent.json`
+   assembles the final prompt from this config at runtime; `AI Agent Reply`'s
+   `systemMessage` now references that node instead of a fixed string. Deliberately does
+   not cover proactive/outbound behaviors some pages allude to (abandoned-cart recovery,
+   courier tracking, results-ready notifications), those need their own outbound-trigger
+   workflows and data sources that don't exist in this repo yet, adding config fields for
+   them now would be exactly the fabricated/half-built pattern this project avoids.
    Full setup checklist (Meta app creation, credentials to wire in, environment
    variable, webhook registration) is in
    `n8n/README.md`, read it before importing. Step-by-step Meta Business/WhatsApp
    Platform app setup (not started as of 2026-08-04) is in
    `n8n/meta-whatsapp-setup.md`. `supabase/onboarding-template.sql` is the copy-paste
-   template for creating a customer, granting dashboard logins, and registering WhatsApp
-   numbers, used for every customer including Voxitron's own tenant row.
+   template for creating a customer, setting their industry/config, granting dashboard
+   logins, and registering WhatsApp numbers, used for every customer including Voxitron's
+   own tenant row.
 
    The user reviewed Area50's actual workflow exports (WF1 AI Chat, WF2 AI Suggest, WF5
    KB Ingest, WF6 Knowledge Search) with the agent on 2026-08-04. Corrected understanding:
