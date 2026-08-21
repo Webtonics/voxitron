@@ -1,3 +1,8 @@
+import Link from "next/link";
+
+const WA_CTA_HREF =
+  "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20a%20pricing%20quote";
+
 type PricingCardsProps = {
   compact?: boolean;
 };
@@ -6,44 +11,80 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
   return (
     <div className="pricing-cards">
       <div className="pricing-card">
-        <span className="pricing-card-kicker">ONE-TIME</span>
-        <h3 className="pricing-card-title">Setup</h3>
-        <span className="pricing-card-range">&#8358;150k &ndash; &#8358;600k</span>
+        <span className="pricing-card-kicker">STARTER</span>
+        <h3 className="pricing-card-title">For one WhatsApp number, one workflow</h3>
+        <span className="pricing-card-range">&#8358;350k <span className="pricing-card-range-unit">setup</span></span>
+        <span className="pricing-card-range pricing-card-range-secondary">
+          &#8358;80k<span className="pricing-card-range-unit">/mo</span>
+        </span>
         <p className="pricing-card-note">
-          Scoped to your business during a free discovery call. Simple catalogs cost less,
-          multi-language or multi-location setups cost more.
+          A single catalog, one language, one booking or ordering flow. Right-sized for a
+          single shop, clinic, or agency office.
         </p>
         {!compact && (
           <ul className="pricing-card-list">
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Discovery call and workflow mapping</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Your WhatsApp Business number connected</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Agent trained on your catalog and pricing</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Qualification logic built for your business</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Self-hosted infrastructure, set up under your control</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Booking or ordering flow configured</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Human handoff rules defined</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Pilot period before full go-live</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Staff walkthrough of the finished agent</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Self-hosted infrastructure, under your control</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Monthly tuning and quality checks</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Cancel any time, no lock-in</span></li>
           </ul>
+        )}
+        {!compact && (
+          <Link href="/contact" className="pricing-card-cta">Get started</Link>
         )}
       </div>
 
       <div className="pricing-card is-featured">
-        <span className="pricing-card-kicker">MONTHLY</span>
-        <h3 className="pricing-card-title">Retainer</h3>
-        <span className="pricing-card-range">&#8358;50k &ndash; &#8358;120k<span style={{ fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>/mo</span></span>
+        <span className="pricing-card-kicker">GROWTH</span>
+        <span className="pricing-card-badge">Most businesses choose this</span>
+        <h3 className="pricing-card-title">For multi-language or multi-location businesses</h3>
+        <span className="pricing-card-range">&#8358;750k <span className="pricing-card-range-unit">setup</span></span>
+        <span className="pricing-card-range pricing-card-range-secondary">
+          &#8358;150k<span className="pricing-card-range-unit">/mo</span>
+        </span>
         <p className="pricing-card-note">
-          Meta&apos;s WhatsApp API fees are passed through at cost. No markup added on top.
+          Multiple languages, more than one WhatsApp number, or both booking and ordering
+          in the same agent.
         </p>
         {!compact && (
           <ul className="pricing-card-list">
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Hosting and infrastructure upkeep</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Monthly tuning as your catalog or prices change</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Conversation monitoring and quality checks</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Meta WhatsApp API fees, passed through at cost</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Direct support from your account contact</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Cancel any time, no long-term lock-in</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Everything in Starter</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Multiple languages, trained on how your customers actually message</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Multiple WhatsApp numbers or locations, one agent</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Booking and ordering flows combined</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>CRM or inventory system integration</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Priority tuning turnaround</span></li>
           </ul>
+        )}
+        {!compact && (
+          <Link href="/contact" className="pricing-card-cta pricing-card-cta-primary">Get started</Link>
+        )}
+      </div>
+
+      <div className="pricing-card">
+        <span className="pricing-card-kicker">ENTERPRISE</span>
+        <h3 className="pricing-card-title">For chains, franchises, and high-volume operations</h3>
+        <span className="pricing-card-range">Custom quote</span>
+        <p className="pricing-card-note">
+          Priced around your real volume and complexity, not a fixed range. Built for
+          businesses running dozens of locations or thousands of conversations a month.
+        </p>
+        {!compact && (
+          <ul className="pricing-card-list">
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Everything in Growth</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Unlimited WhatsApp numbers and locations</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Dedicated account manager, not a ticket queue</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Custom CRM, ERP, or payment integrations</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Response-time SLA in writing</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Dedicated infrastructure, isolated from other clients</span></li>
+          </ul>
+        )}
+        {!compact && (
+          <a href={WA_CTA_HREF} className="pricing-card-cta" target="_blank" rel="noopener noreferrer">
+            Talk to us
+          </a>
         )}
       </div>
     </div>

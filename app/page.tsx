@@ -515,7 +515,7 @@ export default function Home() {
                   <li>Checks real stock before it replies</li>
                   <li>Sends your catalog with photos and prices</li>
                   <li>Takes and logs the order automatically</li>
-                  <li>Works across WhatsApp, SMS, and email</li>
+                  <li>Runs on your existing WhatsApp number</li>
                 </ul>
                 <Link href="/retail" className="service-link">See how it works</Link>
               </article>

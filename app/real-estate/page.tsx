@@ -202,7 +202,7 @@ export default function RealEstatePage() {
                 <span className="accent">booked viewing, automatically.</span>
               </h2>
               <p className="section-body">
-                Runs across calls, SMS, and web enquiries. Replies, qualifies, and books
+                Runs inside your WhatsApp Business number. Replies, qualifies, and books
                 while you&apos;re with a client.
               </p>
             </div>
@@ -269,8 +269,8 @@ export default function RealEstatePage() {
                   </svg>
                 </div>
                 <div className="feature-text">
-                  <p className="feature-title">Works across SMS, WhatsApp and email</p>
-                  <p className="feature-body">Buyers reach you however they prefer. Every channel, covered.</p>
+                  <p className="feature-title">Runs on your existing WhatsApp number</p>
+                  <p className="feature-body">No new app to learn, no number for buyers to save. It&apos;s the one they already message.</p>
                 </div>
               </div>
 

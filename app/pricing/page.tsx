@@ -45,20 +45,23 @@ export default function PricingPage() {
 
         {/* PRICING CARDS */}
         <Reveal as="section" id="pricing-cards" aria-labelledby="pricing-cards-title">
-          <div className="section-inner">
-            <span className="section-label">PRICING</span>
-            <h2 id="pricing-cards-title" className="section-title">
-              Two line items.
-              <br />
-              <span className="accent">That&apos;s the whole invoice.</span>
-            </h2>
+          <div className="section-inner-wide">
+            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+              <span className="section-label">PRICING</span>
+              <h2 id="pricing-cards-title" className="section-title">
+                Three tiers.
+                <br />
+                <span className="accent">One clear invoice.</span>
+              </h2>
+            </div>
 
             <PricingCards />
 
-            <div className="pricing-disclaimer">
-              <strong>These are indicative ranges</strong>, not a fixed quote. Actual price
-              depends on catalog size, languages, and how many booking or ordering flows you
-              need. <Link href="/contact" style={{ textDecoration: "underline" }}>Get a clear quote</Link> after a free discovery call.
+            <div className="pricing-disclaimer" style={{ maxWidth: "var(--container)", margin: "var(--space-5) auto 0" }}>
+              <strong>Starter and Growth are typical prices</strong>, not a locked quote.
+              Actual price depends on catalog size, languages, and how many booking or
+              ordering flows you need. Enterprise is scoped individually.{" "}
+              <Link href="/contact" style={{ textDecoration: "underline" }}>Get a clear quote</Link> after a free discovery call.
             </div>
           </div>
         </Reveal>
@@ -75,7 +78,11 @@ export default function PricingPage() {
             <div className="section-body">
               <p>
                 Catalog size, number of languages, and whether you need booking, ordering,
-                or both all shift the number.
+                or both all shift the number within a tier.
+              </p>
+              <p>
+                Running dozens of locations or thousands of conversations a month usually
+                means Enterprise, priced around your real volume instead of a fixed range.
               </p>
             </div>
             <div className="cta-group">
@@ -233,6 +240,18 @@ export default function PricingPage() {
                 <p className="faq-body">
                   We can discuss a split payment for larger setups. Bring it up on your
                   discovery call.
+                </p>
+              </details>
+
+              <details className="faq-item" role="listitem">
+                <summary>
+                  What actually moves a business from Growth to Enterprise?
+                  <span className="faq-icon" aria-hidden="true">+</span>
+                </summary>
+                <p className="faq-body">
+                  Volume and structure, not company size. A single busy shop can stay on
+                  Growth. A chain running many locations, needing a dedicated account
+                  manager, or wanting a response-time SLA in writing moves to Enterprise.
                 </p>
               </details>
             </div>

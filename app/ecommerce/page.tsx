@@ -352,8 +352,8 @@ export default function EcommercePage() {
                   </svg>
                 </div>
                 <div className="feature-text">
-                  <p className="feature-title">Works across SMS, WhatsApp and email</p>
-                  <p className="feature-body">Customers reach you however they prefer. Every channel, covered.</p>
+                  <p className="feature-title">Runs on your existing WhatsApp number</p>
+                  <p className="feature-body">No new app to learn, no number for customers to save. It&apos;s the one they already message.</p>
                 </div>
               </div>
 
