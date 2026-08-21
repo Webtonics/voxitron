@@ -75,6 +75,7 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
           <ul className="pricing-card-list">
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Everything in Growth</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Unlimited WhatsApp numbers and locations</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Fully bespoke qualification logic and booking flow, tuned to how your business actually works</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Dedicated account manager, not a ticket queue</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Custom CRM, ERP, or payment integrations</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Response-time SLA in writing</span></li>
