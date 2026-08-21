@@ -1472,6 +1472,22 @@ a {
   }
 }
 
+.services-grid-4col {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 700px) {
+  .services-grid-4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .services-grid-4col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 /* Missed call callout: secondary feature */
 .feature-callout {
   margin-top: var(--space-7);

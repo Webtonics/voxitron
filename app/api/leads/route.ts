@@ -8,6 +8,8 @@ const VALID_AGENTS = [
   "whatsapp-agent",
   "real-estate",
   "diagnostic-centre",
+  "retail",
+  "ecommerce",
   "general",
 ] as const;
 type Agent = (typeof VALID_AGENTS)[number];

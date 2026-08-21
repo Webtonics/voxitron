@@ -465,13 +465,13 @@ export default function Home() {
             <div style={{ maxWidth: "var(--container)", margin: "0 auto var(--space-2)" }}>
               <span className="section-label">BUILT FOR YOUR INDUSTRY</span>
               <h2 id="industries-title" className="section-title">
-                Two industries,
+                Four industries,
                 <br />
                 <span className="accent">purpose-built agents.</span>
               </h2>
             </div>
 
-            <div className="services-grid services-grid-2col">
+            <div className="services-grid services-grid-4col">
               <article className="service-card">
                 <span className="service-kicker">REAL ESTATE</span>
                 <h3 className="service-title">Never lose a buyer to a slower reply.</h3>
@@ -502,6 +502,38 @@ export default function Home() {
                   <li>Notifies patients when results are ready</li>
                 </ul>
                 <Link href="/diagnostic-centre" className="service-link">See how it works</Link>
+              </article>
+
+              <article className="service-card">
+                <span className="service-kicker">RETAILERS</span>
+                <h3 className="service-title">Stop retyping the same price all day.</h3>
+                <p className="service-body">
+                  Answers stock and price questions, takes orders, and frees you up to
+                  actually run the shop.
+                </p>
+                <ul className="service-list">
+                  <li>Checks real stock before it replies</li>
+                  <li>Sends your catalog with photos and prices</li>
+                  <li>Takes and logs the order automatically</li>
+                  <li>Works across WhatsApp, SMS, and email</li>
+                </ul>
+                <Link href="/retail" className="service-link">See how it works</Link>
+              </article>
+
+              <article className="service-card">
+                <span className="service-kicker">E-COMMERCE BRANDS</span>
+                <h3 className="service-title">Confirm orders. Kill WISMO tickets.</h3>
+                <p className="service-body">
+                  Confirms orders instantly, answers &quot;where is my order,&quot; and
+                  recovers abandoned carts automatically.
+                </p>
+                <ul className="service-list">
+                  <li>Confirms orders the moment payment lands</li>
+                  <li>Answers tracking questions from real courier data</li>
+                  <li>Sends a nudge to recover abandoned carts</li>
+                  <li>Sends delivery updates without being asked</li>
+                </ul>
+                <Link href="/ecommerce" className="service-link">See how it works</Link>
               </article>
             </div>
           </div>

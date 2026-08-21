@@ -72,6 +72,32 @@ const INDUSTRIES = [
       </svg>
     ),
   },
+  {
+    href: "/retail",
+    key: "retail",
+    title: "Retailers",
+    description: "Answers stock and price questions, takes orders, 24/7.",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.5 5L3.3 2.5H12.7L13.5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2.5 5H13.5V12.5C13.5 13.05 13.05 13.5 12.5 13.5H3.5C2.95 13.5 2.5 13.05 2.5 12.5V5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+        <path d="M6 7.5C6 8.6 6.9 9.5 8 9.5C9.1 9.5 10 8.6 10 7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    href: "/ecommerce",
+    key: "ecommerce",
+    title: "E-commerce Brands",
+    description: "Confirms orders and recovers abandoned carts, automatically.",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6" cy="13" r="1" stroke="currentColor" strokeWidth="1.2" />
+        <circle cx="11.5" cy="13" r="1" stroke="currentColor" strokeWidth="1.2" />
+        <path d="M2 2.5H3.5L5 9.5H12.5L14 4.5H4.2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
 ] as const;
 
 type ActivePage = (typeof SOLUTIONS)[number]["key"] | (typeof INDUSTRIES)[number]["key"];
