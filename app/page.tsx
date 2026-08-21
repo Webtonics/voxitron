@@ -657,7 +657,7 @@ export default function Home() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing orders
+              Stop losing customers
               <br />
               to a slow reply.
             </h2>

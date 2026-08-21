@@ -37,6 +37,15 @@ export default function Reveal({
     );
 
     observer.observe(el);
+
+    // Safety net: if a section is already in view before the observer
+    // attaches (or the observer never fires for any reason), don't leave
+    // it invisible.
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add("is-visible");
+    }
+
     return () => observer.disconnect();
   }, []);
 
