@@ -186,7 +186,12 @@ export default function RealEstatePage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="A buyer enquiry arriving on WhatsApp while the agent is mid-viewing" />
+              <Image
+                src="https://images.unsplash.com/photo-1582142582231-bf8e5e15ce46?fm=jpg&q=80&w=800&auto=format&fit=crop"
+                alt="A buyer checking their phone, waiting on a reply about a listing"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>

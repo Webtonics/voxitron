@@ -193,7 +193,12 @@ export default function EcommercePage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="A customer waiting anxiously for order confirmation after payment" />
+              <Image
+                src="https://images.unsplash.com/photo-1595349785606-5982d59ef635?fm=jpg&q=80&w=800&auto=format&fit=crop"
+                alt="A customer checking their phone, waiting on order confirmation after paying"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>

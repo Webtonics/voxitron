@@ -187,7 +187,12 @@ export default function DiagnosticCentrePage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="A patient's booking question left unanswered after hours" />
+              <Image
+                src="https://images.unsplash.com/photo-1517940322679-2b003a168fd2?fm=jpg&q=80&w=800&auto=format&fit=crop"
+                alt="A patient checking their phone at night, waiting on a reply about a test booking"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>
