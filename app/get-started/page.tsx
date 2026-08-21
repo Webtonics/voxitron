@@ -29,7 +29,7 @@ export default async function GetStartedPage({
         <section
           id="get-started"
           aria-labelledby="get-started-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-9)" }}
+          className="page-hero is-full-page"
         >
           <div className="section-inner">
             <span className="section-label">GET STARTED</span>

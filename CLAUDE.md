@@ -49,7 +49,7 @@ until the Next.js app fully replaces it end to end. Do not delete it mid-migrati
 | Database | Supabase (Postgres) |
 | Auth | Supabase Auth, for the customer dashboard |
 | API | Next.js Route Handlers (`app/api/**/route.ts`), no separate PHP or Node backend |
-| Fonts | Google Fonts: DM Sans (body/display) + DM Mono (labels, numbers, kickers), loaded via `next/font` |
+| Fonts | Google Fonts: Inter (body/display, `--font-inter`) + JetBrains Mono (labels, numbers, kickers, `--font-jetbrains-mono`), loaded via `next/font` |
 | Icons | Inline SVG, stroke-based, `currentColor` |
 | Animations | Intersection Observer API (scroll fade-ins via `.reveal`), same behavior as today, reimplemented as a small client-side hook/component |
 | Forms | Real lead-capture form(s) posting to a Route Handler, which writes to Supabase. The WhatsApp Business Agent page keeps its `wa.me` CTAs instead |
@@ -107,55 +107,58 @@ primary reason for this migration.
 ### Identity
 - **Brand name:** Voxitron
 - **Tone:** Confident, direct, urgent. Speaks to a busy trade or service-business owner, not a tech buyer.
-- **Visual direction: Electric Lime on Navy.** A deep navy-black ground with one bold,
-  high-voltage lime accent. Chosen deliberately over a generic "safe SaaS teal": the accent
-  should be unmistakable and used sparingly so it keeps its punch (see "Spend the accent
-  carefully" below).
+- **Visual direction: restrained blue on a light, cool-tinted canvas.** A light background
+  system (`#F7F9FC` page canvas, `#EFF3F9` section alternation, `#FFFFFF` elevated cards)
+  carries the page, with one accent blue (`#3860D6`) spent only on actionable elements:
+  buttons, links, kickers, stat numbers, and the one inverted `#cta` band at the bottom of
+  every page. The palette is light-first, not a dark theme with an accent swapped in.
 
 ### Colors
+The single source of truth is the `:root` block at the top of `app/globals.css`. Do not
+hand-copy these values elsewhere, reference the CSS custom properties instead.
+
 ```css
 :root {
-  /* Backgrounds */
-  --bg-primary:   #0B0F19;   /* deep navy-black, page background, hero */
-  --bg-secondary: #121A2B;   /* section alternation (proof strip, testimonials) */
-  --bg-elevated:  #161F33;   /* cards: feature-item, ui-card, testimonial-card, footer */
+  /* Backgrounds: light, cool-tinted, not stark white */
+  --bg-primary:   #F7F9FC;   /* page canvas */
+  --bg-secondary: #EFF3F9;   /* section alternation (proof strip, testimonials) */
+  --bg-elevated:  #FFFFFF;   /* cards: feature-item, ui-card, testimonial-card, footer */
 
-  /* Accent: electric lime, the one bold move on the page */
-  --accent:       #CFFF3D;
-  --accent-ink:   #0B0F19;   /* dark text/icons that sit ON the accent (never white-on-lime) */
-  --accent-light: rgba(207, 255, 61, 0.07);   /* tinted backgrounds: kickers, ui-msg-ai */
-  --accent-glow:  rgba(207, 255, 61, 0.18);   /* focus rings */
-  --accent-mid:   rgba(207, 255, 61, 0.26);   /* tinted borders */
+  /* Accent: restrained blue, spent only on actionable elements */
+  --accent:       #3860D6;
+  --accent-ink:   #FFFFFF;   /* text/icons that sit ON the accent */
+  --accent-light: rgba(36, 86, 229, 0.06);   /* tinted backgrounds: kickers, ui-msg-ai */
+  --accent-glow:  rgba(36, 86, 229, 0.16);   /* focus rings */
+  --accent-mid:   rgba(36, 86, 229, 0.22);   /* tinted borders */
 
   /* Text */
-  --text-primary:   #EDF1F8;  /* near-white, cool tint */
-  --text-secondary: #9AA3B8;  /* muted slate, body copy on dark */
-  --text-muted:     #7480A0;  /* micro copy, timestamps, placeholders */
+  --text-primary:   #0E1526;  /* near-black, cool tint */
+  --text-secondary: #5A6B85;  /* muted slate, body copy */
+  --text-muted:     #8C99AC;  /* micro copy, timestamps, placeholders */
 
   /* Borders */
-  --border:     #1E2536;
-  --border-mid: #2B3450;
+  --border:     #E4E9F1;
+  --border-mid: #D3DAE5;
 
-  /* Secondary colour: quiet periwinkle, used only for the step-number badges.
-     Never let it compete with the lime. */
-  --color-blue: #8FA6FF;
+  /* Secondary colour: quiet slate, used only for the step-number badges.
+     Never let it compete with the accent blue. */
+  --color-blue: #6B7BA8;
 }
 ```
 
-**Spend the accent carefully.** Lime appears on: the hero accent word, kickers/badges,
+**Spend the accent carefully.** Blue appears on: the hero accent word, kickers/badges,
 primary buttons, stat numbers, section-title accent words, and the one inverted `#cta`
-band at the bottom of every page (lime background, navy text/button: the single "flip"
-moment on the page). It should not appear everywhere at once. The navy carries the page;
-lime marks what matters.
+band at the bottom of every page (blue background, white text/button: the single "flip"
+moment on the page). It should not appear everywhere at once. The light canvas carries the
+page; blue marks what matters.
 
 **Text-on-accent rule.** Anything sitting on a `var(--accent)` background (buttons, nav
-CTA, icon chips) uses `color: var(--accent-ink)`, never white. Lime is too light for
-white text to read against it.
+CTA, icon chips) uses `color: var(--accent-ink)` (white), for contrast against the blue.
 
 ### Typography
 ```css
---font-mono: 'DM Mono', 'Courier New', monospace;   /* kickers, labels, numbers, timestamps */
---font-body: 'DM Sans', 'Helvetica Neue', sans-serif; /* headings, body, buttons */
+--font-mono: var(--font-jetbrains-mono), 'Courier New', monospace;   /* kickers, labels, numbers, timestamps */
+--font-body: var(--font-inter), 'Helvetica Neue', sans-serif;        /* headings, body, buttons */
 
 --text-xs:   clamp(0.7rem,  1.5vw, 0.75rem);
 --text-sm:   clamp(0.85rem, 1.8vw, 0.875rem);
@@ -166,10 +169,36 @@ white text to read against it.
 --text-2xl:  clamp(2.8rem,  7vw,   4.5rem);
 --text-3xl:  clamp(3.2rem,  8vw,   5.5rem);
 ```
+Fonts are Inter (body, `--font-inter`) and JetBrains Mono (labels/numbers, `--font-jetbrains-mono`),
+loaded via `next/font` in `app/layout.tsx` and exposed as CSS variables that `--font-body`
+and `--font-mono` wrap. Heading hierarchy per page: `.hero-title` for the one real page
+`<h1>` on pages with a marketing hero, `.section-title` for every `<h2>` subsection, and
+`.article-title` for blog post `<h1>`s. No page should have two `.hero-title`-sized
+headings, and no subsection should out-rank the hero.
 
 ### Spacing
-Token scale: `--space-1` (4px) through `--space-10` (128px). Always use the tokens, never
-a hardcoded pixel value for margin/padding/gap.
+Token scale: `--space-1` (4px) through `--space-10` (128px), plus `--container` (640px,
+the standard reading-column max-width), `--container-full` (1100px, wide grid/table
+sections), and `--gutter` (`clamp(20px, 5vw, 56px)`, the horizontal page margin used on
+every section wrapper). Always use the tokens, never a hardcoded pixel value for
+margin/padding/gap in global styles.
+
+**Standard section pattern.** Most sections follow: a wrapper (`<section id="...">` or a
+`<Reveal as="section">`) with `padding: var(--space-9) var(--gutter)`, containing either
+`.section-inner` (640px, centered, single-column content) or `.section-inner-wide` (1100px,
+centered, for grids/tables). A wide section that still wants a narrow, centered
+label/title/intro above its grid nests a `.section-inner-wide-header` (640px, centered)
+inside the `.section-inner-wide` wrapper, rather than stretching the header across the
+full 1100px. Grids collapse to `grid-template-columns: 1fr` below their breakpoint
+(mobile-first CSS throughout: base rules are mobile, `@media (min-width: ...)` scales up).
+
+**Fixed-nav clearance.** `.site-nav` is `height: 56px`, fixed to the top. Every page's
+first section clears it with `padding-top: calc(56px + var(--space-9))` (the full
+photo/mesh `#hero` used by the home page and the 7 product/industry pages) or the shorter
+`.page-hero` class (`calc(56px + var(--space-9)) var(--gutter) var(--space-8)`, used by
+pricing/compare/about/contact/tools/get-started/privacy, pages with no photo hero). Single-
+section pages with nothing below the hero (404, the error boundary, privacy, get-started)
+add the `.page-hero.is-full-page` modifier for a `--space-9` bottom instead of `--space-8`.
 
 ### Border Radius
 Small and consistent: `4px` on buttons/inputs, `6px` on cards, `50%` on avatars/dots.
@@ -177,11 +206,13 @@ Nothing above 6px on rectangular elements. The site does not use large, soft "fr
 
 ### Shadows
 ```css
---shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.03);
---shadow-md: 0 10px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+--shadow-sm: 0 1px 2px rgba(14, 21, 38, 0.04), 0 0 0 1px rgba(14, 21, 38, 0.04);
+--shadow-md: 0 8px 24px rgba(14, 21, 38, 0.08), 0 0 0 1px rgba(14, 21, 38, 0.05);
 ```
-Dark-theme shadows are black-based, not colour-tinted, except the deliberate lime-tinted
-hover glow on `.feature-item` and `.feature-icon` (a small, intentional exception).
+Light-theme shadows are minimal and tint-based (a soft ink-tinted shadow plus a hairline
+border), not heavy black drop shadows, except the deliberate blue-tinted hover glow on
+`.feature-item` and `.feature-icon` (a small, intentional exception) and the deeper shadow
+under the hero `.ui-card` stack, which needs more separation from the photo behind it.
 
 ---
 
@@ -247,7 +278,7 @@ canonical order, until it's ported into `app/page.tsx`):
 8. How It Works   3 numbered steps, 1-sentence body each
 9. Testimonials   3 short quotes (<=2 sentences), name + role
 10. Offer/FAQ     offer bullets + 4 FAQ items, 1-2 sentence answers (homepage has offer bullets, agent pages have FAQ only)
-11. Final CTA     the one inverted `#cta` band (lime bg), headline + CTA group
+11. Final CTA     the one inverted `#cta` band (accent blue bg), headline + CTA group
 12. Footer        wordmark, credit, copyright, privacy, email
 ```
 

@@ -25,11 +25,7 @@ export default function MissedLeadCalculatorPage() {
       <Nav />
 
       <main>
-        <section
-          id="hero"
-          aria-labelledby="hero-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-8)" }}
-        >
+        <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
             <span className="hero-kicker">FREE TOOL, NO SIGNUP REQUIRED</span>
             <h1 id="hero-title" className="hero-title">
@@ -47,7 +43,7 @@ export default function MissedLeadCalculatorPage() {
         {/* CALCULATOR */}
         <Reveal as="section" id="calculator" aria-labelledby="calculator-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">CALCULATE</span>
               <h2 id="calculator-title" className="section-title">
                 Your numbers,
@@ -63,7 +59,7 @@ export default function MissedLeadCalculatorPage() {
         {/* HOW TO USE */}
         <Reveal as="section" id="how-to-use" aria-labelledby="how-to-use-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">HOW TO USE THIS CALCULATOR</span>
               <h2 id="how-to-use-title" className="section-title">
                 Four numbers.

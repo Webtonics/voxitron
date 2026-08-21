@@ -21,18 +21,18 @@ export default function ErrorPage({
     <>
       <Nav />
       <main>
-        <section style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-9)" }}>
-          <div className="section-inner" style={{ textAlign: "center" }}>
+        <section className="page-hero is-full-page">
+          <div className="section-inner empty-state">
             <span className="section-label">SOMETHING WENT WRONG</span>
             <h1 className="section-title">
               That didn&apos;t <span className="accent">load right.</span>
             </h1>
-            <p className="section-body" style={{ margin: "0 auto var(--space-6)", maxWidth: "480px" }}>
+            <p className="section-body">
               An unexpected error happened on our end. Try again, or head back to the
               homepage.
             </p>
 
-            <div className="cta-group" style={{ justifyContent: "center" }}>
+            <div className="cta-group">
               <button type="button" onClick={() => reset()} className="btn btn-primary">
                 Try again
               </button>

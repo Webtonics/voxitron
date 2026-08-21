@@ -715,6 +715,12 @@ a {
   margin-bottom: 4px;
 }
 
+/* Modifier: right-aligns a message group's label and bubble, for the
+   customer reply in the middle of the hero's ui-chat card. */
+.ui-msg-group.is-reply {
+  text-align: right;
+}
+
 /* Card 3: Booking confirmed */
 .ui-booking {
   display: flex;
@@ -846,6 +852,15 @@ a {
   position: relative;
   overflow: hidden;
   background: #ECE5DD;
+}
+
+/* Modifier: centers a placeholder (instead of the chat video) inside the
+   phone screen on industry pages that don't yet have a recorded demo. */
+.wa-body-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
 }
 
 .wa-chat-video {
@@ -1202,6 +1217,34 @@ a {
   margin: 0 auto;
 }
 
+/* Narrow header block nested inside a .section-inner-wide section: the
+   kicker/title/intro copy stays readable-width while the grid/table below
+   it uses the full container. Repeated on every wide section across the
+   site, kept as one shared class instead of a per-page inline style. */
+.section-inner-wide-header {
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+.section-inner-wide-header + * {
+  margin-top: var(--space-7);
+}
+
+/* Secondary-page hero: shorter than the marketing-page #hero (no photo, no
+   mockup), used by pricing/compare/about/contact/tools/get-started/privacy.
+   Shares the same top offset math (nav height + space-9) so every page's
+   first section starts at a consistent distance from the fixed nav. */
+.page-hero {
+  padding: calc(56px + var(--space-9)) var(--gutter) var(--space-8);
+}
+
+/* Modifier: full space-9 bottom padding instead of #hero's shorter
+   space-8, for single-section pages with no further content below (404,
+   error boundary, privacy, get-started's lead-only page). */
+.page-hero.is-full-page {
+  padding-bottom: var(--space-9);
+}
+
 .section-label {
   display: inline-block;
   font-family: var(--font-mono);
@@ -1239,6 +1282,20 @@ a {
 }
 
 .section-body p + p { margin-top: var(--space-4); }
+
+/* Centered empty-state pattern shared by not-found and error boundaries. */
+.empty-state {
+  text-align: center;
+}
+
+.empty-state .section-body {
+  margin: 0 auto var(--space-6);
+  max-width: 480px;
+}
+
+.empty-state .cta-group {
+  justify-content: center;
+}
 
 /* =============================================
    PAIN SECTION: text + supporting photo split
@@ -2391,6 +2448,11 @@ textarea.lead-form-input {
   text-align: center;
 }
 
+.blog-hero .section-body {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
 .blog-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -2915,7 +2977,8 @@ textarea.lead-form-input {
 }
 
 .compare-card-link {
-  margin-top: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.04em;

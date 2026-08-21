@@ -24,11 +24,7 @@ export default function ComparePage() {
       <Nav />
 
       <main>
-        <section
-          id="hero"
-          aria-labelledby="hero-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-8)" }}
-        >
+        <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
             <span className="hero-kicker">HONEST COMPARISONS</span>
             <h1 id="hero-title" className="hero-title">
@@ -46,7 +42,7 @@ export default function ComparePage() {
         {/* COMPARE CARDS */}
         <Reveal as="section" id="compare-cards" aria-labelledby="compare-cards-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">PICK YOUR COMPARISON</span>
               <h2 id="compare-cards-title" className="section-title">
                 Four alternatives,
@@ -75,7 +71,7 @@ export default function ComparePage() {
         {/* AT A GLANCE TABLE */}
         <Reveal as="section" id="at-a-glance" aria-labelledby="at-a-glance-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">AT A GLANCE</span>
               <h2 id="at-a-glance-title" className="section-title">
                 Every option,

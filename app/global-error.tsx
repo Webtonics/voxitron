@@ -22,8 +22,8 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0B0F19",
-          color: "#EDF1F8",
+          background: "#F7F9FC",
+          color: "#0E1526",
           fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
           textAlign: "center",
           padding: "24px",
@@ -35,7 +35,7 @@ export default function GlobalError({
               fontFamily: "'Courier New', monospace",
               fontSize: "0.75rem",
               letterSpacing: "0.08em",
-              color: "#7480A0",
+              color: "#8C99AC",
               marginBottom: "16px",
             }}
           >
@@ -44,7 +44,7 @@ export default function GlobalError({
           <h1 style={{ fontSize: "2rem", fontWeight: 500, margin: "0 0 16px" }}>
             Something broke on our end.
           </h1>
-          <p style={{ color: "#9AA3B8", fontSize: "1rem", lineHeight: 1.5, margin: "0 0 32px" }}>
+          <p style={{ color: "#5A6B85", fontSize: "1rem", lineHeight: 1.5, margin: "0 0 32px" }}>
             Try again in a moment, or email us if it keeps happening.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
@@ -52,8 +52,8 @@ export default function GlobalError({
               type="button"
               onClick={() => reset()}
               style={{
-                background: "#CFFF3D",
-                color: "#0B0F19",
+                background: "#3860D6",
+                color: "#FFFFFF",
                 border: "none",
                 borderRadius: "4px",
                 padding: "12px 24px",
@@ -68,8 +68,8 @@ export default function GlobalError({
               href="/"
               style={{
                 background: "transparent",
-                color: "#EDF1F8",
-                border: "1px solid #2B3450",
+                color: "#0E1526",
+                border: "1px solid #D3DAE5",
                 borderRadius: "4px",
                 padding: "12px 24px",
                 fontSize: "0.9375rem",

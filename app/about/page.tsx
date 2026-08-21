@@ -24,11 +24,7 @@ export default function AboutPage() {
       <Nav />
 
       <main>
-        <section
-          id="hero"
-          aria-labelledby="hero-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-8)" }}
-        >
+        <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
             <span className="hero-kicker">LAGOS-BASED</span>
             <h1 id="hero-title" className="hero-title">
@@ -76,7 +72,7 @@ export default function AboutPage() {
         {/* WHAT WE BELIEVE */}
         <Reveal as="section" id="beliefs" aria-labelledby="beliefs-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">WHAT WE BELIEVE</span>
               <h2 id="beliefs-title" className="section-title">
                 Three things we
@@ -153,7 +149,7 @@ export default function AboutPage() {
         {/* HOW WE WORK WITH YOU */}
         <Reveal as="section" id="how-we-work" aria-labelledby="how-we-work-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">HOW WE WORK WITH YOU</span>
               <h2 id="how-we-work-title" className="section-title">
                 No black box.

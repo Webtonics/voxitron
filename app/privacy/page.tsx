@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <>
       <Nav />
       <main>
-        <section style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-9)" }}>
+        <section className="page-hero is-full-page">
           <div className="section-inner">
             <span className="section-label">PRIVACY POLICY</span>
             <h1 className="section-title">How we handle your information.</h1>

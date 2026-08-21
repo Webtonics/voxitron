@@ -94,8 +94,8 @@ export default function QuotingAgentPage() {
                     or something else?
                   </div>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <p className="ui-msg-label" style={{ textAlign: "right" }}>Customer</p>
+                <div className="ui-msg-group is-reply">
+                  <p className="ui-msg-label">Customer</p>
                   <div className="ui-msg ui-msg-customer">
                     EV charger installation at my house, 3-bed semi.
                   </div>
@@ -194,7 +194,7 @@ export default function QuotingAgentPage() {
         {/* FEATURES */}
         <Reveal as="section" id="features" aria-labelledby="features-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto var(--space-2)" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
                 From enquiry to professional
@@ -304,7 +304,7 @@ export default function QuotingAgentPage() {
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
                 Set up once.
@@ -345,7 +345,7 @@ export default function QuotingAgentPage() {
         {/* TESTIMONIALS */}
         <Reveal as="section" id="testimonials" aria-labelledby="testimonials-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">CLIENT RESULTS</span>
               <h2 id="testimonials-title" className="section-title">
                 What changed when quoting

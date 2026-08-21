@@ -45,23 +45,21 @@ export default async function ComparisonPage({
       <Nav />
 
       <main>
-        <section
-          id="hero"
-          aria-labelledby="hero-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-8)" }}
-        >
+        <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
             <span className="hero-kicker">VOXITRON VS {competitor.name.toUpperCase()}</span>
-            <h1 id="hero-title" className="section-title">
+            <h1 id="hero-title" className="hero-title">
               {competitor.heroTension[0]}
               <br />
               {competitor.heroTension[1]}
               <br />
               <span className="accent">
-                {competitor.heroTension[2]} {competitor.heroTension[3]}
+                {competitor.heroTension[2]}
+                <br />
+                {competitor.heroTension[3]}
               </span>
             </h1>
-            <p className="section-body">{competitor.intro}</p>
+            <p className="hero-sub">{competitor.intro}</p>
             <div className="cta-group">
               <Link href="/contact" className="btn btn-primary">Book a discovery call</Link>
               <a href={waHref} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
@@ -74,7 +72,7 @@ export default async function ComparisonPage({
         {/* TWO-COLUMN HONEST ASSESSMENT */}
         <Reveal as="section" id="assessment" aria-labelledby="assessment-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">AN HONEST LOOK</span>
               <h2 id="assessment-title" className="section-title">
                 Where {competitor.shortName}
@@ -145,7 +143,7 @@ export default async function ComparisonPage({
         {/* FEATURE-BY-FEATURE TABLE */}
         <Reveal as="section" id="table" aria-labelledby="table-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">FEATURE BY FEATURE</span>
               <h2 id="table-title" className="section-title">
                 Voxitron vs

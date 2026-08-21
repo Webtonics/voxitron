@@ -23,11 +23,7 @@ export default function ContactPage() {
       <Nav />
 
       <main>
-        <section
-          id="hero"
-          aria-labelledby="hero-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-8)" }}
-        >
+        <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
             <span className="hero-kicker">LET&apos;S TALK</span>
             <h1 id="hero-title" className="hero-title">
@@ -88,7 +84,7 @@ export default function ContactPage() {
         {/* PROCESS STEPS */}
         <Reveal as="section" id="process" aria-labelledby="process-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">WHAT HAPPENS NEXT</span>
               <h2 id="process-title" className="section-title">
                 What happens

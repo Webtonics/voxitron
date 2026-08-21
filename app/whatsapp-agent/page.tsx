@@ -204,7 +204,7 @@ export default function WhatsAppAgentPage() {
         {/* COMPARISON: old way vs new way */}
         <Reveal as="section" id="comparison" aria-labelledby="comparison-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">BEFORE AND AFTER</span>
               <h2 id="comparison-title" className="section-title">
                 What changes when
@@ -286,7 +286,7 @@ export default function WhatsAppAgentPage() {
         {/* FEATURES */}
         <Reveal as="section" id="features" aria-labelledby="features-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto var(--space-2)" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
                 Every message answered,
@@ -434,7 +434,7 @@ export default function WhatsAppAgentPage() {
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
                 Set up once.
@@ -475,7 +475,7 @@ export default function WhatsAppAgentPage() {
         {/* TESTIMONIALS */}
         <Reveal as="section" id="testimonials" aria-labelledby="testimonials-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">CLIENT RESULTS</span>
               <h2 id="testimonials-title" className="section-title">
                 What changed for Nigerian

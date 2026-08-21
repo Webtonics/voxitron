@@ -208,7 +208,7 @@ export default function Home() {
         {/* COMPARISON: old way vs new way */}
         <Reveal as="section" id="comparison" aria-labelledby="comparison-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">BEFORE AND AFTER</span>
               <h2 id="comparison-title" className="section-title">
                 What changes when
@@ -290,7 +290,7 @@ export default function Home() {
         {/* FEATURES: six things it does */}
         <Reveal as="section" id="features" aria-labelledby="features-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto var(--space-2)" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">WHAT VOXITRON DOES</span>
               <h2 id="features-title" className="section-title">
                 Six things,
@@ -420,7 +420,7 @@ export default function Home() {
         {/* HOW IT WORKS */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
                 Set up once.
@@ -462,7 +462,7 @@ export default function Home() {
             other page's "See the other agents" CTA links to /#services */}
         <Reveal as="section" id="services" aria-labelledby="industries-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto var(--space-2)" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">BUILT FOR YOUR INDUSTRY</span>
               <h2 id="industries-title" className="section-title">
                 Four industries,

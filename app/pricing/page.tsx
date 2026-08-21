@@ -24,11 +24,7 @@ export default function PricingPage() {
       <Nav />
 
       <main>
-        <section
-          id="hero"
-          aria-labelledby="hero-title"
-          style={{ padding: "calc(56px + var(--space-9)) var(--gutter) var(--space-8)" }}
-        >
+        <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
             <span className="hero-kicker">NO HIDDEN PLANS OR LOCKED FEATURES</span>
             <h1 id="hero-title" className="hero-title">
@@ -46,7 +42,7 @@ export default function PricingPage() {
         {/* PRICING CARDS */}
         <Reveal as="section" id="pricing-cards" aria-labelledby="pricing-cards-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">PRICING</span>
               <h2 id="pricing-cards-title" className="section-title">
                 Three tiers.
@@ -94,7 +90,7 @@ export default function PricingPage() {
         {/* BUYING VS NOT BUYING */}
         <Reveal as="section" id="buying" aria-labelledby="buying-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">WHAT YOU&apos;RE ACTUALLY BUYING</span>
               <h2 id="buying-title" className="section-title">
                 Own it, don&apos;t
@@ -136,7 +132,7 @@ export default function PricingPage() {
         {/* HOW IT WORKS: pricing variant */}
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
           <div className="section-inner-wide">
-            <div style={{ maxWidth: "var(--container)", margin: "0 auto" }}>
+            <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
                 From discovery call
