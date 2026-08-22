@@ -30,3 +30,6 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Local scratch SQL for testing, contains real auth UUIDs once filled in
+supabase/demo-user.sql
