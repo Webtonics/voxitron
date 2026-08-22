@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const { error } = await supabase.from("leads").insert({
     name: name.trim(),
