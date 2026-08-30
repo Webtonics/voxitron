@@ -68,7 +68,7 @@ export default function ContactPage() {
         </Reveal>
 
         {/* LEAD FORM */}
-        <Reveal as="section" id="get-started" aria-labelledby="get-started-title">
+        <Reveal as="section" id="get-started" className="inline-get-started" aria-labelledby="get-started-title">
           <div className="section-inner">
             <span className="section-label">OR TELL US ABOUT YOUR BUSINESS</span>
             <h2 id="get-started-title" className="section-title">
