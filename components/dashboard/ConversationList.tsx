@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export type ConversationListItem = {
   id: string;
   contact_name: string | null;
@@ -22,26 +20,21 @@ function timeAgo(iso: string) {
 
 export default function ConversationList({
   conversations,
-  customerQuery,
+  selectedId,
+  onSelect,
 }: {
   conversations: ConversationListItem[];
-  customerQuery: string;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
 }) {
-  if (conversations.length === 0) {
-    return (
-      <div className="dashboard-empty-state">
-        <p>No conversations yet. Once your WhatsApp agent is live, conversations will show up here.</p>
-      </div>
-    );
-  }
-
   return (
     <ul className="dashboard-conversation-list">
       {conversations.map((c) => (
         <li key={c.id}>
-          <Link
-            href={`/dashboard/conversations/${c.id}${customerQuery}`}
-            className={`dashboard-conversation-row${c.needs_human ? " needs-human" : ""}`}
+          <button
+            type="button"
+            onClick={() => onSelect(c.id)}
+            className={`dashboard-conversation-row${c.needs_human ? " needs-human" : ""}${c.id === selectedId ? " is-selected" : ""}`}
           >
             <div className="dashboard-conversation-row-main">
               <span className="dashboard-conversation-row-name">
@@ -55,7 +48,7 @@ export default function ConversationList({
             {c.latest_message_at && (
               <span className="dashboard-conversation-row-time">{timeAgo(c.latest_message_at)}</span>
             )}
-          </Link>
+          </button>
         </li>
       ))}
     </ul>

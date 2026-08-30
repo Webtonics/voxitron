@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers } from "@/lib/dashboard/activeCustomer";
 import { VOXITRON_CUSTOMER_ID } from "@/lib/dashboard/voxitron";
-import DashboardNav from "@/components/dashboard/DashboardNav";
+import Sidebar from "@/components/dashboard/Sidebar";
 
 export default async function DashboardLayout({
   children,
@@ -23,9 +23,9 @@ export default async function DashboardLayout({
   const isVoxitronTeam = customers.some((c) => c.id === VOXITRON_CUSTOMER_ID);
 
   return (
-    <>
-      <DashboardNav customers={customers} isVoxitronTeam={isVoxitronTeam} />
+    <div className="dashboard-shell">
+      <Sidebar customers={customers} isVoxitronTeam={isVoxitronTeam} />
       <main className="dashboard-main">{children}</main>
-    </>
+    </div>
   );
 }

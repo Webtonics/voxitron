@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 import StatsStrip from "@/components/dashboard/StatsStrip";
-import ConversationList, { type ConversationListItem } from "@/components/dashboard/ConversationList";
+import Inbox from "@/components/dashboard/Inbox";
+import type { ConversationListItem } from "@/components/dashboard/ConversationList";
 
 export const metadata: Metadata = { title: "Dashboard | Voxitron" };
 
@@ -88,46 +89,42 @@ export default async function DashboardPage({
   const messagesThisWeek = (messages || []).filter((m) => m.sent_at >= weekAgo).length;
 
   const stats = [
-    { number: String((conversations || []).length), label: "Total conversations" },
-    { number: String((messages || []).length), label: "Total messages" },
-    { number: String(conversationsThisWeek), label: "New conversations this week" },
+    { number: String(conversationsThisWeek), label: "Conversations this week" },
     { number: String(messagesThisWeek), label: "Messages this week" },
   ];
 
   return (
-    <div className="dashboard-page">
-      <div className="dashboard-page-header">
-        <h1 className="dashboard-page-title">Overview</h1>
+    <div className="dashboard-inbox-page">
+      <div className="dashboard-inbox-toolbar">
+        <StatsStrip stats={stats} />
+
+        {(numbers || []).length > 1 && (
+          <div className="dashboard-number-switcher">
+            <a
+              href={`/dashboard${customerQuery}`}
+              className={`dashboard-number-tab${!activeNumberId ? " is-active" : ""}`}
+            >
+              All numbers
+            </a>
+            {(numbers || []).map((n) => {
+              const params = new URLSearchParams();
+              if (customerParam) params.set("customer", customerParam);
+              params.set("number", n.id);
+              return (
+                <a
+                  key={n.id}
+                  href={`/dashboard?${params.toString()}`}
+                  className={`dashboard-number-tab${activeNumberId === n.id ? " is-active" : ""}`}
+                >
+                  {n.label || n.whatsapp_number}
+                </a>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      <StatsStrip stats={stats} />
-
-      {(numbers || []).length > 1 && (
-        <div className="dashboard-number-switcher">
-          <a
-            href={`/dashboard${customerQuery}`}
-            className={`dashboard-number-tab${!activeNumberId ? " is-active" : ""}`}
-          >
-            All numbers
-          </a>
-          {(numbers || []).map((n) => {
-            const params = new URLSearchParams();
-            if (customerParam) params.set("customer", customerParam);
-            params.set("number", n.id);
-            return (
-              <a
-                key={n.id}
-                href={`/dashboard?${params.toString()}`}
-                className={`dashboard-number-tab${activeNumberId === n.id ? " is-active" : ""}`}
-              >
-                {n.label || n.whatsapp_number}
-              </a>
-            );
-          })}
-        </div>
-      )}
-
-      <ConversationList conversations={conversationItems} customerQuery={customerQuery} />
+      <Inbox conversations={conversationItems} />
     </div>
   );
 }
