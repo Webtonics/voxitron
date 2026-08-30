@@ -110,7 +110,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const sourceType = $json['Source Type'];\nconst content = ($json['Content'] || '').trim();\nconst pageUrl = ($json['Page URL'] || '').trim();\nconst sheetUrl = ($json['Google Sheet URL'] || '').trim();\nconst hasFile = Boolean($binary && $binary['File'] && $binary['File'].fileName);\n\nlet valid = false;\nlet reason = '';\n\nif (sourceType === 'Paste text') {\n  valid = content.length > 0;\n  reason = 'Source Type is \"Paste text\" but the Content field is empty.';\n} else if (sourceType === 'Website page') {\n  valid = /^https?:\\/\\//.test(pageUrl);\n  reason = 'Source Type is \"Website page\" but Page URL is empty or not a valid http(s) URL.';\n} else if (sourceType === 'File (PDF or Word)') {\n  valid = hasFile;\n  reason = 'Source Type is \"File (PDF or Word)\" but no file was attached.';\n} else if (sourceType === 'Google Sheet') {\n  valid = /^https?:\\/\\/docs\\.google\\.com\\/spreadsheets\\//.test(sheetUrl);\n  reason = 'Source Type is \"Google Sheet\" but Google Sheet URL is empty or not a docs.google.com/spreadsheets link.';\n} else {\n  reason = 'Unrecognized Source Type: ' + sourceType;\n}\n\nreturn [{ json: { ...$json, sourceValid: valid, sourceValidationReason: reason } }];"
+        "jsCode": "const sourceType = $json['Source Type'];\nconst content = ($json['Content'] || '').trim();\nconst pageUrl = ($json['Page URL'] || '').trim();\nconst sheetUrl = ($json['Google Sheet URL'] || '').trim();\nconst hasFile = Boolean($binary && $binary['File'] && $binary['File'].fileName) || Boolean(($json.fileUrl || '').trim());\n\nlet valid = false;\nlet reason = '';\n\nif (sourceType === 'Paste text') {\n  valid = content.length > 0;\n  reason = 'Source Type is \"Paste text\" but the Content field is empty.';\n} else if (sourceType === 'Website page') {\n  valid = /^https?:\\/\\//.test(pageUrl);\n  reason = 'Source Type is \"Website page\" but Page URL is empty or not a valid http(s) URL.';\n} else if (sourceType === 'File (PDF or Word)') {\n  valid = hasFile;\n  reason = 'Source Type is \"File (PDF or Word)\" but no file was attached.';\n} else if (sourceType === 'Google Sheet') {\n  valid = /^https?:\\/\\/docs\\.google\\.com\\/spreadsheets\\//.test(sheetUrl);\n  reason = 'Source Type is \"Google Sheet\" but Google Sheet URL is empty or not a docs.google.com/spreadsheets link.';\n} else if (sourceType === 'Delete Document') {\n  valid = true; // no extra fields needed, Customer ID + Document title already validated\n} else {\n  reason = 'Unrecognized Source Type: ' + sourceType;\n}\n\nreturn [{ json: { ...$json, sourceValid: valid, sourceValidationReason: reason } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -253,7 +253,7 @@
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "={{ 'No customer found with id ' + $('KB Upload Form').item.json['Customer ID'] + '. Check the id in Supabase (select id, business_name from customers) and try again. Nothing was ingested.' }}",
+        "responseBody": "={{ 'No customer found with id ' + $('Normalize Ingest Trigger').item.json['Customer ID'] + '. Check the id in Supabase (select id, business_name from customers) and try again. Nothing was ingested.' }}",
         "options": {
           "responseCode": 404
         }
@@ -269,7 +269,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const title = $('KB Upload Form').item.json['Document title'];\nconst content = $('Merge Content Sources').item.json.resolvedContent;\nconst customerId = $('Load Customer').item.json.id;\nconst businessName = $('Load Customer').item.json.business_name;\n\nconst MAX_CHARS = 1200;\nconst OVERLAP = 150;\nconst MIN_CHUNK = 400; // don't hunt for a boundary so far back that a chunk becomes tiny\n\n// Prefer breaking at a paragraph gap, then a sentence end, then a line break,\n// only falling back to a hard character cut if none exist near the target\n// size. Added 2026-08-13: the previous version sliced at a fixed character\n// count with no regard for word/sentence boundaries, so a price line or\n// sentence could be split in half across two chunks, degrading retrieval\n// (the model sees half a fact per chunk instead of a whole one).\nfunction findBreakPoint(text, idealEnd) {\n  const windowStart = Math.max(MIN_CHUNK, idealEnd - 300);\n  const window = text.slice(windowStart, idealEnd);\n\n  const paraBreak = window.lastIndexOf('\\n\\n');\n  if (paraBreak !== -1) return windowStart + paraBreak + 2;\n\n  const sentenceMatch = [...window.matchAll(/[.!?]\\s/g)].pop();\n  if (sentenceMatch) return windowStart + sentenceMatch.index + sentenceMatch[0].length;\n\n  const lineBreak = window.lastIndexOf('\\n');\n  if (lineBreak !== -1) return windowStart + lineBreak + 1;\n\n  return idealEnd; // no natural boundary found, hard cut as last resort\n}\n\nfunction chunk(text) {\n  const clean = text.replace(/\\r\\n/g, '\\n').trim();\n  if (clean.length <= MAX_CHARS) return [clean];\n\n  const chunks = [];\n  let start = 0;\n  while (start < clean.length) {\n    const idealEnd = Math.min(start + MAX_CHARS, clean.length);\n    const end = idealEnd === clean.length ? idealEnd : findBreakPoint(clean, idealEnd);\n    chunks.push(clean.slice(start, end).trim());\n    if (end >= clean.length) break;\n    start = Math.max(end - OVERLAP, start + 1); // always advance, even if OVERLAP would otherwise stall on a short boundary\n  }\n  return chunks;\n}\n\nconst chunks = chunk(content);\n\nreturn chunks.map((text, i) => ({\n  json: {\n    customerId,\n    businessName,\n    title,\n    chunkIndex: i,\n    chunkCount: chunks.length,\n    text: `${title}\\n\\n${text}`,\n  },\n}));"
+        "jsCode": "const title = $('Normalize Ingest Trigger').item.json['Document title'];\nconst content = $('Merge Content Sources').item.json.resolvedContent;\nconst customerId = $('Load Customer').item.json.id;\nconst businessName = $('Load Customer').item.json.business_name;\n\nconst MAX_CHARS = 1200;\nconst OVERLAP = 150;\nconst MIN_CHUNK = 400; // don't hunt for a boundary so far back that a chunk becomes tiny\n\n// Prefer breaking at a paragraph gap, then a sentence end, then a line break,\n// only falling back to a hard character cut if none exist near the target\n// size. Added 2026-08-13: the previous version sliced at a fixed character\n// count with no regard for word/sentence boundaries, so a price line or\n// sentence could be split in half across two chunks, degrading retrieval\n// (the model sees half a fact per chunk instead of a whole one).\nfunction findBreakPoint(text, idealEnd) {\n  const windowStart = Math.max(MIN_CHUNK, idealEnd - 300);\n  const window = text.slice(windowStart, idealEnd);\n\n  const paraBreak = window.lastIndexOf('\\n\\n');\n  if (paraBreak !== -1) return windowStart + paraBreak + 2;\n\n  const sentenceMatch = [...window.matchAll(/[.!?]\\s/g)].pop();\n  if (sentenceMatch) return windowStart + sentenceMatch.index + sentenceMatch[0].length;\n\n  const lineBreak = window.lastIndexOf('\\n');\n  if (lineBreak !== -1) return windowStart + lineBreak + 1;\n\n  return idealEnd; // no natural boundary found, hard cut as last resort\n}\n\nfunction chunk(text) {\n  const clean = text.replace(/\\r\\n/g, '\\n').trim();\n  if (clean.length <= MAX_CHARS) return [clean];\n\n  const chunks = [];\n  let start = 0;\n  while (start < clean.length) {\n    const idealEnd = Math.min(start + MAX_CHARS, clean.length);\n    const end = idealEnd === clean.length ? idealEnd : findBreakPoint(clean, idealEnd);\n    chunks.push(clean.slice(start, end).trim());\n    if (end >= clean.length) break;\n    start = Math.max(end - OVERLAP, start + 1); // always advance, even if OVERLAP would otherwise stall on a short boundary\n  }\n  return chunks;\n}\n\nconst chunks = chunk(content);\n\nreturn chunks.map((text, i) => ({\n  json: {\n    customerId,\n    businessName,\n    title,\n    chunkIndex: i,\n    chunkCount: chunks.length,\n    text: `${title}\\n\\n${text}`,\n  },\n}));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -464,7 +464,7 @@
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "={{ 'Nothing was ingested: could not fetch ' + $('KB Upload Form').item.json['Page URL'] + ' (HTTP ' + $json.statusCode + '). Check the URL and try again.' }}",
+        "responseBody": "={{ 'Nothing was ingested: could not fetch ' + $('Normalize Ingest Trigger').item.json['Page URL'] + ' (HTTP ' + $json.statusCode + '). Check the URL and try again.' }}",
         "options": {
           "responseCode": 400
         }
@@ -739,7 +739,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"filter\": {\n    \"must\": [\n      { \"key\": \"title\", \"match\": { \"value\": \"{{ $('KB Upload Form').item.json['Document title'] }}\" } }\n    ]\n  }\n}",
+        "jsonBody": "={\n  \"filter\": {\n    \"must\": [\n      { \"key\": \"title\", \"match\": { \"value\": \"{{ $('Normalize Ingest Trigger').item.json['Document title'] }}\" } }\n    ]\n  }\n}",
         "options": {
           "response": {
             "response": {
@@ -829,7 +829,7 @@
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "={{ 'Ingested \"' + $('KB Upload Form').item.json['Document title'] + '\" for ' + $('Load Customer').item.json.business_name + ' (' + $('Chunk Document').all().length + ' chunk(s)). Their WhatsApp agent can now answer from it.' }}",
+        "responseBody": "={{ 'Ingested \"' + $('Normalize Ingest Trigger').item.json['Document title'] + '\" for ' + $('Load Customer').item.json.business_name + ' (' + $('Chunk Document').all().length + ' chunk(s)). Their WhatsApp agent can now answer from it.' }}",
         "options": {
           "responseCode": 200
         }
@@ -842,6 +842,428 @@
       ],
       "id": "22ccd628-5eb8-41b8-bc73-669ef00c12c6",
       "name": "Respond: Success"
+    },
+    {
+      "parameters": {
+        "dataType": "json",
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "title",
+                "value": "={{ $json.title }}"
+              },
+              {
+                "name": "customerId",
+                "value": "={{ $json.customerId }}"
+              },
+              {
+                "name": "businessName",
+                "value": "={{ $json.businessName }}"
+              },
+              {
+                "name": "chunkIndex",
+                "value": "={{ $json.chunkIndex }}"
+              },
+              {
+                "name": "chunkCount",
+                "value": "={{ $json.chunkCount }}"
+              }
+            ]
+          }
+        },
+        "textSplittingMode": "simple"
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        620
+      ],
+      "id": "de6b7278-221f-4f8d-ab90-7b21ffbd7c7c",
+      "name": "Default Data Loader",
+      "notes": "ADDED 2026-08-23: Upsert to Qdrant's required 'Document' input had nothing connected to it -- this node was missing from the original file entirely. Reads the pre-chunked 'text' field Chunk Document already builds. Uses default Simple text splitting (chunk size 1000/overlap 200), which may re-split Chunk Document's carefully boundary-aware ~1200-char chunks slightly further -- a minor quality tradeoff, not a functional bug. Tighten later with a custom Text Splitter sized above 1200 if exact chunk boundaries matter."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voxitron/kb-ingest",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1936,
+        700
+      ],
+      "id": "aaf8e5f4-645f-4033-9c49-e598b211025b",
+      "name": "KB Ingest Webhook",
+      "webhookId": "43031d80-21ff-4eb4-a7b8-765419a4a8b7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CREATE_ME_IN_N8N",
+          "name": "Voxitron KB Ingest API (create this credential)"
+        }
+      },
+      "notes": "ADDED 2026-08-23: frontend entry point, separate from KB Upload Form. Plain JSON POST, header-auth protected -- you must create a real Header Auth credential in n8n and share the secret with the backend, this placeholder will not work until you do. Expected body: customerId, documentTitle, sourceType (paste/website/file/sheet), content, pageUrl, fileUrl, googleSheetUrl. File uploads go through Supabase Storage first -- fileUrl, not raw file bytes -- see Normalize Ingest Trigger and Download File From URL for why."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ADDED 2026-08-23: unifies KB Upload Form (manual/internal use, raw\n// file binary) and KB Ingest Webhook (frontend integration, JSON body,\n// file uploads via a Supabase-Storage fileUrl instead of raw binary)\n// into one shape. Everything downstream reads this shape unchanged,\n// regardless of which trigger fired.\n\nconst SOURCE_TYPE_MAP = {\n  paste: 'Paste text',\n  website: 'Website page',\n  file: 'File (PDF or Word)',\n  sheet: 'Google Sheet',\n  delete: 'Delete Document',\n};\n\nif ($('KB Upload Form').isExecuted) {\n  const item = $('KB Upload Form').item;\n  return [{\n    json: { ...item.json, triggerSource: 'form' },\n    binary: item.binary,\n    pairedItem: { item: 0 },\n  }];\n}\n\nif ($('KB Ingest Webhook').isExecuted) {\n  const body = $('KB Ingest Webhook').item.json.body || {};\n  const sourceType = SOURCE_TYPE_MAP[body.sourceType] || body.sourceType || '';\n  return [{\n    json: {\n      'Customer ID': body.customerId || '',\n      'Document title': body.documentTitle || '',\n      'Source Type': sourceType,\n      'Content': body.content || '',\n      'Page URL': body.pageUrl || '',\n      'Google Sheet URL': body.googleSheetUrl || '',\n      fileUrl: body.fileUrl || '',\n      triggerSource: 'webhook',\n    },\n    pairedItem: { item: 0 },\n  }];\n}\n\nthrow new Error('Normalize Ingest Trigger: neither trigger executed, this should be unreachable.');"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1680,
+        550
+      ],
+      "id": "84684ad9-5c4b-46e5-bc6b-bdb2dabc44b1",
+      "name": "Normalize Ingest Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "came-from-webhook",
+              "leftValue": "={{ $('Normalize Ingest Trigger').item.json.triggerSource }}",
+              "rightValue": "webhook",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -336,
+        640
+      ],
+      "id": "7b317239-8969-4675-8333-d1c8021b6f46",
+      "name": "Came From Webhook?",
+      "notes": "ADDED 2026-08-23: form submissions already have $binary.File attached, webhook submissions only have a fileUrl and need it downloaded first."
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Normalize Ingest Trigger').item.json.fileUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "File"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -112,
+        560
+      ],
+      "id": "de300a7c-5357-4c1f-8588-befd47ea3124",
+      "name": "Download File From URL",
+      "notes": "ADDED 2026-08-23: downloads the file the frontend already uploaded to Supabase Storage, into $binary.File -- same shape KB Upload Form already produces directly, so Is PDF? / Extract PDF Text / Convert DOCX all work unchanged. The Storage object's filename must keep its real extension (.pdf/.docx) or Is PDF? can't tell them apart."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://voxitron-qdrant:6333/collections/kb_{{ $('Load Customer').item.json.id }}/points/delete",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"must\": [\n      { \"key\": \"title\", \"match\": { \"value\": \"{{ $('Normalize Ingest Trigger').item.json['Document title'] }}\" } }\n    ]\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        464,
+        976
+      ],
+      "id": "bb668712-a46a-4cde-9088-3bef4f299f2f",
+      "name": "Delete Document (Standalone)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Rq0bMXbZjNTHUSca",
+          "name": "Voxitron Meta"
+        }
+      },
+      "notes": "ADDED 2026-08-23: standalone deletion, separate from Delete Existing Chunks for This Title (which only runs as a pre-step before re-ingest). Same Qdrant filter-delete call, kept as its own node so this doesn't touch that already-working node's wiring. Credential needs the same manual verification flagged earlier -- untested either way."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "is-delete-op",
+              "leftValue": "={{ $('Normalize Ingest Trigger').item.json['Source Type'] }}",
+              "rightValue": "Delete Document",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        464,
+        720
+      ],
+      "id": "f51c3077-4c2e-43e4-886f-afd26718b53f",
+      "name": "Is Delete Operation?"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ 'Deleted \"' + $('Normalize Ingest Trigger').item.json['Document title'] + '\" for ' + $('Load Customer').item.json.business_name + ' from the knowledge base.' }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        912,
+        976
+      ],
+      "id": "8ec7a524-68cc-4197-8546-796fe7fafee3",
+      "name": "Respond: Deleted"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "is-webhook",
+              "leftValue": "={{ $json.triggerSource }}",
+              "rightValue": "webhook",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1440,
+        550
+      ],
+      "id": "fccad69a-4a41-4027-8d28-22921f9fa6e7",
+      "name": "Is Webhook Triggered?",
+      "notes": "ADDED 2026-08-23: only the webhook path (frontend) gets async job tracking. KB Upload Form keeps its existing synchronous behavior -- an internal/manual form benefits more from an immediate result than a job id to go poll."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO kb_ingest_jobs (customer_id, document_title, operation)\nVALUES ($1::uuid, $2, $3)\nRETURNING id",
+        "options": {
+          "queryReplacement": "={{ $json['Customer ID'] }},{{ $json['Document title'] }},{{ $json['Source Type'] === 'Delete Document' ? 'delete' : 'ingest' }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1200,
+        480
+      ],
+      "id": "7aa43a1c-5954-4db0-b242-24da2e4ad0d3",
+      "name": "Create Ingest Job",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-08-23: fires before Customer ID is even confirmed to look like a real UUID -- intentional, so a bad-ID request still gets a job row the frontend can see failed, instead of just a dropped HTTP response."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { jobId: $json.id, status: 'processing' } }}",
+        "options": {
+          "responseCode": 202
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -1024,
+        480
+      ],
+      "id": "1f9ce7ac-204b-4c7a-8f21-44f6288786a4",
+      "name": "Acknowledge Job Created",
+      "notes": "ADDED 2026-08-23: sends the HTTP response back immediately -- this is what actually fixes the timeout risk. Processing continues in the background after this; the frontend polls kb_ingest_jobs using jobId for the real outcome, same pattern as Acknowledge Immediately in voxitron-whatsapp-agent."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE kb_ingest_jobs\nSET status = 'failed', error_message = $2, completed_at = now()\nWHERE id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Create Ingest Job').isExecuted ? $('Create Ingest Job').item.json.id : null }},{{ 'Customer ID is not a valid UUID' }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1488,
+        260
+      ],
+      "id": "55837d2b-d188-4199-b270-c30b5bfe4fe0",
+      "name": "Update Job Status: Bad ID",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-08-23: no-op for KB Upload Form submissions -- WHERE id = NULL matches zero rows in Postgres, so this only actually updates anything when a real job id exists (KB Ingest Webhook path)."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE kb_ingest_jobs\nSET status = 'failed', error_message = $2, completed_at = now()\nWHERE id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Create Ingest Job').isExecuted ? $('Create Ingest Job').item.json.id : null }},{{ 'Customer not found for that ID' }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -800,
+        520
+      ],
+      "id": "8857dd07-f361-48cf-8027-00577b68052e",
+      "name": "Update Job Status: Customer Not Found",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-08-23: no-op for KB Upload Form submissions -- WHERE id = NULL matches zero rows in Postgres, so this only actually updates anything when a real job id exists (KB Ingest Webhook path)."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE kb_ingest_jobs\nSET status = 'failed', error_message = $2, completed_at = now()\nWHERE id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Create Ingest Job').isExecuted ? $('Create Ingest Job').item.json.id : null }},{{ 'Failed to fetch the page URL' }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1200,
+        100
+      ],
+      "id": "149c779d-fcd1-46be-80bd-e95fcf534ae1",
+      "name": "Update Job Status: Webpage Failed",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-08-23: no-op for KB Upload Form submissions -- WHERE id = NULL matches zero rows in Postgres, so this only actually updates anything when a real job id exists (KB Ingest Webhook path)."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE kb_ingest_jobs\nSET status = 'success', chunk_count = $2, completed_at = now()\nWHERE id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Create Ingest Job').isExecuted ? $('Create Ingest Job').item.json.id : null }},{{ $('Chunk Document').all().length }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3600,
+        320
+      ],
+      "id": "65a05855-2454-408a-a6df-403468699493",
+      "name": "Update Job Status: Success",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-08-23: no-op for KB Upload Form submissions -- WHERE id = NULL matches zero rows in Postgres, so this only actually updates anything when a real job id exists (KB Ingest Webhook path)."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE kb_ingest_jobs\nSET status = 'success', error_message = $2, completed_at = now()\nWHERE id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Create Ingest Job').isExecuted ? $('Create Ingest Job').item.json.id : null }},{{ 'Document deleted' }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        700,
+        976
+      ],
+      "id": "a7066b7e-8126-454f-bf1f-4b5a7e19201f",
+      "name": "Update Job Status: Deleted",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-08-23: no-op for KB Upload Form submissions -- WHERE id = NULL matches zero rows in Postgres, so this only actually updates anything when a real job id exists (KB Ingest Webhook path)."
     }
   ],
   "pinData": {},
@@ -850,7 +1272,7 @@
       "main": [
         [
           {
-            "node": "Customer ID Looks Valid?",
+            "node": "Normalize Ingest Trigger",
             "type": "main",
             "index": 0
           }
@@ -868,7 +1290,7 @@
         ],
         [
           {
-            "node": "Respond: Bad ID Format",
+            "node": "Update Job Status: Bad ID",
             "type": "main",
             "index": 0
           }
@@ -919,14 +1341,14 @@
       "main": [
         [
           {
-            "node": "Is Paste Text?",
+            "node": "Is Delete Operation?",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Respond: Customer Not Found",
+            "node": "Update Job Status: Customer Not Found",
             "type": "main",
             "index": 0
           }
@@ -973,7 +1395,7 @@
       "main": [
         [
           {
-            "node": "Is PDF?",
+            "node": "Came From Webhook?",
             "type": "main",
             "index": 0
           }
@@ -1009,7 +1431,7 @@
         ],
         [
           {
-            "node": "Respond: Webpage Fetch Failed",
+            "node": "Update Job Status: Webpage Failed",
             "type": "main",
             "index": 0
           }
@@ -1203,7 +1625,193 @@
       "main": [
         [
           {
+            "node": "Update Job Status: Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Upsert to Qdrant",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KB Ingest Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Ingest Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Ingest Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Webhook Triggered?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Came From Webhook?": {
+      "main": [
+        [
+          {
+            "node": "Download File From URL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is PDF?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File From URL": {
+      "main": [
+        [
+          {
+            "node": "Is PDF?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Webhook Triggered?": {
+      "main": [
+        [
+          {
+            "node": "Create Ingest Job",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Customer ID Looks Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Ingest Job": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Job Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acknowledge Job Created": {
+      "main": [
+        [
+          {
+            "node": "Customer ID Looks Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Job Status: Bad ID": {
+      "main": [
+        [
+          {
+            "node": "Respond: Bad ID Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Job Status: Customer Not Found": {
+      "main": [
+        [
+          {
+            "node": "Respond: Customer Not Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Job Status: Webpage Failed": {
+      "main": [
+        [
+          {
+            "node": "Respond: Webpage Fetch Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Job Status: Success": {
+      "main": [
+        [
+          {
             "node": "Respond: Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Delete Operation?": {
+      "main": [
+        [
+          {
+            "node": "Delete Document (Standalone)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Paste Text?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Document (Standalone)": {
+      "main": [
+        [
+          {
+            "node": "Update Job Status: Deleted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Job Status: Deleted": {
+      "main": [
+        [
+          {
+            "node": "Respond: Deleted",
             "type": "main",
             "index": 0
           }

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 export type BlogSource = { label: string; href: string };
 
@@ -12,7 +13,7 @@ type BlogPostLayoutProps = {
   dek: string;
   publishedLabel: string;
   readingTime: string;
-  coverImage: string;
+  coverImage?: string;
   coverAlt: string;
   coverCaption?: string;
   sources: BlogSource[];
@@ -49,7 +50,11 @@ export default function BlogPostLayout({
           </header>
 
           <div className="article-cover">
-            <Image src={coverImage} alt={coverAlt} fill sizes="(max-width: 1100px) 100vw, 1100px" priority />
+            {coverImage ? (
+              <Image src={coverImage} alt={coverAlt} fill sizes="(max-width: 1100px) 100vw, 1100px" priority />
+            ) : (
+              <ImagePlaceholder label={coverAlt} />
+            )}
           </div>
           {coverCaption && <p className="article-cover-caption">{coverCaption}</p>}
 

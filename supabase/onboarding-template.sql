@@ -21,12 +21,17 @@ returning id;
 
 -- STEP 1.5: set the customer's industry and AI agent config.
 -- Requires 009_customer_config.sql to already be applied.
--- Copy a starting config blob for this industry from
--- supabase/industry-templates.md, adjust the wording and specifics for this
--- actual business, then paste the adjusted JSON below. Do not skip this step,
--- an un-configured customer (industry/config left null/default) falls back
--- to the agent's generic platform-level behavior only, no qualification
--- questions or booking flow tailored to their business.
+-- Do this in the dashboard now: log in as a Voxitron team member, go to
+-- /dashboard/onboarding, pick this customer, pick their industry (which
+-- pre-fills the starting template), adjust the wording for their actual
+-- business, and save. Do not skip this step, an un-configured customer
+-- (industry/config left null/default) falls back to the agent's generic
+-- platform-level behavior only, no qualification questions or booking flow
+-- tailored to their business.
+--
+-- The SQL below is a fallback for when the dashboard isn't reachable
+-- (e.g. local/manual setup before a deploy exists). Copy a starting config
+-- blob for this industry from supabase/industry-templates.md instead.
 update customers
 set industry = '<<one of: whatsapp-agent, real-estate, diagnostic-centre, retail, ecommerce, general>>',
     config = '<<PASTE_ADJUSTED_CONFIG_JSON_FROM_industry-templates.md_HERE>>'::jsonb

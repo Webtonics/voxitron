@@ -196,12 +196,7 @@ export default function WhatsAppAgentPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <Image
-                src="https://images.unsplash.com/photo-1604074309324-72543c99d59c?fm=jpg&q=80&w=800&auto=format&fit=crop"
-                alt="A seller busy serving one customer while a WhatsApp message from another waits unread"
-                fill
-                sizes="(max-width: 860px) 100vw, 50vw"
-              />
+              <ImagePlaceholder label="Photo: a Lagos market seller serving one customer while a WhatsApp message from another waits unread" />
             </div>
           </div>
         </Reveal>

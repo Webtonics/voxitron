@@ -187,12 +187,7 @@ export default function RetailPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <Image
-                src="https://images.unsplash.com/photo-1604074309324-72543c99d59c?fm=jpg&q=80&w=800&auto=format&fit=crop"
-                alt="A shop owner busy serving a walk-in customer at the counter"
-                fill
-                sizes="(max-width: 860px) 100vw, 50vw"
-              />
+              <ImagePlaceholder label="Photo: a shop owner serving a walk-in customer at the counter" />
             </div>
           </div>
         </Reveal>

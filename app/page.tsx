@@ -7,6 +7,8 @@ import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import BuiltOnStrip from "@/components/BuiltOnStrip";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
+import Tick from "@/components/Tick";
+import RepliedThread from "@/components/RepliedThread";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -75,7 +77,9 @@ export default function Home() {
                 <Link href="#services" className="btn btn-secondary">See all solutions</Link>
               </div>
 
-              <span className="form-note">Message us directly. See the agent reply in real time.</span>
+              <span className="form-note mono">
+                Replied <Tick /> in seconds. Message us and see it happen.
+              </span>
             </div>
 
             <div className="hero-ui" aria-hidden="true">
@@ -161,263 +165,227 @@ export default function Home() {
 
         <BuiltOnStrip />
 
-        {/* PROOF STRIP */}
-        <Reveal className="proof-strip" role="region" aria-label="Key facts">
-          <ul className="proof-list">
-            <li className="proof-item">
-              <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>Replies day and night, in seconds</span>
-            </li>
-            <li className="proof-divider" role="separator" aria-hidden="true"></li>
-            <li className="proof-item">
-              <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>Self-hosted. You own the data</span>
-            </li>
-            <li className="proof-divider" role="separator" aria-hidden="true"></li>
-            <li className="proof-item">
-              <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
-            </li>
-          </ul>
-        </Reveal>
-
-        {/* THE PAIN */}
-        <Reveal as="section" id="pain" aria-labelledby="pain-title">
-          <div className="pain-split">
-            <div className="pain-split-text">
-              <span className="section-label">THE PROBLEM</span>
-              <h2 id="pain-title" className="section-title">
-                You were busy.
-                <br />
-                <span className="accent">They messaged someone else.</span>
-              </h2>
-              <div className="section-body">
-                <p>
-                  A customer messages asking if the blue fabric&apos;s still available.
-                  You&apos;re serving someone else, or it&apos;s 1am and you&apos;re asleep.
-                </p>
-                <p>They don&apos;t wait. They message the next seller and buy from them instead.</p>
-              </div>
-            </div>
-            <div className="pain-photo">
-              <Image
-                src="https://images.unsplash.com/photo-1604074309324-72543c99d59c?fm=jpg&q=80&w=800&auto=format&fit=crop"
-                alt="A seller busy serving one customer while a WhatsApp message from another waits unread"
-                fill
-                sizes="(max-width: 860px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </Reveal>
-
-        {/* COMPARISON: old way vs new way */}
-        <Reveal as="section" id="comparison" aria-labelledby="comparison-title">
+        {/* NIGHT: merged pain + before/after comparison, dark section */}
+        <Reveal as="section" id="night" className="night" aria-labelledby="night-title">
           <div className="section-inner-wide">
             <div className="section-inner-wide-header">
-              <span className="section-label">BEFORE AND AFTER</span>
-              <h2 id="comparison-title" className="section-title">
-                What changes when
+              <span className="section-label">WHILE YOU SLEEP</span>
+              <h2 id="night-title" className="section-title">
+                Your messages don&apos;t stop
                 <br />
-                <span className="accent">WhatsApp runs itself.</span>
-              </h2>
-            </div>
-
-            <div className="comparison-table" role="table" aria-label="Manual replies compared to a Voxitron agent">
-              <div className="comparison-header" role="row">
-                <span className="comparison-header-cell" role="columnheader"></span>
-                <span className="comparison-header-cell is-old" role="columnheader">Manual replies</span>
-                <span className="comparison-header-cell is-new" role="columnheader">Voxitron Agent</span>
-              </div>
-
-              <div className="comparison-row" role="row">
-                <span className="comparison-row-title">Reply time</span>
-                <div className="comparison-cell is-old" role="cell">
-                  <span className="comparison-cell-label">Manual replies</span>
-                  <span className="comparison-cell-value">Minutes to hours, faster only while you&apos;re free</span>
-                </div>
-                <div className="comparison-cell is-new" role="cell">
-                  <span className="comparison-cell-label">Voxitron Agent</span>
-                  <span className="comparison-cell-value">Seconds, day or night</span>
-                </div>
-              </div>
-
-              <div className="comparison-row" role="row">
-                <span className="comparison-row-title">Overnight messages</span>
-                <div className="comparison-cell is-old" role="cell">
-                  <span className="comparison-cell-label">Manual replies</span>
-                  <span className="comparison-cell-value">Sit unread until morning</span>
-                </div>
-                <div className="comparison-cell is-new" role="cell">
-                  <span className="comparison-cell-label">Voxitron Agent</span>
-                  <span className="comparison-cell-value">Answered the moment they arrive</span>
-                </div>
-              </div>
-
-              <div className="comparison-row" role="row">
-                <span className="comparison-row-title">Data and infrastructure</span>
-                <div className="comparison-cell is-old" role="cell">
-                  <span className="comparison-cell-label">Manual replies</span>
-                  <span className="comparison-cell-value">Scattered across staff phones</span>
-                </div>
-                <div className="comparison-cell is-new" role="cell">
-                  <span className="comparison-cell-label">Voxitron Agent</span>
-                  <span className="comparison-cell-value">Self-hosted, logged, and owned by you</span>
-                </div>
-              </div>
-
-              <div className="comparison-row" role="row">
-                <span className="comparison-row-title">Repeat questions</span>
-                <div className="comparison-cell is-old" role="cell">
-                  <span className="comparison-cell-label">Manual replies</span>
-                  <span className="comparison-cell-value">You type the same price and stock answer, every time</span>
-                </div>
-                <div className="comparison-cell is-new" role="cell">
-                  <span className="comparison-cell-label">Voxitron Agent</span>
-                  <span className="comparison-cell-value">Answered automatically, you never retype it</span>
-                </div>
-              </div>
-
-              <div className="comparison-row" role="row">
-                <span className="comparison-row-title">Complex requests</span>
-                <div className="comparison-cell is-old" role="cell">
-                  <span className="comparison-cell-label">Manual replies</span>
-                  <span className="comparison-cell-value">You handle everything yourself</span>
-                </div>
-                <div className="comparison-cell is-new" role="cell">
-                  <span className="comparison-cell-label">Voxitron Agent</span>
-                  <span className="comparison-cell-value">Flagged with full context, you step in only when needed</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* FEATURES: six things it does */}
-        <Reveal as="section" id="features" aria-labelledby="features-title">
-          <div className="section-inner-wide">
-            <div className="section-inner-wide-header">
-              <span className="section-label">WHAT VOXITRON DOES</span>
-              <h2 id="features-title" className="section-title">
-                Six things,
-                <br />
-                <span className="accent">running while you work.</span>
+                at closing time.
               </h2>
               <p className="section-body">
-                One agent, trained on your business. Runs inside the WhatsApp number your
-                customers already have.
+                The enquiries that decide your month land at 11pm and 3am. The only
+                question is whether they get answered, or the customer buys from the next
+                seller instead.
               </p>
             </div>
 
-            <div className="features-grid">
-              <div className="feature-item">
-                <div className="feature-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.2" />
-                    <path d="M8 5V8L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
+            <div className="compare" role="table" aria-label="Without an agent compared to with Voxitron">
+              <div className="night-col" role="rowgroup">
+                <h3>Without an agent</h3>
+                <div className="night-row">
+                  <span className="night-time mono">23:47</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Is the blue one still in stock?&quot;</span>
+                    <span className="r">Sits unread till morning</span>
+                  </div>
                 </div>
-                <div className="feature-text">
-                  <p className="feature-title">Replies in seconds, 24/7</p>
-                  <p className="feature-body">Every message gets an answer, whether it&apos;s noon or 3am.</p>
+                <div className="night-row">
+                  <span className="night-time mono">01:04</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Are you open tomorrow?&quot;</span>
+                    <span className="r">Sits unread till morning</span>
+                  </div>
                 </div>
+                <div className="night-row">
+                  <span className="night-time mono">03:22</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Can I book for 9am?&quot;</span>
+                    <span className="r">Already booked elsewhere by 8am</span>
+                  </div>
+                </div>
+                <div className="night-verdict mono">3 enquiries in &middot; 0 booked</div>
               </div>
 
-              <div className="feature-item">
-                <div className="feature-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 2.5H13V11.5H3V2.5Z" stroke="currentColor" strokeWidth="1.2" />
-                    <path d="M5 5.5H11M5 8H9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
+              <div className="night-col is-you" role="rowgroup">
+                <h3>With Voxitron</h3>
+                <div className="night-row">
+                  <span className="night-time mono">23:47</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Is the blue one still in stock?&quot;</span>
+                    <span className="r">
+                      Priced and confirmed <Tick /> <span className="mono">23:47</span>
+                    </span>
+                  </div>
                 </div>
-                <div className="feature-text">
-                  <p className="feature-title">Checks stock and pricing in real time</p>
-                  <p className="feature-body">Confirms what&apos;s available before promising anything.</p>
+                <div className="night-row">
+                  <span className="night-time mono">01:04</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Are you open tomorrow?&quot;</span>
+                    <span className="r">
+                      Booked for 9am <Tick /> <span className="mono">01:04</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
-
-              <div className="feature-item">
-                <div className="feature-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 4C2 3.45 2.45 3 3 3H13C13.55 3 14 3.45 14 4V11C14 11.55 13.55 12 13 12H3C2.45 12 2 11.55 2 11V4Z" stroke="currentColor" strokeWidth="1.2" />
-                    <path d="M2 5L8 8.5L14 5" stroke="currentColor" strokeWidth="1.2" />
-                  </svg>
+                <div className="night-row">
+                  <span className="night-time mono">03:22</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Can I book for 9am?&quot;</span>
+                    <span className="r">
+                      Booked, confirmed <Tick /> <span className="mono">03:22</span>
+                    </span>
+                  </div>
                 </div>
-                <div className="feature-text">
-                  <p className="feature-title">Books appointments and viewings</p>
-                  <p className="feature-body">Confirms a time slot right inside the chat, no back and forth.</p>
-                </div>
-              </div>
-
-              <div className="feature-item">
-                <div className="feature-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 4C2 3.45 2.45 3 3 3H13C13.55 3 14 3.45 14 4V11C14 11.55 13.55 12 13 12H3C2.45 12 2 11.55 2 11V4Z" stroke="currentColor" strokeWidth="1.2" />
-                    <path d="M5 6.5H11M5 9H9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <div className="feature-text">
-                  <p className="feature-title">Takes orders and confirms sales</p>
-                  <p className="feature-body">Collects the order details and confirms the total, in chat.</p>
-                </div>
-              </div>
-
-              <div className="feature-item">
-                <div className="feature-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.2" />
-                    <path d="M2 6H14M6 2V6M10 2V6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                    <path d="M5 9.5H8M5 11.5H7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <div className="feature-text">
-                  <p className="feature-title">Runs on your existing number</p>
-                  <p className="feature-body">No new hardware. Customers message the number they already have saved.</p>
-                </div>
-              </div>
-
-              <div className="feature-item">
-                <div className="feature-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 2L9.8 5.6L14 6.2L11 9.1L11.7 13.2L8 11.3L4.3 13.2L5 9.1L2 6.2L6.2 5.6L8 2Z" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div className="feature-text">
-                  <p className="feature-title">Self-hosted, NDPA-aware infrastructure</p>
-                  <p className="feature-body">Your conversations and customer data stay yours, not locked in a third-party platform.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="feature-callout">
-              <div>
-                <span className="callout-label">Important</span>
-                <p className="callout-title">Sounds like a real person, not a chatbot</p>
-                <p className="callout-body">
-                  Trained on how your customers actually message: short texts, common
-                  phrasing, straight to the point. Professional, never robotic.
-                </p>
+                <div className="night-verdict mono">3 enquiries in &middot; 3 booked</div>
               </div>
             </div>
           </div>
         </Reveal>
 
-        {/* STATS */}
-        <Reveal className="stats-strip" role="region" aria-label="WhatsApp and Nigeria market statistics">
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className="stat-number">96.5%</span>
-              <p className="stat-label">of Nigerian internet users are active on WhatsApp, one of the highest rates in Africa</p>
-              <span className="stat-source">DataReportal</span>
+        {/* WHAT VOXITRON DOES: asymmetric capability grid */}
+        <Reveal as="section" id="what" aria-labelledby="what-title">
+          <div className="section-inner-wide">
+            <div className="section-inner-wide-header">
+              <h2 id="what-title" className="section-title">
+                It does the front-desk work,
+                <br />
+                <span className="accent">in the chat.</span>
+              </h2>
+              <p className="section-body">
+                Not a menu of buttons. One agent that reads what the customer actually
+                wrote and takes it all the way to a booking or a sale.
+              </p>
             </div>
-            <div className="stat-item">
-              <span className="stat-number">20M+</span>
-              <p className="stat-label">daily business message senders on WhatsApp in Nigeria, a first for the country</p>
-              <span className="stat-source">Meta</span>
+
+            <div className="caps">
+              <div className="cap is-lead">
+                <div>
+                  <div className="cap-badge" aria-hidden="true"><Tick /></div>
+                  <h3>Books the appointment or the sale</h3>
+                  <p>
+                    Confirms a real time slot or order inside the conversation, sends the
+                    details, and logs it. No back and forth, no phone tag.
+                  </p>
+                </div>
+                <div className="cap-lead-demo">
+                  <div className="mini-msg in">Can I get this Saturday morning?</div>
+                  <div className="mini-msg out">
+                    Saturday 10:30am is open. Shall I hold it?
+                    <span className="t mono">sent</span>
+                  </div>
+                  <div className="mini-msg in">Yes please</div>
+                  <div className="mini-msg out">
+                    Booked. 10:30am Saturday.
+                    <span className="t mono"><Tick /> confirmed</span>
+                  </div>
+                </div>
+              </div>
+              <div className="cap">
+                <div className="cap-badge" aria-hidden="true">&#8358;</div>
+                <h3>Answers prices instantly</h3>
+                <p>Quotes the right price, every time, without you retyping it.</p>
+              </div>
+              <div className="cap">
+                <div className="cap-badge" aria-hidden="true">&#9203;</div>
+                <h3>Replies in seconds</h3>
+                <p>Noon or 3am, every message gets a real answer.</p>
+              </div>
+              <div className="cap">
+                <div className="cap-badge" aria-hidden="true">&#9873;</div>
+                <h3>Flags the tricky ones</h3>
+                <p>Anything sensitive comes to you with the full chat, so nothing is missed.</p>
+              </div>
+              <div className="cap">
+                <div className="cap-badge" aria-hidden="true">&#9989;</div>
+                <h3>Sounds like a person</h3>
+                <p>Trained on how your customers actually message. Never robotic.</p>
+              </div>
             </div>
-            <div className="stat-item">
-              <span className="stat-number">₦7.2B</span>
-              <p className="stat-label">already collected in NDPC data-privacy penalties, why self-hosted infrastructure matters</p>
-              <span className="stat-source">Nigeria Data Protection Commission</span>
+          </div>
+        </Reveal>
+
+        {/* MULTIMODAL: voice notes + photos */}
+        <Reveal as="section" id="multimodal" className="mm" aria-labelledby="mm-title">
+          <div className="section-inner-wide">
+            <div className="section-inner-wide-header">
+              <h2 id="mm-title" className="section-title">
+                Most customers don&apos;t type.
+                <br />
+                <span className="accent">They talk, or they snap a photo.</span>
+              </h2>
+              <p className="section-body">
+                Voxitron listens to voice notes and reads photos, then does the same job it
+                does with text. It quotes, it books, it confirms. No &quot;please type your
+                message.&quot;
+              </p>
+            </div>
+
+            <div className="mm-grid">
+              <div className="mm-card">
+                <span className="mm-tag"><span className="ic" aria-hidden="true">&#9673;</span> Voice note</span>
+                <div className="mm-thread">
+                  <div className="voice">
+                    <span className="play" aria-hidden="true">&#9654;</span>
+                    <span className="wave" aria-hidden="true">
+                      <span style={{ height: "5px" }}></span>
+                      <span style={{ height: "9px" }}></span>
+                      <span style={{ height: "14px" }}></span>
+                      <span style={{ height: "7px" }}></span>
+                      <span style={{ height: "19px" }}></span>
+                      <span style={{ height: "11px" }}></span>
+                      <span style={{ height: "21px" }}></span>
+                      <span style={{ height: "8px" }}></span>
+                      <span style={{ height: "14px" }}></span>
+                      <span style={{ height: "6px" }}></span>
+                    </span>
+                    <span className="dur mono">0:11</span>
+                  </div>
+                  <div className="form-time mono">received 09:12</div>
+                  <div className="heard">
+                    <b>Agent heard</b>
+                    &quot;Abeg, how much for the blue one, and una dey deliver today?&quot;
+                  </div>
+                  <div className="mm-reply">
+                    The blue one is &#8358;12,000. Yes, we deliver today if you order
+                    before 3pm.
+                    <span className="t">
+                      09:12 <Tick />
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mm-card">
+                <span className="mm-tag"><span className="ic" aria-hidden="true">&#9635;</span> Photo</span>
+                <div className="mm-thread">
+                  <div className="imgmsg">
+                    <div className="form-card">
+                      <div className="form-top"><span>PRODUCT PHOTO</span><span aria-hidden="true">&#9993;</span></div>
+                      <div className="form-body">
+                        <div className="form-line" style={{ width: "72%" }}></div>
+                        <div className="form-line q" style={{ width: "54%" }}></div>
+                        <div className="form-line q" style={{ width: "62%" }}></div>
+                        <div className="form-line" style={{ width: "40%" }}></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-time mono">received 16:40</div>
+                  <div className="heard">
+                    <b>Agent read</b>
+                    Customer sent a photo of the item they want, asking if it&apos;s
+                    available.
+                  </div>
+                  <div className="mm-reply">
+                    Yes, that one&apos;s available in stock. &#8358;9,500. Want me to hold
+                    it for you?
+                    <span className="t">
+                      16:40 <Tick />
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Reveal>
@@ -426,35 +394,31 @@ export default function Home() {
         <Reveal as="section" id="how-it-works" aria-labelledby="how-title">
           <div className="section-inner-wide">
             <div className="section-inner-wide-header">
-              <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
+                Live on your existing number
                 <br />
-                <span className="accent">Answer every message automatically.</span>
+                <span className="accent">in a week.</span>
               </h2>
             </div>
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: WhatsApp number connected" className="step-visual" />
                 <div className="step-heading">
-                  <span className="step-number" aria-hidden="true">01</span>
+                  <span className="step-number mono" aria-hidden="true">DAY 01</span>
                   <h3 className="step-title">Connect your WhatsApp Business number</h3>
                 </div>
                 <p className="step-body">No new number. Customers message the one they already have.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: catalog and pricing setup" className="step-visual" />
                 <div className="step-heading">
-                  <span className="step-number" aria-hidden="true">02</span>
+                  <span className="step-number mono" aria-hidden="true">DAY 02-03</span>
                   <h3 className="step-title">We train it on your catalog and prices</h3>
                 </div>
                 <p className="step-body">Your products, services, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: live WhatsApp conversation" className="step-visual" />
                 <div className="step-heading">
-                  <span className="step-number" aria-hidden="true">03</span>
+                  <span className="step-number mono" aria-hidden="true">DAY 04</span>
                   <h3 className="step-title">It goes live, answering every message</h3>
                 </div>
                 <p className="step-body">You step in only when a customer needs you directly.</p>
@@ -463,7 +427,51 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* INDUSTRIES: two vertical cards. id="services" kept for backward-compat: every
+        {/* REPLIED: second orchestrated Replied moment */}
+        <Reveal as="section" id="replied" aria-labelledby="replied-title">
+          <div className="section-inner-wide">
+            <div className="two-col-split">
+              <div>
+                <h2 id="replied-title" className="section-title">
+                  Watch it happen
+                  <br />
+                  <span className="accent">before you finish reading this.</span>
+                </h2>
+                <p className="section-body">
+                  Every conversation gets a real answer, not a queue. The reply lands the
+                  same minute the question does, whatever time it is.
+                </p>
+                <p className="form-note mono">
+                  Replied <Tick /> zero gap between question and answer.
+                </p>
+              </div>
+              <RepliedThread />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* STATS */}
+        <Reveal className="stats-strip" role="region" aria-label="WhatsApp and Nigeria market statistics">
+          <div className="stats-grid">
+            <div className="stat-item">
+              <span className="stat-number mono">96.5%</span>
+              <p className="stat-label">of Nigerian internet users are active on WhatsApp, one of the highest rates in Africa</p>
+              <span className="stat-source mono">DataReportal</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number mono">20M+</span>
+              <p className="stat-label">daily business message senders on WhatsApp in Nigeria, a first for the country</p>
+              <span className="stat-source mono">Meta</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number mono">00:03</span>
+              <p className="stat-label">typical time for the agent to answer a new message, at any hour</p>
+              <span className="stat-source mono">Measured, Voxitron</span>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* INDUSTRIES: four vertical cards. id="services" kept for backward-compat: every
             other page's "See the other agents" CTA links to /#services */}
         <Reveal as="section" id="services" aria-labelledby="industries-title">
           <div className="section-inner-wide">
@@ -678,7 +686,9 @@ export default function Home() {
               <Link href="/contact" className="btn btn-secondary">Book a call</Link>
             </div>
 
-            <span className="form-note">No forms required. Just message us.</span>
+            <span className="form-note mono">
+              No forms. Just message us, and watch it reply <Tick /> before you finish typing.
+            </span>
           </div>
         </Reveal>
       </main>
