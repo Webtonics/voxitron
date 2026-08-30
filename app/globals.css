@@ -65,9 +65,10 @@
   --space-7:  48px;  --space-8:  64px;  --space-9:  96px;
   --space-10: 128px;
 
-  --container:      640px;
-  --container-full: 1200px;
-  --gutter:         clamp(20px, 5vw, 56px);
+  --container:         640px;
+  --container-full:    1200px;
+  --article-container: 760px;   /* wider reading column, blog posts only, see .article-body */
+  --gutter:            clamp(20px, 5vw, 56px);
 
   /* Radius: brand doc's three-tier scale, replacing the old 4px/6px system */
   --r-sm: 8px;
@@ -3246,9 +3247,14 @@ textarea.lead-form-input {
   line-height: 1.6;
 }
 
-/* Article page */
+/* Article page. Uses its own wider reading column (--article-container,
+   defined in :root above) instead of the shared --container (640px, used
+   site-wide for narrow text blocks like FAQ/pricing copy): a full blog
+   post reads best around 65-75 characters per line, which needs more like
+   760px at this body font size, and the previous 640px column looked lost
+   in the middle of the page on anything wider than a phone. */
 .article-header {
-  max-width: var(--container);
+  max-width: var(--article-container);
   margin: 0 auto;
   padding: calc(56px + var(--space-7)) var(--gutter) var(--space-6);
 }
@@ -3303,7 +3309,7 @@ textarea.lead-form-input {
 }
 
 .article-cover-caption {
-  max-width: var(--container);
+  max-width: var(--article-container);
   margin: calc(-1 * var(--space-6)) auto var(--space-8);
   padding: 0 var(--gutter);
   font-family: var(--font-mono);
@@ -3312,7 +3318,7 @@ textarea.lead-form-input {
 }
 
 .article-body {
-  max-width: var(--container);
+  max-width: var(--article-container);
   margin: 0 auto;
   padding: 0 var(--gutter) var(--space-9);
   font-family: var(--font-body);
@@ -3409,7 +3415,7 @@ textarea.lead-form-input {
 }
 
 .article-sources {
-  max-width: var(--container);
+  max-width: var(--article-container);
   margin: 0 auto;
   padding: var(--space-6) var(--gutter) var(--space-9);
   border-top: 1px solid var(--border);
