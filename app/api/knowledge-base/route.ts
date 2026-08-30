@@ -141,7 +141,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-Key": apiKey,
+        "Authorization": apiKey,
       },
       body: JSON.stringify(payload),
     });
