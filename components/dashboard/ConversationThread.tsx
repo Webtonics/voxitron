@@ -1,3 +1,5 @@
+import Tick from "@/components/Tick";
+
 type Message = {
   id: string;
   direction: "inbound" | "outbound";
@@ -30,8 +32,9 @@ export default function ConversationThread({ messages }: { messages: Message[] }
           key={m.id}
           className={`dashboard-thread-group${m.direction === "inbound" ? " is-inbound" : ""}`}
         >
-          <span className="ui-msg-label">
+          <span className="ui-msg-label mono">
             {m.direction === "inbound" ? "Customer" : "Voxitron"} &middot; {formatTime(m.sent_at)}
+            {m.direction === "outbound" && <Tick className="dashboard-thread-tick" />}
           </span>
           <div className={`ui-msg ${m.direction === "inbound" ? "ui-msg-customer" : "ui-msg-ai"}`}>
             {m.body}

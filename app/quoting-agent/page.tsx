@@ -186,12 +186,7 @@ export default function QuotingAgentPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <Image
-                src="https://images.unsplash.com/photo-1605568985653-3d8e43f4efa6?fm=jpg&q=80&w=800&auto=format&fit=crop"
-                alt="A tradesperson on the phone at the end of a long day, quote requests piling up"
-                fill
-                sizes="(max-width: 860px) 100vw, 50vw"
-              />
+              <ImagePlaceholder label="Photo: a tradesperson on the phone at the end of a long day, quote requests piling up" />
             </div>
           </div>
         </Reveal>

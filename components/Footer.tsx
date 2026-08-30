@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Tick from "@/components/Tick";
 
 const WA_CONTACT_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20know%20more";
@@ -67,6 +68,9 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <span>&#169; 2026 Voxitron. All rights reserved.</span>
+        <span className="footer-bottom-replied mono">
+          Message us. Replied <Tick /> before you finish reading this.
+        </span>
       </div>
     </footer>
   );

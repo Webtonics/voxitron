@@ -184,12 +184,7 @@ export default function SpeedToLeadPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <Image
-                src="https://images.unsplash.com/photo-1676210133055-eab6ef033ce3?fm=jpg&q=80&w=800&auto=format&fit=crop"
-                alt="A tradesperson focused on a repair job, unable to answer the phone"
-                fill
-                sizes="(max-width: 860px) 100vw, 50vw"
-              />
+              <ImagePlaceholder label="Photo: a tradesperson mid-repair, phone ringing unanswered on the bench" />
             </div>
           </div>
         </Reveal>

@@ -6,7 +6,13 @@ import { createClient } from "@/lib/supabase/client";
 
 type Customer = { id: string; business_name: string; industry: string | null };
 
-export default function DashboardNav({ customers }: { customers: Customer[] }) {
+export default function DashboardNav({
+  customers,
+  isVoxitronTeam = false,
+}: {
+  customers: Customer[];
+  isVoxitronTeam?: boolean;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -39,6 +45,14 @@ export default function DashboardNav({ customers }: { customers: Customer[] }) {
           <span className="dashboard-nav-tenant-badge">{active.industry}</span>
         )}
       </div>
+
+      {isVoxitronTeam && (
+        <div className="dashboard-nav-links">
+          <Link href="/dashboard/leads" className="dashboard-nav-link">Leads</Link>
+          <Link href="/dashboard/knowledge-base" className="dashboard-nav-link">Knowledge Base</Link>
+          <Link href="/dashboard/onboarding" className="dashboard-nav-link">Onboarding</Link>
+        </div>
+      )}
 
       {customers.length > 1 && (
         <select

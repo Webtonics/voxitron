@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers } from "@/lib/dashboard/activeCustomer";
+import { VOXITRON_CUSTOMER_ID } from "@/lib/dashboard/voxitron";
 import DashboardNav from "@/components/dashboard/DashboardNav";
 
 export default async function DashboardLayout({
@@ -19,10 +20,11 @@ export default async function DashboardLayout({
   }
 
   const customers = await getUserCustomers(supabase, user.id);
+  const isVoxitronTeam = customers.some((c) => c.id === VOXITRON_CUSTOMER_ID);
 
   return (
     <>
-      <DashboardNav customers={customers} />
+      <DashboardNav customers={customers} isVoxitronTeam={isVoxitronTeam} />
       <main className="dashboard-main">{children}</main>
     </>
   );
