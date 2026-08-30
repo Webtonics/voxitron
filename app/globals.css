@@ -3268,12 +3268,18 @@ textarea.lead-form-input {
 
 .article-meta-dot { color: var(--border-mid); }
 
+/* Deliberately smaller than .hero-title/h1's default --text-2xl (see the
+   type-scale rule near the top of this file and CLAUDE.md's Typography
+   section): a blog headline is a real, variable-length sentence that needs
+   to wrap 2-3 lines gracefully, not the short, character-capped marketing
+   hero copy --text-2xl was sized for. At --text-2xl a long real headline
+   wrapped into 7-8 huge lines. */
 .article-title {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: 800;
   color: var(--text-primary);
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: var(--space-4);
 }
