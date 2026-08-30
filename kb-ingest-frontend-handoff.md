@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ## Auth
 
-Header Auth, server-side calls only — **never expose this in browser/client code**. Header name and secret are pending; Josh/Alex will provide these once the credential is created in n8n. Build the request with a placeholder header for now (e.g. `X-API-Key`) and swap in the real value when given.
+Header Auth, server-side calls only — **never expose this in browser/client code**. Confirmed 2026-08-30: the "Voxitron Meta" Header Auth credential on the KB Ingest Webhook node checks a bare `Authorization` header (not a custom header name like `X-API-Key`), value is a plain secret string, no `Bearer` prefix. Set the same value as `N8N_KB_INGEST_API_KEY` in this app's environment.
 
 ## Request body
 
