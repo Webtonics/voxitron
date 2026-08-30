@@ -129,7 +129,7 @@ export default function MissedLeadCalculatorPage() {
         </Reveal>
 
         {/* LEAD CAPTURE */}
-        <Reveal as="section" id="get-started" aria-labelledby="get-started-title">
+        <Reveal as="section" id="get-started" className="inline-get-started" aria-labelledby="get-started-title">
           <div className="section-inner">
             <span className="section-label">WANT TO STOP LOSING IT?</span>
             <h2 id="get-started-title" className="section-title">

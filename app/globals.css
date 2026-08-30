@@ -1332,6 +1332,51 @@ body, p, .section-body {
   margin-top: var(--space-7);
 }
 
+/* Section wrappers ported from the brand-foundation prototype
+   (voxitron-homepage-demo.html), which paired a shared `.section {
+   padding: 96px 0 }` class with its own `.wrap` container for horizontal
+   gutters. That vertical-padding rule never made it into the app's CSS when
+   these sections were built, so every one below only had the horizontal
+   gutter (via .section-inner/.section-inner-wide) and rendered flush against
+   the top/bottom of its content, with no side padding on some content that
+   sits outside .section-inner (e.g. .compare in #night). Restores the same
+   padding: var(--space-9) var(--gutter) convention every other page's
+   sections already use (see #pain, #services, #faq, etc. above). */
+#what,
+#replied,
+#what-is-this,
+#pricing-teaser,
+#story,
+#beliefs,
+#wont-do,
+#how-we-work,
+#commitments,
+#pricing-cards,
+#what-determines-price,
+#buying,
+#methods,
+#process,
+#compare-cards,
+#at-a-glance,
+#assessment,
+#why-voxitron,
+#table,
+#calculator,
+#how-to-use,
+#results-meaning {
+  padding: var(--space-9) var(--gutter);
+}
+
+/* #get-started is deliberately excluded from the shared rule above: on
+   /get-started itself it's the page's first section and already gets its
+   nav-clearance padding from .page-hero (an id selector would override that
+   class and break the fixed-nav offset). /contact reuses the same id for an
+   unrelated mid-page section, tagged with this class so it can be padded
+   without touching /get-started's page. */
+.inline-get-started {
+  padding: var(--space-9) var(--gutter);
+}
+
 /* Secondary-page hero: shorter than the marketing-page #hero (no photo, no
    mockup), used by pricing/compare/about/contact/tools/get-started/privacy.
    Shares the same top offset math (nav height + space-9) so every page's
@@ -1403,6 +1448,7 @@ body, p, .section-body {
    NIGHT: dark merged pain + comparison section (homepage)
    ============================================= */
 .night {
+  padding: var(--space-9) var(--gutter);
   background: var(--ink);
   color: var(--paper);
 }
@@ -1583,6 +1629,7 @@ body, p, .section-body {
    MULTIMODAL: voice note + photo capability section
    ============================================= */
 .mm {
+  padding: var(--space-9) var(--gutter);
   background: linear-gradient(180deg, #fff, #fdfbf6);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
