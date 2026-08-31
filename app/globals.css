@@ -1868,14 +1868,48 @@ body, p, .section-body {
 }
 
 /* =============================================
-   PRIMARY FEATURES / SERVICES
+   PRIMARY FEATURES (agent pages)
    ============================================= */
-#features,
-#services {
+#features {
   padding: var(--space-9) var(--gutter);
   background: var(--bg-elevated);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+}
+
+/* =============================================
+   INDUSTRIES (homepage "Four industries" section):
+   ink-tinted glow on --paper, echoing #cta's glow treatment
+   rather than inverting to a solid dark fill.
+   ============================================= */
+#services {
+  position: relative;
+  padding: var(--space-9) var(--gutter);
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+#services::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(232, 137, 12, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(14, 124, 107, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(11, 31, 42, 0.05) 0%, transparent 65%);
+  animation: cta-mesh-drift 26s ease-in-out infinite alternate;
+}
+
+#services > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #services::before { animation: none; }
 }
 
 .features-grid {
@@ -1954,16 +1988,23 @@ body, p, .section-body {
   display: flex;
   flex-direction: column;
   padding: var(--space-7) var(--space-6);
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(11, 31, 42, 0.08);
   border-top: 3px solid var(--accent);
   border-radius: var(--r-lg);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
 .service-card:hover {
   transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.8);
   box-shadow: var(--shadow-md);
+}
+
+.service-card:nth-child(2n) {
+  border-top-color: var(--teal);
 }
 
 .service-kicker {
@@ -1973,6 +2014,10 @@ body, p, .section-body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: var(--space-3);
+}
+
+.service-card:nth-child(2n) .service-kicker {
+  color: var(--teal);
 }
 
 .service-title {
@@ -2017,6 +2062,10 @@ body, p, .section-body {
   flex-shrink: 0;
 }
 
+.service-card:nth-child(2n) .service-list li::before {
+  color: var(--teal);
+}
+
 .service-link {
   display: inline-flex;
   align-items: center;
@@ -2036,6 +2085,11 @@ body, p, .section-body {
 .service-link:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+.service-card:nth-child(2n) .service-link:hover {
+  color: var(--teal);
+  border-color: var(--teal);
 }
 
 @media (min-width: 900px) {
