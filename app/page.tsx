@@ -658,6 +658,7 @@ export default function Home() {
             </h2>
             <div className="section-body">
               <p>No hidden platform fees. No per-seat pricing. You know the cost upfront.</p>
+              <p>30 days free before your first invoice.</p>
             </div>
             <div className="cta-group">
               <Link href="/pricing" className="btn btn-primary">See pricing</Link>

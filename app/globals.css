@@ -1346,7 +1346,6 @@ body, p, .section-body {
 #what,
 #replied,
 #what-is-this,
-#pricing-teaser,
 #story,
 #beliefs,
 #wont-do,
@@ -2658,7 +2657,54 @@ details[open] .faq-icon { transform: rotate(45deg); }
 }
 
 /* =============================================
-   FINAL CTA: the one "flip" moment.
+   PRICING TEASER (homepage only): solid --ink band with a fine grid
+   texture, the site's one deliberate full inversion. Sits between the
+   plain FAQ section and the amber-glow #cta band below, so it reads as
+   its own bold moment rather than repeating #cta's amber treatment.
+   ============================================= */
+#pricing-teaser {
+  position: relative;
+  padding: var(--space-9) var(--gutter);
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+#pricing-teaser .section-label {
+  color: #FFD9A3;
+  background: rgba(232, 137, 12, 0.14);
+  border-color: rgba(232, 137, 12, 0.3);
+}
+
+#pricing-teaser .section-title {
+  color: #FFFFFF;
+}
+
+#pricing-teaser .section-title .accent {
+  color: var(--amber);
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 137, 12, 0.5);
+  text-underline-offset: 6px;
+}
+
+#pricing-teaser .section-body p {
+  color: var(--paper-muted);
+}
+
+#pricing-teaser .btn-secondary {
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+#pricing-teaser .btn-secondary:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* =============================================
+   FINAL CTA: the other "flip" moment.
    Amber across a full-bleed inverted panel reads as a warning color, in
    tension with the brand's trust-sensitive personality, so this stays on
    --paper with a concentrated amber glow behind the content instead of an
