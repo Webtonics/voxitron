@@ -1,6 +1,6 @@
 import Tick from "@/components/Tick";
 
-type Message = {
+export type ThreadMessage = {
   id: string;
   direction: "inbound" | "outbound";
   body: string;
@@ -16,7 +16,7 @@ function formatTime(iso: string) {
   });
 }
 
-export default function ConversationThread({ messages }: { messages: Message[] }) {
+export default function ConversationThread({ messages }: { messages: ThreadMessage[] }) {
   if (messages.length === 0) {
     return (
       <div className="dashboard-empty-state">
