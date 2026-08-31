@@ -20,7 +20,7 @@
 
   /* Legacy token names kept as aliases so existing selectors don't need renaming */
   --bg-primary:   var(--paper);
-  --bg-secondary: #F3F1EB;
+  --bg-secondary: #FDFCFA;
   --bg-elevated:  #FFFFFF;
 
   --accent:       var(--amber);
