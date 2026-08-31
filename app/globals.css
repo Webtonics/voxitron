@@ -4377,6 +4377,19 @@ textarea.lead-form-input {
   font-size: var(--text-sm);
 }
 
+.dashboard-settings-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 420px;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
 /* =============================================
    INBOX: slim toolbar + split-view list/thread
    ============================================= */
@@ -4639,4 +4652,31 @@ textarea.lead-form-input {
   font-size: var(--text-xs);
   color: var(--text-muted);
   text-transform: uppercase;
+}
+
+.dashboard-kb-status {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1px var(--space-2);
+  border-radius: var(--r-sm);
+}
+
+.dashboard-kb-status-processing {
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+}
+
+.dashboard-kb-status-success {
+  color: var(--teal);
+  background: rgba(14, 124, 107, 0.08);
+  border: 1px solid rgba(14, 124, 107, 0.22);
+}
+
+.dashboard-kb-status-failed {
+  color: var(--error);
+  background: rgba(214, 69, 69, 0.08);
+  border: 1px solid rgba(214, 69, 69, 0.22);
 }

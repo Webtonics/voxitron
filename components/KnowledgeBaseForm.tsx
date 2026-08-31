@@ -18,7 +18,7 @@ const SOURCE_TYPE_LABELS: Record<SourceType, string> = {
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60; // 60 * 2s = 2 minutes: generous for a large file/website fetch, but don't poll forever
 
-export default function KnowledgeBaseForm() {
+export default function KnowledgeBaseForm({ customerId }: { customerId: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [sourceType, setSourceType] = useState<SourceType>("paste");
@@ -74,6 +74,7 @@ export default function KnowledgeBaseForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    formData.set("customerId", customerId);
 
     let response: Response;
     try {
@@ -111,18 +112,6 @@ export default function KnowledgeBaseForm() {
 
   return (
     <form className="lead-form" onSubmit={handleSubmit} noValidate>
-      <div className="lead-form-row">
-        <label className="lead-form-label" htmlFor="kb-customer-id">Customer ID</label>
-        <input
-          id="kb-customer-id"
-          name="customerId"
-          type="text"
-          required
-          className="lead-form-input"
-          placeholder="the customers.id UUID from Supabase"
-        />
-      </div>
-
       <div className="lead-form-row">
         <label className="lead-form-label" htmlFor="kb-title">Document title</label>
         <input

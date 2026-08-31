@@ -8,15 +8,16 @@ type Customer = { id: string; business_name: string; industry: string | null };
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inbox", icon: "inbox" as const },
+  { href: "/dashboard/knowledge-base", label: "Knowledge Base", icon: "kb" as const },
+  { href: "/dashboard/settings", label: "Settings", icon: "settings" as const },
 ];
 
 const TEAM_NAV_ITEMS = [
   { href: "/dashboard/leads", label: "Leads", icon: "leads" as const },
-  { href: "/dashboard/knowledge-base", label: "Knowledge Base", icon: "kb" as const },
   { href: "/dashboard/onboarding", label: "Onboarding", icon: "onboarding" as const },
 ];
 
-function NavIcon({ name }: { name: "inbox" | "leads" | "kb" | "onboarding" }) {
+function NavIcon({ name }: { name: "inbox" | "leads" | "kb" | "onboarding" | "settings" }) {
   const paths: Record<typeof name, React.ReactNode> = {
     inbox: (
       <path
@@ -50,6 +51,17 @@ function NavIcon({ name }: { name: "inbox" | "leads" | "kb" | "onboarding" }) {
         strokeWidth="1.3"
         strokeLinejoin="round"
       />
+    ),
+    settings: (
+      <>
+        <circle cx="10" cy="10" r="2.8" stroke="currentColor" strokeWidth="1.3" />
+        <path
+          d="M10 3.5V5.5M10 14.5V16.5M16.5 10H14.5M5.5 10H3.5M14.6 5.4L13.2 6.8M6.8 13.2L5.4 14.6M14.6 14.6L13.2 13.2M6.8 6.8L5.4 5.4"
+          stroke="currentColor"
+          strokeWidth="1.3"
+          strokeLinecap="round"
+        />
+      </>
     ),
   };
 
