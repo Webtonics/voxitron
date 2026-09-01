@@ -4377,6 +4377,16 @@ textarea.lead-form-input {
   font-size: var(--text-sm);
 }
 
+.dashboard-empty-state-link {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.dashboard-empty-state-link:hover {
+  text-decoration: underline;
+}
+
 .dashboard-settings-info {
   display: flex;
   flex-direction: column;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import ConversationList, { type ConversationListItem } from "@/components/dashboard/ConversationList";
 import ConversationThread, { type ThreadMessage } from "@/components/dashboard/ConversationThread";
@@ -57,6 +58,12 @@ export default function Inbox({
     return (
       <div className="dashboard-empty-state">
         <p>No conversations yet. Once your WhatsApp agent is live, conversations will show up here.</p>
+        <p style={{ marginTop: "var(--space-3)" }}>
+          <Link href="/dashboard/knowledge-base" className="dashboard-empty-state-link">
+            Add to your knowledge base
+          </Link>{" "}
+          so your agent is ready to answer questions.
+        </p>
       </div>
     );
   }
