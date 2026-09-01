@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
+import { sendLeadConfirmationEmail } from "@/lib/email";
 
 const VALID_AGENTS = [
   "speed-to-lead",
@@ -81,6 +82,12 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+
+  // Fire-and-forget: the lead is already saved, a slow or failed email send
+  // shouldn't hold up or fail the response to the visitor.
+  sendLeadConfirmationEmail({ to: email.trim(), name: name.trim() }).catch((err) => {
+    console.error("Unexpected error sending lead confirmation email:", err);
+  });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
