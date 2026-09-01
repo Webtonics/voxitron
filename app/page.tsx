@@ -488,15 +488,10 @@ export default function Home() {
               <article className="service-card">
                 <span className="service-kicker">REAL ESTATE</span>
                 <h3 className="service-title">Never lose a buyer to a slower reply.</h3>
-                <p className="service-body">
-                  Replies to listing enquiries, books viewings, and follows up with diaspora
-                  buyers across time zones.
-                </p>
                 <ul className="service-list">
                   <li>Responds to every enquiry in under 60 seconds</li>
-                  <li>Sends listing details and valuations automatically</li>
                   <li>Books viewings straight into your calendar</li>
-                  <li>Works across time zones for diaspora buyers</li>
+                  <li>Follows up across time zones for diaspora buyers</li>
                 </ul>
                 <Link href="/real-estate" className="service-link">See how it works</Link>
               </article>
@@ -504,13 +499,8 @@ export default function Home() {
               <article className="service-card">
                 <span className="service-kicker">DIAGNOSTIC CENTRES</span>
                 <h3 className="service-title">Book tests before your front desk opens.</h3>
-                <p className="service-body">
-                  Answers pricing questions, books tests, and lets patients know when results
-                  are ready, all inside WhatsApp.
-                </p>
                 <ul className="service-list">
                   <li>Books tests in seconds, day or night</li>
-                  <li>Answers pricing and prep questions automatically</li>
                   <li>Sends prep instructions with every booking</li>
                   <li>Notifies patients when results are ready</li>
                 </ul>
@@ -520,13 +510,8 @@ export default function Home() {
               <article className="service-card">
                 <span className="service-kicker">RETAILERS</span>
                 <h3 className="service-title">Stop retyping the same price all day.</h3>
-                <p className="service-body">
-                  Answers stock and price questions, takes orders, and frees you up to
-                  actually run the shop.
-                </p>
                 <ul className="service-list">
                   <li>Checks real stock before it replies</li>
-                  <li>Sends your catalog with photos and prices</li>
                   <li>Takes and logs the order automatically</li>
                   <li>Runs on your existing WhatsApp number</li>
                 </ul>
@@ -536,15 +521,10 @@ export default function Home() {
               <article className="service-card">
                 <span className="service-kicker">E-COMMERCE BRANDS</span>
                 <h3 className="service-title">Confirm orders. Kill WISMO tickets.</h3>
-                <p className="service-body">
-                  Confirms orders instantly, answers &quot;where is my order,&quot; and
-                  recovers abandoned carts automatically.
-                </p>
                 <ul className="service-list">
                   <li>Confirms orders the moment payment lands</li>
                   <li>Answers tracking questions from real courier data</li>
                   <li>Sends a nudge to recover abandoned carts</li>
-                  <li>Sends delivery updates without being asked</li>
                 </ul>
                 <Link href="/ecommerce" className="service-link">See how it works</Link>
               </article>
