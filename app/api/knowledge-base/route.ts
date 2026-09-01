@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getUserCustomers } from "@/lib/dashboard/activeCustomer";
-import { VOXITRON_CUSTOMER_ID } from "@/lib/dashboard/voxitron";
+import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 
 const KB_UPLOADS_BUCKET = "kb-uploads";
 const SIGNED_URL_TTL_SECONDS = 60 * 60; // 1 hour, only needs to survive the n8n workflow's download step
@@ -26,17 +25,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Not logged in." }, { status: 401 });
   }
 
-  if (!VOXITRON_CUSTOMER_ID) {
-    return NextResponse.json({ error: "Not available yet." }, { status: 403 });
-  }
-
-  const customers = await getUserCustomers(supabase, user.id);
-  const isVoxitronTeam = customers.some((c) => c.id === VOXITRON_CUSTOMER_ID);
-
-  if (!isVoxitronTeam) {
-    return NextResponse.json({ error: "Not available yet." }, { status: 403 });
-  }
-
   const webhookUrl = process.env.N8N_KB_INGEST_WEBHOOK_URL;
   const apiKey = process.env.N8N_KB_INGEST_API_KEY;
   if (!webhookUrl || !apiKey) {
@@ -54,13 +42,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid form submission." }, { status: 400 });
   }
 
-  const customerId = String(incoming.get("customerId") || "");
+  const customers = await getUserCustomers(supabase, user.id);
+  const requestedCustomerId = String(incoming.get("customerId") || "");
+  const active = resolveActiveCustomer(customers, requestedCustomerId || undefined);
+  const customerId = active.id;
+
   const documentTitle = String(incoming.get("documentTitle") || "");
   const sourceTypeRaw = incoming.get("sourceType");
 
-  if (!customerId) {
-    return NextResponse.json({ error: "Customer ID is required." }, { status: 400 });
-  }
   if (!documentTitle) {
     return NextResponse.json({ error: "Document title is required." }, { status: 400 });
   }

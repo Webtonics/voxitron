@@ -18,7 +18,13 @@ const SOURCE_TYPE_LABELS: Record<SourceType, string> = {
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60; // 60 * 2s = 2 minutes: generous for a large file/website fetch, but don't poll forever
 
-export default function KnowledgeBaseForm() {
+export default function KnowledgeBaseForm({
+  customerId,
+  currentTitles,
+}: {
+  customerId: string;
+  currentTitles: string[];
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [sourceType, setSourceType] = useState<SourceType>("paste");
@@ -30,7 +36,7 @@ export default function KnowledgeBaseForm() {
     };
   }, []);
 
-  async function pollJob(jobId: string, attempt: number, form: HTMLFormElement) {
+  async function pollJob(jobId: string, attempt: number, form: HTMLFormElement, operation: SourceType) {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("kb_ingest_jobs")
@@ -40,13 +46,17 @@ export default function KnowledgeBaseForm() {
 
     if (error) {
       setStatus("error");
-      setMessage("Lost track of the ingest job. Check the Knowledge Base later to confirm whether it finished.");
+      setMessage("Lost track of the job. Check the Knowledge Base later to confirm whether it finished.");
       return;
     }
 
     if (data.status === "success") {
       setStatus("success");
-      setMessage(`Ingested (${data.chunk_count ?? "?"} chunk${data.chunk_count === 1 ? "" : "s"}).`);
+      setMessage(
+        operation === "delete"
+          ? "Removed."
+          : `Ingested (${data.chunk_count ?? "?"} chunk${data.chunk_count === 1 ? "" : "s"}).`
+      );
       form.reset();
       setSourceType("paste");
       return;
@@ -64,7 +74,7 @@ export default function KnowledgeBaseForm() {
       return;
     }
 
-    pollTimeoutRef.current = setTimeout(() => pollJob(jobId, attempt + 1, form), POLL_INTERVAL_MS);
+    pollTimeoutRef.current = setTimeout(() => pollJob(jobId, attempt + 1, form, operation), POLL_INTERVAL_MS);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -74,6 +84,7 @@ export default function KnowledgeBaseForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    formData.set("customerId", customerId);
 
     let response: Response;
     try {
@@ -104,37 +115,13 @@ export default function KnowledgeBaseForm() {
 
     setStatus("processing");
     setMessage("Processing...");
-    pollJob(data.jobId, 1, form);
+    pollJob(data.jobId, 1, form, sourceType);
   }
 
   const isBusy = status === "submitting" || status === "processing";
 
   return (
     <form className="lead-form" onSubmit={handleSubmit} noValidate>
-      <div className="lead-form-row">
-        <label className="lead-form-label" htmlFor="kb-customer-id">Customer ID</label>
-        <input
-          id="kb-customer-id"
-          name="customerId"
-          type="text"
-          required
-          className="lead-form-input"
-          placeholder="the customers.id UUID from Supabase"
-        />
-      </div>
-
-      <div className="lead-form-row">
-        <label className="lead-form-label" htmlFor="kb-title">Document title</label>
-        <input
-          id="kb-title"
-          name="documentTitle"
-          type="text"
-          required
-          className="lead-form-input"
-          placeholder="e.g. Price List, Delivery Policy"
-        />
-      </div>
-
       <div className="lead-form-row">
         <label className="lead-form-label" htmlFor="kb-source-type">Source Type</label>
         <select
@@ -150,6 +137,34 @@ export default function KnowledgeBaseForm() {
           ))}
         </select>
       </div>
+
+      {sourceType === "delete" ? (
+        <div className="lead-form-row">
+          <label className="lead-form-label" htmlFor="kb-title">Document to remove</label>
+          {currentTitles.length === 0 ? (
+            <p className="lead-form-hint">Nothing in your knowledge base yet.</p>
+          ) : (
+            <select id="kb-title" name="documentTitle" required className="lead-form-input" defaultValue="">
+              <option value="" disabled>Choose a document</option>
+              {currentTitles.map((title) => (
+                <option key={title} value={title}>{title}</option>
+              ))}
+            </select>
+          )}
+        </div>
+      ) : (
+        <div className="lead-form-row">
+          <label className="lead-form-label" htmlFor="kb-title">Document title</label>
+          <input
+            id="kb-title"
+            name="documentTitle"
+            type="text"
+            required
+            className="lead-form-input"
+            placeholder="e.g. Price List, Delivery Policy"
+          />
+        </div>
+      )}
 
       {sourceType === "paste" && (
         <div className="lead-form-row">
@@ -204,12 +219,6 @@ export default function KnowledgeBaseForm() {
             The sheet must already be shared with Voxitron&apos;s Google service account.
           </p>
         </div>
-      )}
-
-      {sourceType === "delete" && (
-        <p className="lead-form-hint">
-          Removes this document title from this customer&apos;s knowledge base. No other fields needed.
-        </p>
       )}
 
       {status === "error" && (
