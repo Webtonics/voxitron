@@ -36,7 +36,28 @@ export default async function KnowledgeBasePage({
     .select("id, document_title, operation, status, chunk_count, error_message, created_at")
     .eq("customer_id", active.id)
     .order("created_at", { ascending: false })
-    .limit(20);
+    .limit(100);
+
+  // A title is currently in the knowledge base if its most recent
+  // successful job was an ingest, not a delete. Derived from the job log
+  // itself, there's no separate documents table to read from (the real
+  // content lives in n8n's Qdrant, outside this app's reach). Only looks
+  // at the last 100 jobs, so a title untouched since before that window
+  // won't appear in the delete list, an edge case worth revisiting if a
+  // customer's KB grows to that much churn.
+  const latestSuccessByTitle = new Map<string, string>();
+  for (const job of jobs || []) {
+    if (job.status !== "success") continue;
+    if (!latestSuccessByTitle.has(job.document_title)) {
+      latestSuccessByTitle.set(job.document_title, job.operation);
+    }
+  }
+  const currentTitles = Array.from(latestSuccessByTitle.entries())
+    .filter(([, operation]) => operation === "ingest")
+    .map(([title]) => title)
+    .sort((a, b) => a.localeCompare(b));
+
+  const recentJobs = (jobs || []).slice(0, 20);
 
   return (
     <div className="dashboard-page">
@@ -49,7 +70,7 @@ export default async function KnowledgeBasePage({
         it instead of guessing.
       </p>
 
-      <KnowledgeBaseForm customerId={active.id} />
+      <KnowledgeBaseForm customerId={active.id} currentTitles={currentTitles} />
 
       <div className="dashboard-page-header" style={{ marginTop: "var(--space-8)" }}>
         <h2 className="dashboard-page-title" style={{ fontSize: "var(--text-base)" }}>
@@ -57,13 +78,13 @@ export default async function KnowledgeBasePage({
         </h2>
       </div>
 
-      {(jobs || []).length === 0 ? (
+      {recentJobs.length === 0 ? (
         <div className="dashboard-empty-state">
           <p>No updates yet. Anything you add above will show up here.</p>
         </div>
       ) : (
         <ul className="dashboard-lead-list">
-          {(jobs || []).map((job) => (
+          {recentJobs.map((job) => (
             <li key={job.id} className="dashboard-lead-row">
               <div className="dashboard-lead-row-main">
                 <span className="dashboard-lead-row-name">{job.document_title}</span>
