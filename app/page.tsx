@@ -471,63 +471,89 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* INDUSTRIES: four vertical cards. id="services" kept for backward-compat: every
-            other page's "See the other agents" CTA links to /#services */}
-        <Reveal as="section" id="services" aria-labelledby="industries-title">
-          <div className="section-inner-wide">
-            <div className="section-inner-wide-header">
-              <span className="section-label">BUILT FOR YOUR INDUSTRY</span>
-              <h2 id="industries-title" className="section-title">
-                Four industries,
-                <br />
-                <span className="accent">purpose-built agents.</span>
-              </h2>
+        {/* INDUSTRIES: intro + four full-width sections, each on the pricing-teaser's
+            dark ink treatment, alternating --ink/--ink-2 and image side per section.
+            id="services" kept on the intro for backward-compat: every other page's
+            "See the other agents" CTA links to /#services */}
+        <Reveal as="section" id="services" aria-labelledby="industries-title" className="industries-intro">
+          <div className="section-inner-wide-header">
+            <span className="section-label">BUILT FOR YOUR INDUSTRY</span>
+            <h2 id="industries-title" className="section-title">
+              Four industries,
+              <br />
+              <span className="accent">purpose-built agents.</span>
+            </h2>
+          </div>
+        </Reveal>
+
+        <Reveal as="section" id="industry-real-estate" aria-labelledby="industry-real-estate-title" className="industry-section">
+          <div className="industry-inner">
+            <div className="industry-visual">
+              <ImagePlaceholder label="Real estate agent replying to a buyer on WhatsApp, coming soon" />
             </div>
+            <div>
+              <span className="service-kicker">REAL ESTATE</span>
+              <h3 id="industry-real-estate-title" className="service-title">Never lose a buyer to a slower reply.</h3>
+              <ul className="service-list">
+                <li>Responds to every enquiry in under 60 seconds</li>
+                <li>Books viewings straight into your calendar</li>
+                <li>Follows up across time zones for diaspora buyers</li>
+              </ul>
+              <Link href="/real-estate" className="service-link">See how it works</Link>
+            </div>
+          </div>
+        </Reveal>
 
-            <div className="services-grid services-grid-4col">
-              <article className="service-card">
-                <span className="service-kicker">REAL ESTATE</span>
-                <h3 className="service-title">Never lose a buyer to a slower reply.</h3>
-                <ul className="service-list">
-                  <li>Responds to every enquiry in under 60 seconds</li>
-                  <li>Books viewings straight into your calendar</li>
-                  <li>Follows up across time zones for diaspora buyers</li>
-                </ul>
-                <Link href="/real-estate" className="service-link">See how it works</Link>
-              </article>
+        <Reveal as="section" id="industry-diagnostic-centres" aria-labelledby="industry-diagnostic-centres-title" className="industry-section industry-section-alt">
+          <div className="industry-inner industry-inner-reverse">
+            <div>
+              <span className="service-kicker">DIAGNOSTIC CENTRES</span>
+              <h3 id="industry-diagnostic-centres-title" className="service-title">Book tests before your front desk opens.</h3>
+              <ul className="service-list">
+                <li>Books tests in seconds, day or night</li>
+                <li>Sends prep instructions with every booking</li>
+                <li>Notifies patients when results are ready</li>
+              </ul>
+              <Link href="/diagnostic-centre" className="service-link">See how it works</Link>
+            </div>
+            <div className="industry-visual">
+              <ImagePlaceholder label="Diagnostic centre booking confirmation on WhatsApp, coming soon" />
+            </div>
+          </div>
+        </Reveal>
 
-              <article className="service-card">
-                <span className="service-kicker">DIAGNOSTIC CENTRES</span>
-                <h3 className="service-title">Book tests before your front desk opens.</h3>
-                <ul className="service-list">
-                  <li>Books tests in seconds, day or night</li>
-                  <li>Sends prep instructions with every booking</li>
-                  <li>Notifies patients when results are ready</li>
-                </ul>
-                <Link href="/diagnostic-centre" className="service-link">See how it works</Link>
-              </article>
+        <Reveal as="section" id="industry-retailers" aria-labelledby="industry-retailers-title" className="industry-section">
+          <div className="industry-inner">
+            <div className="industry-visual">
+              <ImagePlaceholder label="Retail catalog and order confirmation on WhatsApp, coming soon" />
+            </div>
+            <div>
+              <span className="service-kicker">RETAILERS</span>
+              <h3 id="industry-retailers-title" className="service-title">Stop retyping the same price all day.</h3>
+              <ul className="service-list">
+                <li>Checks real stock before it replies</li>
+                <li>Takes and logs the order automatically</li>
+                <li>Runs on your existing WhatsApp number</li>
+              </ul>
+              <Link href="/retail" className="service-link">See how it works</Link>
+            </div>
+          </div>
+        </Reveal>
 
-              <article className="service-card">
-                <span className="service-kicker">RETAILERS</span>
-                <h3 className="service-title">Stop retyping the same price all day.</h3>
-                <ul className="service-list">
-                  <li>Checks real stock before it replies</li>
-                  <li>Takes and logs the order automatically</li>
-                  <li>Runs on your existing WhatsApp number</li>
-                </ul>
-                <Link href="/retail" className="service-link">See how it works</Link>
-              </article>
-
-              <article className="service-card">
-                <span className="service-kicker">E-COMMERCE BRANDS</span>
-                <h3 className="service-title">Confirm orders. Kill WISMO tickets.</h3>
-                <ul className="service-list">
-                  <li>Confirms orders the moment payment lands</li>
-                  <li>Answers tracking questions from real courier data</li>
-                  <li>Sends a nudge to recover abandoned carts</li>
-                </ul>
-                <Link href="/ecommerce" className="service-link">See how it works</Link>
-              </article>
+        <Reveal as="section" id="industry-ecommerce" aria-labelledby="industry-ecommerce-title" className="industry-section industry-section-alt">
+          <div className="industry-inner industry-inner-reverse">
+            <div>
+              <span className="service-kicker">E-COMMERCE BRANDS</span>
+              <h3 id="industry-ecommerce-title" className="service-title">Confirm orders. Kill WISMO tickets.</h3>
+              <ul className="service-list">
+                <li>Confirms orders the moment payment lands</li>
+                <li>Answers tracking questions from real courier data</li>
+                <li>Sends a nudge to recover abandoned carts</li>
+              </ul>
+              <Link href="/ecommerce" className="service-link">See how it works</Link>
+            </div>
+            <div className="industry-visual">
+              <ImagePlaceholder label="Order confirmation and delivery update on WhatsApp, coming soon" />
             </div>
           </div>
         </Reveal>
