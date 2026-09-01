@@ -2587,7 +2587,7 @@ body, p, .section-body {
 }
 
 .product-frame-inner {
-  max-width: var(--container);
+  max-width: var(--container-full);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -2597,6 +2597,10 @@ body, p, .section-body {
 
 .product-frame-visual {
   order: -1;
+}
+
+.product-frame-visual .img-placeholder {
+  min-height: 320px;
 }
 
 @media (min-width: 900px) {
