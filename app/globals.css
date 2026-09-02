@@ -1882,16 +1882,15 @@ body, p, .section-body {
 }
 
 /* =============================================
-   INDUSTRIES (homepage "Four industries" section):
+   INDUSTRIES INTRO (homepage "Four industries" heading):
    ink-tinted glow on --paper, echoing #cta's glow treatment
-   rather than inverting to a solid dark fill.
+   rather than inverting to a solid dark fill. The four industry
+   sections themselves follow below, each fully inverted.
    ============================================= */
 #services {
   position: relative;
-  padding: var(--space-9) var(--gutter);
+  padding: var(--space-9) var(--gutter) var(--space-6);
   background: var(--paper);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
   overflow: hidden;
 }
 
@@ -1910,6 +1909,94 @@ body, p, .section-body {
 #services > * {
   position: relative;
   z-index: 1;
+}
+
+.industries-intro .section-inner-wide-header {
+  max-width: var(--container);
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* =============================================
+   INDUSTRY SECTIONS: one full-width section per industry, alternating
+   --ink / --ink-2 with the pricing-teaser's grid-texture treatment, image
+   on alternating sides. Four in a row, so the alternating shade (not a
+   repeated identical fill) is what keeps them from reading as one slab.
+   ============================================= */
+.industry-section {
+  position: relative;
+  padding: var(--space-8) var(--gutter);
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.industry-section-alt {
+  background-color: var(--ink-2);
+}
+
+.industry-inner {
+  max-width: var(--container-full);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .industry-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .industry-inner-reverse .industry-visual {
+    order: 1;
+  }
+}
+
+.industry-visual .img-placeholder {
+  min-height: 260px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+}
+
+.industry-visual .img-placeholder-icon {
+  background: rgba(232, 137, 12, 0.16);
+  border-color: rgba(232, 137, 12, 0.3);
+  color: #FFB454;
+}
+
+.industry-visual .img-placeholder-label {
+  color: var(--paper-muted);
+}
+
+.industry-section .service-kicker {
+  color: #FFD9A3;
+}
+
+.industry-section .service-title {
+  color: #FFFFFF;
+}
+
+.industry-section .service-list li {
+  color: var(--paper-muted);
+}
+
+.industry-section .service-list li::before {
+  color: var(--amber);
+}
+
+.industry-section .service-link {
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.industry-section .service-link:hover {
+  color: var(--amber);
+  border-color: var(--amber);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2500,7 +2587,7 @@ body, p, .section-body {
 }
 
 .product-frame-inner {
-  max-width: var(--container);
+  max-width: var(--container-full);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -2510,6 +2597,10 @@ body, p, .section-body {
 
 .product-frame-visual {
   order: -1;
+}
+
+.product-frame-visual .img-placeholder {
+  min-height: 320px;
 }
 
 @media (min-width: 900px) {
