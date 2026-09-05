@@ -188,17 +188,12 @@ Sequencing within Phase 4:
    Area50's WF1 HTTP Request nodes during this review, flagged to the user, not
    reproduced here, worth rotating in Area50 if those exports are ever shared further.
 
-   Do not attempt to build the dashboard until this workflow is actually live (Meta app
-   created, credentials wired, imported, tested) and at least one real conversation has
-   landed in `conversations`/`messages`.
-
-   **Known gap, explicitly accepted by the user 2026-08-04, not yet resolved:** there is
-   no WhatsApp automation of any kind live today. Messages sent to the site's `wa.me`
-   number currently go unanswered, despite `/whatsapp-agent`'s copy promising a live AI
-   reply. The user was offered the choice to pause and adjust that page's claims, or add
-   an interim manual-reply stopgap, and chose neither, opting to proceed straight to
-   building this workflow instead. If a future session resumes this work, check whether
-   that gap has since been closed rather than assuming it has.
+   **Update 2026-09-05: this gap is closed.** The user confirmed the n8n WhatsApp
+   workflow is live and tested, real conversations have landed in
+   `conversations`/`messages` against Voxitron's own tenant. Dashboard build-out is
+   unblocked. Voxitron's own tenant row now exists (see `lib/dashboard/voxitron.ts`,
+   `VOXITRON_CUSTOMER_ID` filled in with a real UUID from onboarding), unlocking
+   `/dashboard/leads` for Voxitron's own team.
 
    **Knowledge-base ingestion workflow: written 2026-08-12, not yet imported or run.**
    `n8n/voxitron-kb-ingest.json` (mirroring Area50's WF5 pattern) is a ready-to-import n8n

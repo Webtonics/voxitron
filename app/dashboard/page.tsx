@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 import StatsStrip from "@/components/dashboard/StatsStrip";
-import Inbox from "@/components/dashboard/Inbox";
-import type { ConversationListItem } from "@/components/dashboard/ConversationList";
+import Inbox, { type ExtendedConversationListItem } from "@/components/dashboard/Inbox";
+import { computeAverageReplyTimeSeconds, formatReplyTimeMono } from "@/lib/dashboard/replyTime";
 
 export const metadata: Metadata = { title: "Dashboard | Voxitron" };
 
@@ -40,7 +40,7 @@ export default async function DashboardPage({
 
   let conversationsQuery = supabase
     .from("conversations")
-    .select("id, contact_name, contact_phone, needs_human, started_at")
+    .select("id, contact_name, contact_phone, needs_human, escalation_reason, started_at")
     .eq("customer_id", active.id);
 
   if (activeNumberId) {
@@ -53,10 +53,32 @@ export default async function DashboardPage({
   const { data: messages } = conversationIds.length
     ? await supabase
         .from("messages")
-        .select("id, conversation_id, body, sent_at")
+        .select("id, conversation_id, direction, body, sent_at")
         .in("conversation_id", conversationIds)
         .order("sent_at", { ascending: false })
-    : { data: [] as { id: string; conversation_id: string; body: string; sent_at: string }[] };
+    : {
+        data: [] as {
+          id: string;
+          conversation_id: string;
+          direction: "inbound" | "outbound";
+          body: string;
+          sent_at: string;
+        }[],
+      };
+
+  const { data: kbJobs } = await supabase
+    .from("kb_ingest_jobs")
+    .select("id")
+    .eq("customer_id", active.id)
+    .eq("status", "success")
+    .eq("operation", "ingest")
+    .limit(1);
+
+  const { data: customerConfig } = await supabase
+    .from("customers")
+    .select("config")
+    .eq("id", active.id)
+    .single();
 
   const latestByConversation = new Map<string, { body: string; sent_at: string }>();
   for (const m of messages || []) {
@@ -65,7 +87,7 @@ export default async function DashboardPage({
     }
   }
 
-  const conversationItems: ConversationListItem[] = (conversations || [])
+  const conversationItems: ExtendedConversationListItem[] = (conversations || [])
     .map((c) => {
       const latest = latestByConversation.get(c.id);
       return {
@@ -73,6 +95,7 @@ export default async function DashboardPage({
         contact_name: c.contact_name,
         contact_phone: c.contact_phone,
         needs_human: c.needs_human,
+        escalation_reason: c.escalation_reason,
         latest_message_body: latest?.body || null,
         latest_message_at: latest?.sent_at || c.started_at,
       };
@@ -87,11 +110,29 @@ export default async function DashboardPage({
   const weekAgo = new Date(Date.now() - ONE_WEEK_MS).toISOString();
   const conversationsThisWeek = (conversations || []).filter((c) => c.started_at >= weekAgo).length;
   const messagesThisWeek = (messages || []).filter((m) => m.sent_at >= weekAgo).length;
+  const escalations = (conversations || []).filter((c) => c.needs_human).length;
+
+  const averageReplyTimeSeconds = computeAverageReplyTimeSeconds(
+    (messages || []).map((m) => ({
+      conversation_id: m.conversation_id,
+      direction: m.direction,
+      sent_at: m.sent_at,
+    }))
+  );
 
   const stats = [
-    { number: String(conversationsThisWeek), label: "Conversations this week" },
-    { number: String(messagesThisWeek), label: "Messages this week" },
+    { number: String(conversationsThisWeek), label: "Conversations this week", icon: "conversations" as const },
+    { number: String(messagesThisWeek), label: "Messages this week", icon: "messages" as const },
+    averageReplyTimeSeconds === null
+      ? { number: "Waiting for your first message", label: "Average reply time", icon: "reply-time" as const, isEmpty: true }
+      : { number: formatReplyTimeMono(averageReplyTimeSeconds), label: "Average reply time", icon: "reply-time" as const },
+    { number: String(escalations), label: "Escalations", icon: "escalations" as const },
   ];
+
+  const numberConnected = (numbers || []).length > 0;
+  const knowledgeBaseLoaded = (kbJobs || []).length > 0;
+  const config = (customerConfig?.config || {}) as { tone_notes?: string };
+  const agentConfigured = Boolean(config.tone_notes);
 
   return (
     <div className="dashboard-inbox-page">
@@ -124,7 +165,12 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <Inbox conversations={conversationItems} />
+      <Inbox
+        conversations={conversationItems}
+        numberConnected={numberConnected}
+        knowledgeBaseLoaded={knowledgeBaseLoaded}
+        agentConfigured={agentConfigured}
+      />
     </div>
   );
 }

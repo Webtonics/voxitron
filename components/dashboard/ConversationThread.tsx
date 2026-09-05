@@ -11,12 +11,19 @@ function formatTime(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
     month: "short",
     day: "numeric",
-    hour: "numeric",
+    hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
   });
 }
 
-export default function ConversationThread({ messages }: { messages: ThreadMessage[] }) {
+export default function ConversationThread({
+  messages,
+  escalationReason,
+}: {
+  messages: ThreadMessage[];
+  escalationReason?: string | null;
+}) {
   if (messages.length === 0) {
     return (
       <div className="dashboard-empty-state">
@@ -27,17 +34,22 @@ export default function ConversationThread({ messages }: { messages: ThreadMessa
 
   return (
     <div className="dashboard-thread">
+      {escalationReason && (
+        <div className="dashboard-empty-state" style={{ textAlign: "left" }}>
+          <p>Flagged for you: {escalationReason}</p>
+        </div>
+      )}
       {messages.map((m) => (
         <div
           key={m.id}
           className={`dashboard-thread-group${m.direction === "inbound" ? " is-inbound" : ""}`}
         >
-          <span className="ui-msg-label mono">
-            {m.direction === "inbound" ? "Customer" : "Voxitron"} &middot; {formatTime(m.sent_at)}
-            {m.direction === "outbound" && <Tick className="dashboard-thread-tick" />}
-          </span>
-          <div className={`ui-msg ${m.direction === "inbound" ? "ui-msg-customer" : "ui-msg-ai"}`}>
+          <div className={`thread-msg ${m.direction === "inbound" ? "thread-msg-in" : "thread-msg-out"}`}>
             {m.body}
+            <span className="thread-msg-time mono">
+              {formatTime(m.sent_at)}
+              {m.direction === "outbound" && <Tick />}
+            </span>
           </div>
         </div>
       ))}
