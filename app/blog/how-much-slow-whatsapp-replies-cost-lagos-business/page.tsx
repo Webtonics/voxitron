@@ -73,7 +73,7 @@ export default function Page() {
         <p>
           According to DataReportal&apos;s Digital 2026 Nigeria report, the country&apos;s online
           population has passed 109 million people, and WhatsApp usage among internet users aged 16+
-          sits at roughly 96.5%, one of the highest adoption rates anywhere on the continent. Kenya and
+          sits at 95%+, one of the highest adoption rates anywhere on the continent. Kenya and
           South Africa are close behind, but Nigeria&apos;s sheer population means more people are
           reachable on WhatsApp in Lagos alone than through almost any other single channel in the
           country.
@@ -88,7 +88,7 @@ export default function Page() {
 
         <div className="article-stat-row">
           <div className="article-stat">
-            <span className="article-stat-number">96.5%</span>
+            <span className="article-stat-number">95%+</span>
             <span className="article-stat-label">of Nigerian internet users (16+) are active WhatsApp users, DataReportal 2026</span>
           </div>
           <div className="article-stat">
@@ -259,7 +259,7 @@ export default function Page() {
           full context attached, well inside that 24-hour free window every time.
         </p>
         <p>
-          That&apos;s the gap between the 96.5% of Nigerians already on WhatsApp and the businesses still
+          That&apos;s the gap between the 95%+ of Nigerians already on WhatsApp and the businesses still
           treating it like a slow inbox. The customers are there. The channel is close to free to run.
           What&apos;s missing, for most businesses, is simply someone (or something) answering in the
           first five minutes instead of the fifth hour.

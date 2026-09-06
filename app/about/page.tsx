@@ -12,7 +12,7 @@ const WA_CTA_HREF =
 export const metadata: Metadata = {
   title: "About Voxitron | Lagos-Based AI Agency",
   description:
-    "Voxitron is a Lagos-based team building self-hosted WhatsApp AI agents for Nigerian businesses. Founded by Emmanuel Ezema.",
+    "Voxitron is a Lagos-based team building WhatsApp AI agents for Nigerian businesses, with data isolated and private to each business. Founded by Emmanuel Ezema.",
   alternates: {
     canonical: "https://voxitron.com/about",
   },
@@ -43,7 +43,7 @@ export default function AboutPage() {
         <Reveal as="section" id="story" aria-labelledby="story-title">
           <div className="pain-split">
             <div className="pain-split-text">
-              <span className="section-label">WHY OWNED INFRASTRUCTURE BEATS RENTED SAAS</span>
+              <span className="section-label">WHY DATA ISOLATION BEATS RENTED SAAS</span>
               <h2 id="story-title" className="section-title">
                 Founded by
                 <br />
@@ -58,8 +58,8 @@ export default function AboutPage() {
                 <p>
                   Most fixes on offer were rented chatbot seats on foreign platforms, with no
                   real ownership and no fluency in how Nigerians actually message. Voxitron
-                  was built as the alternative: self-hosted, bespoke, and accountable to the
-                  business that owns it.
+                  was built as the alternative: bespoke, accountable to the business it
+                  serves, with data isolated and private to each client.
                 </p>
               </div>
             </div>
@@ -83,10 +83,10 @@ export default function AboutPage() {
 
             <div className="about-grid">
               <div className="about-card">
-                <p className="about-card-title">Owned beats rented</p>
+                <p className="about-card-title">Isolated beats shared</p>
                 <p className="about-card-body">
-                  A business should own the infrastructure its customers depend on, not
-                  lease it from a platform that can change the rules.
+                  A business&apos;s conversation and customer data shouldn&apos;t sit in a
+                  shared pool it can&apos;t inspect, export, or leave.
                 </p>
               </div>
               <div className="about-card">

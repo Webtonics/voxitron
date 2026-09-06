@@ -147,7 +147,7 @@ export default function EcommercePage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -499,7 +499,8 @@ export default function EcommercePage() {
             </h2>
 
             <p className="cta-sub">
-              Message us on WhatsApp and see the agent reply live. 30 days free after that.
+              Message us on WhatsApp and see the agent reply live. Try it 2 weeks, only
+              pay next month if it books.
             </p>
 
             <div className="cta-group">

@@ -16,11 +16,11 @@ const WA_CTA_HREF =
 export const metadata: Metadata = {
   title: "Voxitron: WhatsApp AI Agents for Lagos Businesses",
   description:
-    "Voxitron builds WhatsApp AI agents that reply, book, and sell for Lagos businesses, real estate agencies, and diagnostic centres, 24/7. Self-hosted, NDPA-compliant, you own everything.",
+    "Voxitron builds WhatsApp AI agents that reply, book, and sell for Lagos businesses, real estate agencies, and diagnostic centres, 24/7. Your data is isolated and private per business, exportable any time. NDPA-aware. No lock-in.",
   openGraph: {
     title: "Voxitron: WhatsApp AI Agents for Lagos Businesses",
     description:
-      "Every WhatsApp message answered in seconds, day and night. Built for Nigerian businesses. You own the data and the infrastructure.",
+      "Every WhatsApp message answered in seconds, day and night. Built for Nigerian businesses. Your data stays isolated and private to your business.",
     images: ["/assets/images/og-image.jpg"],
     url: "https://voxitron.com",
     type: "website",
@@ -454,7 +454,7 @@ export default function Home() {
         <Reveal className="stats-strip" role="region" aria-label="WhatsApp and Nigeria market statistics">
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-number mono">96.5%</span>
+              <span className="stat-number mono">95%+</span>
               <p className="stat-label">of Nigerian internet users are active on WhatsApp, one of the highest rates in Africa</p>
               <span className="stat-source mono">DataReportal</span>
             </div>
@@ -573,8 +573,8 @@ export default function Home() {
                 <span className="accent">not a chatbot plugin.</span>
               </h2>
               <p className="section-body">
-                Voxitron is a self-hosted AI agent built for your business, not a rented
-                seat on someone else&apos;s platform.
+                Voxitron is an AI agent built for your business, not a rented seat on
+                someone else&apos;s platform.
               </p>
 
               <ul className="product-frame-list">
@@ -584,7 +584,7 @@ export default function Home() {
                 </li>
                 <li>
                   <span className="product-frame-bullet" aria-hidden="true">&#9679;</span>
-                  <span><strong>You own the data</strong>, conversations and customer records stay on infrastructure you control</span>
+                  <span><strong>Your data stays yours</strong>, isolated and private to your business, exportable any time</span>
                 </li>
                 <li>
                   <span className="product-frame-bullet" aria-hidden="true">&#9679;</span>
@@ -623,8 +623,8 @@ export default function Home() {
                   <span className="faq-icon" aria-hidden="true">+</span>
                 </summary>
                 <p className="faq-body">
-                  You do. Voxitron runs on self-hosted infrastructure, not a third-party
-                  platform that holds your customer data hostage.
+                  You do. Your data is isolated and private to your business, exportable
+                  any time. NDPA-aware. No lock-in.
                 </p>
               </details>
 
@@ -664,7 +664,7 @@ export default function Home() {
             </h2>
             <div className="section-body">
               <p>No hidden platform fees. No per-seat pricing. You know the cost upfront.</p>
-              <p>30 days free before your first invoice.</p>
+              <p>Start with a 2-week pilot. Only pay next month if it books.</p>
             </div>
             <div className="cta-group">
               <Link href="/pricing" className="btn btn-primary">See pricing</Link>
@@ -683,7 +683,8 @@ export default function Home() {
             </h2>
 
             <p className="cta-sub">
-              Message us on WhatsApp and see the agent reply live. 30 days free after that.
+              Message us on WhatsApp and see the agent reply live. Try it 2 weeks, only
+              pay next month if it books.
             </p>
 
             <div className="cta-group">

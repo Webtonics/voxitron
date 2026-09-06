@@ -71,7 +71,7 @@ export default function RealEstatePage() {
                 <Link href="/#services" className="btn btn-secondary">See all three agents</Link>
               </div>
 
-              <span className="form-note">No spam. 30 days free. No credit card needed.</span>
+              <span className="form-note">No spam. 2-week pilot to start.</span>
             </div>
 
             <div className="hero-ui" aria-hidden="true">
@@ -141,7 +141,7 @@ export default function RealEstatePage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -410,12 +410,12 @@ export default function RealEstatePage() {
             </h2>
 
             <p className="cta-sub">
-              Get started today. 30 days free. Live in 48 hours. No credit card. No
-              long-term contract.
+              Try it 2 weeks. Only pay next month if it books. We build and connect it
+              for you, live on your existing number in about a week.
             </p>
 
             <div className="cta-group">
-              <Link href="/get-started?agent=both" className="btn btn-primary">Get Started</Link>
+              <Link href="/get-started?agent=both" className="btn btn-primary">Start your 2-week pilot</Link>
               <Link href="/#services" className="btn btn-secondary">See all three agents</Link>
             </div>
 

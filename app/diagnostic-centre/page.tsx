@@ -141,7 +141,7 @@ export default function DiagnosticCentrePage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -156,12 +156,12 @@ export default function DiagnosticCentrePage() {
             </div>
             <div className="stat-item">
               <span className="stat-number">67%</span>
-              <p className="stat-label">of patients prefer messaging over calling to book an appointment</p>
+              <p className="stat-label">of customers prefer messaging over calling to book an appointment</p>
               <span className="stat-source">Meta Business Messaging Report</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">82%</span>
-              <p className="stat-label">of patients expect a reply within 24 hours, day or night</p>
+              <p className="stat-label">of customers expect a reply within 24 hours, day or night</p>
               <span className="stat-source">WhatsApp Business Platform</span>
             </div>
           </div>
@@ -494,7 +494,8 @@ export default function DiagnosticCentrePage() {
             </h2>
 
             <p className="cta-sub">
-              Message us on WhatsApp and see the agent reply live. 30 days free after that.
+              Message us on WhatsApp and see the agent reply live. Try it 2 weeks, only
+              pay next month if it books.
             </p>
 
             <div className="cta-group">
