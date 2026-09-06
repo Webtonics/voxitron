@@ -522,7 +522,7 @@ body, p, .section-body {
   padding: calc(56px + var(--space-9)) var(--gutter) var(--space-8);
   display: flex;
   align-items: center;
-  background-color: var(--bg-primary);
+  background-color: var(--ink);
   overflow: hidden;
 }
 
@@ -539,6 +539,38 @@ body, p, .section-body {
   background: radial-gradient(circle at center, var(--accent-glow), transparent 62%);
   pointer-events: none;
   z-index: 0;
+}
+
+#hero .hero-trust-pill {
+  color: var(--paper-muted);
+  background: var(--ink-2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+#hero .hero-kicker {
+  color: #FFD9A3;
+}
+
+#hero .hero-title {
+  color: #FFFFFF;
+}
+
+#hero .hero-sub {
+  color: var(--paper-muted);
+}
+
+#hero .form-note {
+  color: var(--paper-muted);
+}
+
+#hero .btn-secondary {
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+#hero .btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Real photo, full-bleed, anchored to the right so it reads behind the
