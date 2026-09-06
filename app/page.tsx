@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import BuiltOnStrip from "@/components/BuiltOnStrip";
+import ParticleNetwork from "@/components/ParticleNetwork";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import Tick from "@/components/Tick";
 import RepliedThread from "@/components/RepliedThread";
@@ -127,6 +128,7 @@ export default function Home() {
 
         {/* INDUSTRY STRIP */}
         <div className="industry-strip" aria-label="Industries served">
+          <ParticleNetwork />
           <div className="industry-inner">
             <span className="industry-label">Built for:</span>
             <div className="industry-items">
