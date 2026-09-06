@@ -526,6 +526,21 @@ body, p, .section-body {
   overflow: hidden;
 }
 
+/* Soft amber glow in the corner, standing in for the hero-richness role a
+   background photo used to play, without reintroducing stock photography. */
+#hero::before {
+  content: "";
+  position: absolute;
+  top: -160px;
+  right: -160px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--accent-glow), transparent 62%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* Real photo, full-bleed, anchored to the right so it reads behind the
    mockup cards, same "photo landscape behind the content" move Stripe
    and cekat both use for hero richness */
@@ -615,6 +630,8 @@ body, p, .section-body {
 }
 
 .hero-inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: var(--container-full);
   margin: 0 auto;

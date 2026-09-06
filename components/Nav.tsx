@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 
 const CALCULATOR_HREF = "/tools/missed-lead-calculator";
@@ -126,6 +126,20 @@ export default function Nav({
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
   const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
 
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function scheduleClose(close: () => void) {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(close, 200);
+  }
+
+  function cancelScheduledClose() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
   const isSolutionsActive = SOLUTIONS.some((item) => item.key === activePage);
   const isIndustriesActive = INDUSTRIES.some((item) => item.key === activePage);
 
@@ -143,7 +157,8 @@ export default function Nav({
       <div className="nav-links">
         <div
           className={`nav-dropdown${solutionsOpen ? " is-open" : ""}`}
-          onMouseLeave={() => setSolutionsOpen(false)}
+          onMouseEnter={cancelScheduledClose}
+          onMouseLeave={() => scheduleClose(() => setSolutionsOpen(false))}
         >
           <button
             type="button"
@@ -179,7 +194,8 @@ export default function Nav({
 
         <div
           className={`nav-dropdown${industriesOpen ? " is-open" : ""}`}
-          onMouseLeave={() => setIndustriesOpen(false)}
+          onMouseEnter={cancelScheduledClose}
+          onMouseLeave={() => scheduleClose(() => setIndustriesOpen(false))}
         >
           <button
             type="button"
