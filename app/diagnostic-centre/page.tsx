@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
+import StepIcon from "@/components/StepIcon";
 import CalculatorTool from "@/components/CalculatorTool";
 import PhoneMockup from "@/components/PhoneMockup";
 
@@ -73,10 +74,10 @@ export default function DiagnosticCentrePage() {
                 contactName="Lifeline Diagnostics"
                 contactInitials="LC"
                 messages={[
-                  { from: "in", text: "Hi, do you do full blood count tests? How much?", time: "09:14" },
+                  { from: "in", voicenote: { duration: "0:11" }, time: "09:14" },
                   { from: "out", text: "Yes, FBC is ₦8,500. Want me to book a slot for you today?", time: "09:14" },
                   { from: "in", text: "Yes please, this afternoon if possible", time: "09:15" },
-                  { from: "out", text: "Booked for 2pm. Come fasted, we'll text when your results are ready.", time: "09:15" },
+                  { from: "out", image: { alt: "Booking confirmation card for 2pm appointment", caption: "Booking confirmed" }, text: "Booked for 2pm. Come fasted, we'll text when your results are ready.", time: "09:15" },
                 ]}
               />
             </div>
@@ -374,7 +375,7 @@ export default function DiagnosticCentrePage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: WhatsApp number connected" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Connect your WhatsApp Business number</h3>
@@ -382,7 +383,7 @@ export default function DiagnosticCentrePage() {
                 <p className="step-body">No new number. Patients message the one they already have.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: test catalog and pricing setup" className="step-visual" />
+                <StepIcon icon="catalog" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">We train it on your tests and prices</h3>
@@ -390,7 +391,16 @@ export default function DiagnosticCentrePage() {
                 <p className="step-body">Your test panels, prep instructions, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: live WhatsApp conversation" className="step-visual" />
+                <div className="step-visual step-visual-phone">
+                  <PhoneMockup
+                    contactName="Lifeline Diagnostics"
+                    contactInitials="LC"
+                    messages={[
+                      { from: "in", text: "Do I need to fast before the FBC test?", time: "08:30" },
+                      { from: "out", text: "Yes, 8 hours fasting. Come any time before 11am.", time: "08:30" },
+                    ]}
+                  />
+                </div>
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>

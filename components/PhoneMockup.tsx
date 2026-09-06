@@ -2,8 +2,10 @@ import Tick from "@/components/Tick";
 
 export type PhoneMockupMessage = {
   from: "in" | "out";
-  text: string;
   time: string;
+  text?: string;
+  image?: { alt: string; caption?: string };
+  voicenote?: { duration: string };
 };
 
 type PhoneMockupProps = {
@@ -12,6 +14,39 @@ type PhoneMockupProps = {
   status?: string;
   messages: PhoneMockupMessage[];
 };
+
+function VoicenoteBubble({ duration }: { duration: string }) {
+  return (
+    <span className="thread-msg-voicenote">
+      <span className="thread-msg-voicenote-play" aria-hidden="true">
+        <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0.8C0 0.13 0.75 -0.26 1.31 0.11L9.31 5.31C9.82 5.64 9.82 6.36 9.31 6.69L1.31 11.89C0.75 12.26 0 11.87 0 11.2V0.8Z" />
+        </svg>
+      </span>
+      <span className="thread-msg-voicenote-wave" aria-hidden="true">
+        {[4, 8, 5, 10, 6, 9, 4, 7, 5, 8, 4].map((h, i) => (
+          <span key={i} style={{ height: `${h}px` }} />
+        ))}
+      </span>
+      <span className="thread-msg-voicenote-duration mono">{duration}</span>
+    </span>
+  );
+}
+
+function ImageBubble({ alt, caption }: { alt: string; caption?: string }) {
+  return (
+    <span className="thread-msg-image">
+      <span className="thread-msg-image-art" role="img" aria-label={alt}>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="3.5" width="18" height="15" rx="1.8" stroke="currentColor" strokeWidth="1.3" />
+          <circle cx="7.2" cy="8.5" r="1.6" stroke="currentColor" strokeWidth="1.3" />
+          <path d="M2 15.5L7.5 10.5L11.5 14L15.5 10L20 14.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+      {caption && <span className="thread-msg-image-caption">{caption}</span>}
+    </span>
+  );
+}
 
 export default function PhoneMockup({
   contactName,
@@ -46,7 +81,14 @@ export default function PhoneMockup({
         <div className="wa-body wa-body-mockup">
           <div className="thread-body">
             {messages.map((m, i) => (
-              <div key={i} className={`thread-msg thread-msg-mockup ${m.from === "in" ? "thread-msg-in" : "thread-msg-out"}`}>
+              <div
+                key={i}
+                className={`thread-msg thread-msg-mockup ${m.from === "in" ? "thread-msg-in" : "thread-msg-out"}${
+                  m.image ? " thread-msg-has-image" : ""
+                }`}
+              >
+                {m.image && <ImageBubble alt={m.image.alt} caption={m.image.caption} />}
+                {m.voicenote && <VoicenoteBubble duration={m.voicenote.duration} />}
                 {m.text}
                 <span className="thread-msg-time mono">
                   {m.time}

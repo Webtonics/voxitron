@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
+import PhoneMockup from "@/components/PhoneMockup";
+import StepIcon from "@/components/StepIcon";
 
 export const metadata: Metadata = {
   title: "AI Agents for Real Estate Agents & Brokers | Voxitron",
@@ -305,7 +307,7 @@ export default function RealEstatePage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: listing and pricing setup" className="step-visual" />
+                <StepIcon icon="catalog" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">We configure your agent</h3>
@@ -313,7 +315,7 @@ export default function RealEstatePage() {
                 <p className="step-body">We load your listings and pricing so responses sound like you.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: channel connection" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">Connect your number and calendar</h3>
@@ -321,7 +323,16 @@ export default function RealEstatePage() {
                 <p className="step-body">Your existing line and booking calendar. No new hardware.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: enquiry converted to viewing" className="step-visual" />
+                <div className="step-visual step-visual-phone">
+                  <PhoneMockup
+                    contactName="Lekki Phase 1 Listing"
+                    contactInitials="LP"
+                    messages={[
+                      { from: "in", text: "Can I book a viewing this weekend?", time: "17:40" },
+                      { from: "out", text: "Saturday 11am is open. I've booked it for you.", time: "17:40" },
+                    ]}
+                  />
+                </div>
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">Every enquiry becomes a booked viewing</h3>

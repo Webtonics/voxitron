@@ -905,7 +905,8 @@ body, p, .section-body {
 
 /* =============================================
    PHONE FRAME: WhatsApp interface mockup
-   (whatsapp-agent hero only)
+   (whatsapp-agent hero, industry page heroes,
+   and homepage industry-section visuals)
    ============================================= */
 .phone-frame {
   position: relative;
@@ -1034,6 +1035,79 @@ body, p, .section-body {
 
 .thread-msg-mockup .thread-msg-time {
   font-size: 0.6rem;
+}
+
+.thread-msg-has-image {
+  padding-top: var(--space-2);
+}
+
+.thread-msg-image {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.thread-msg-image-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 74px;
+  border-radius: 10px;
+  background: rgba(14, 21, 38, 0.06);
+  color: var(--muted);
+}
+
+.thread-msg-image-caption {
+  font-size: 0.68rem;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.thread-msg-voicenote {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 2px;
+}
+
+.thread-msg-voicenote-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: currentColor;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.thread-msg-voicenote-play svg {
+  color: var(--bg-elevated);
+}
+
+.thread-msg-voicenote-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  height: 14px;
+}
+
+.thread-msg-voicenote-wave span {
+  display: block;
+  width: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.thread-msg-voicenote-duration {
+  font-size: 0.62rem;
+  opacity: 0.75;
+  flex-shrink: 0;
 }
 
 .wa-input-bar {
@@ -2415,6 +2489,45 @@ body, p, .section-body {
   min-height: 160px;
 }
 
+/* Modifier: scales a full PhoneMockup down to fit the shorter
+   step-visual slot instead of the taller hero/industry-section use. */
+.step-visual-phone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.step-visual-phone .phone-frame {
+  max-width: 160px;
+}
+
+/* Step icon card: an honest on-brand icon for setup steps that have no
+   real screenshot to show (onboarding is handled manually by Voxitron's
+   team, not a self-serve flow), instead of an ImagePlaceholder implying
+   one is coming. */
+.step-icon-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.step-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+  box-shadow: 0 2px 10px rgba(36, 86, 229, 0.25);
+}
+
 .step-heading {
   display: flex;
   align-items: center;
@@ -2712,6 +2825,58 @@ body, p, .section-body {
 
 .product-frame-visual .img-placeholder {
   min-height: 320px;
+}
+
+/* Product frame visual: a static stack of illustrated dashboard cards
+   (message log, stock check, handoff flag), reusing the .ui-card
+   mockup language from the hero rather than a real screenshot, the
+   dashboard is authenticated and per-customer so there's nothing
+   generic to screenshot. */
+.dashboard-mockup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dashboard-mockup-card {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.dashboard-mockup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.dashboard-mockup-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dashboard-mockup-time {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.dashboard-mockup-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.dashboard-mockup-flag {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #E8890C;
+  flex-shrink: 0;
 }
 
 @media (min-width: 900px) {

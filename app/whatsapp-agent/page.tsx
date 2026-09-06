@@ -5,6 +5,9 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
+import PhoneMockup from "@/components/PhoneMockup";
+import DashboardMockup from "@/components/DashboardMockup";
+import StepIcon from "@/components/StepIcon";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -381,7 +384,7 @@ export default function WhatsAppAgentPage() {
         <Reveal as="section" id="product-frame" aria-labelledby="product-frame-title">
           <div className="product-frame-inner">
             <div className="product-frame-visual">
-              <ImagePlaceholder label="Product screenshot: live chat view coming soon" />
+              <DashboardMockup />
             </div>
 
             <div>
@@ -428,7 +431,7 @@ export default function WhatsAppAgentPage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: WhatsApp number connected" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Connect your WhatsApp Business number</h3>
@@ -436,7 +439,7 @@ export default function WhatsAppAgentPage() {
                 <p className="step-body">No new number. Customers message the one they already have.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: catalog and pricing setup" className="step-visual" />
+                <StepIcon icon="catalog" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">We train it on your catalog and prices</h3>
@@ -444,7 +447,16 @@ export default function WhatsAppAgentPage() {
                 <p className="step-body">Your products, services, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: live WhatsApp conversation" className="step-visual" />
+                <div className="step-visual step-visual-phone">
+                  <PhoneMockup
+                    contactName="Chidinma A."
+                    contactInitials="CA"
+                    messages={[
+                      { from: "in", text: "Hi, are you open right now?", time: "23:47" },
+                      { from: "out", text: "Yes, we're open 24/7 on WhatsApp. How can I help?", time: "23:47" },
+                    ]}
+                  />
+                </div>
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>
