@@ -4144,6 +4144,13 @@ textarea.lead-form-input {
   line-height: 1.5;
 }
 
+.calculator-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
 /* =============================================
    ABOUT: values grid, commitments list
    ============================================= */

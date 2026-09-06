@@ -9,6 +9,7 @@ import BuiltOnStrip from "@/components/BuiltOnStrip";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import Tick from "@/components/Tick";
 import RepliedThread from "@/components/RepliedThread";
+import CalculatorTool from "@/components/CalculatorTool";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -468,6 +469,24 @@ export default function Home() {
               <p className="stat-label">typical time for the agent to answer a new message, at any hour</p>
               <span className="stat-source mono">Measured, Voxitron</span>
             </div>
+          </div>
+        </Reveal>
+
+        {/* CALCULATOR TEASER */}
+        <Reveal as="section" id="calculator-teaser" aria-labelledby="calculator-teaser-title">
+          <div className="section-inner-wide">
+            <div className="section-inner-wide-header">
+              <span className="section-label">CALCULATE</span>
+              <h2 id="calculator-teaser-title" className="section-title">
+                What would slow
+                <br />
+                <span className="accent">replies cost you?</span>
+              </h2>
+            </div>
+            <CalculatorTool compact />
+            <Link href="/tools/missed-lead-calculator" className="service-link" style={{ marginTop: "var(--space-5)" }}>
+              See the full breakdown
+            </Link>
           </div>
         </Reveal>
 
