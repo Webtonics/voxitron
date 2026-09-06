@@ -971,6 +971,22 @@ body, p, .section-body {
   display: block;
 }
 
+/* Modifier: real message bubbles (PhoneMockup) inside the phone screen,
+   instead of a placeholder or video. */
+.wa-body-mockup {
+  padding: var(--space-3) var(--space-2);
+  overflow-y: auto;
+}
+
+.thread-msg-mockup {
+  font-size: 0.72rem;
+  padding: 7px 10px;
+}
+
+.thread-msg-mockup .thread-msg-time {
+  font-size: 0.6rem;
+}
+
 .wa-input-bar {
   flex-shrink: 0;
   display: flex;
