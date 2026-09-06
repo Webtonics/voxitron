@@ -30,13 +30,7 @@ export const metadata: Metadata = {
 export default function WhatsAppAgentPage() {
   return (
     <>
-      <Nav
-        activePage="whatsapp-agent"
-        ctaHref={WA_CTA_HREF}
-        ctaLabel="Chat on WhatsApp"
-        ctaExternal
-        showWhatsAppCta={false}
-      />
+      <Nav activePage="whatsapp-agent" />
 
       <main>
         {/* HERO */}

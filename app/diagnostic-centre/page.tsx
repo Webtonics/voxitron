@@ -30,13 +30,7 @@ export const metadata: Metadata = {
 export default function DiagnosticCentrePage() {
   return (
     <>
-      <Nav
-        activePage="diagnostic-centre"
-        ctaHref={WA_CTA_HREF}
-        ctaLabel="Chat on WhatsApp"
-        ctaExternal
-        showWhatsAppCta={false}
-      />
+      <Nav activePage="diagnostic-centre" />
 
       <main>
         {/* HERO */}

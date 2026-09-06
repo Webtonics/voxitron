@@ -30,13 +30,7 @@ export const metadata: Metadata = {
 export default function RetailPage() {
   return (
     <>
-      <Nav
-        activePage="retail"
-        ctaHref={WA_CTA_HREF}
-        ctaLabel="Chat on WhatsApp"
-        ctaExternal
-        showWhatsAppCta={false}
-      />
+      <Nav activePage="retail" />
 
       <main>
         {/* HERO */}
