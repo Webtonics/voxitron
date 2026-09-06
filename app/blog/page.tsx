@@ -20,8 +20,8 @@ const POSTS = [
     title: "How Much Are Slow WhatsApp Replies Costing Your Lagos Business? (2026 Data)",
     excerpt:
       "Nigeria has over 50 million WhatsApp users. Most businesses still reply in hours. Here's what that gap actually costs, with real 2026 pricing data.",
-    image: "https://images.unsplash.com/photo-1643917567366-5afb8cf4bac9?fm=jpg&q=80&w=800",
-    imagePlaceholderLabel: undefined,
+    image: null,
+    imagePlaceholderLabel: "Photo: a phone showing an unanswered WhatsApp business chat",
     readingTime: "9 min read",
   },
   {
@@ -30,8 +30,8 @@ const POSTS = [
     title: "Real Estate Agents in Lagos Are Losing Diaspora Buyers to Time Zones, Not Bad Listings",
     excerpt:
       "Diaspora remittances into Nigerian real estate are projected to hit $23 billion in 2026. Most of that money is being lost to slow replies across time zones.",
-    image: "https://images.unsplash.com/photo-1643297550841-1386b3a10612?fm=jpg&q=80&w=800",
-    imagePlaceholderLabel: undefined,
+    image: null,
+    imagePlaceholderLabel: "Photo: a world clock showing overlapping Lagos and diaspora time zones",
     readingTime: "10 min read",
   },
   {
@@ -50,8 +50,8 @@ const POSTS = [
     title: "Why Nigerian Diagnostic Centres Still Book Tests by Manual WhatsApp Message",
     excerpt:
       "Africa's no-show rate for medical appointments runs as high as 43%. Manual WhatsApp booking is part of why, and part of the fix.",
-    image: "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?fm=jpg&q=80&w=800",
-    imagePlaceholderLabel: undefined,
+    image: null,
+    imagePlaceholderLabel: "Photo: a diagnostic centre reception desk with a phone mid-conversation",
     readingTime: "10 min read",
   },
 ] as const;

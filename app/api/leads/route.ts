@@ -31,17 +31,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, businessName, email, phone, interestedAgent, businessType, monthlyWhatsappLeads, notes } =
+  const { name, businessName, email, phone, interestedAgent, businessType, monthlyWhatsappLeads, notes, minimal } =
     body as Record<string, unknown>;
+
+  const isMinimal = minimal === true;
 
   if (typeof name !== "string" || name.trim().length === 0) {
     return NextResponse.json({ error: "Name is required." }, { status: 400 });
   }
-  if (typeof businessName !== "string" || businessName.trim().length === 0) {
+  if (!isMinimal && (typeof businessName !== "string" || businessName.trim().length === 0)) {
     return NextResponse.json({ error: "Business name is required." }, { status: 400 });
   }
-  if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!isMinimal && (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
     return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
+  }
+  if (isMinimal && (typeof phone !== "string" || phone.trim().length === 0)) {
+    return NextResponse.json({ error: "A WhatsApp number is required." }, { status: 400 });
   }
   if (phone !== undefined && phone !== null && phone !== "" && typeof phone !== "string") {
     return NextResponse.json({ error: "Invalid phone number." }, { status: 400 });
@@ -61,10 +66,14 @@ export async function POST(request: Request) {
 
   const supabase = await createServerClient();
 
+  const trimmedEmail = typeof email === "string" && email.trim().length > 0 ? email.trim() : null;
+  const trimmedBusinessName =
+    typeof businessName === "string" && businessName.trim().length > 0 ? businessName.trim() : null;
+
   const { error } = await supabase.from("leads").insert({
     name: name.trim(),
-    business_name: businessName.trim(),
-    email: email.trim(),
+    business_name: trimmedBusinessName,
+    email: trimmedEmail,
     phone: typeof phone === "string" && phone.trim().length > 0 ? phone.trim() : null,
     interested_agent: interestedAgent,
     business_type: typeof businessType === "string" && businessType.trim().length > 0 ? businessType.trim() : null,
@@ -84,10 +93,13 @@ export async function POST(request: Request) {
   }
 
   // Fire-and-forget: the lead is already saved, a slow or failed email send
-  // shouldn't hold up or fail the response to the visitor.
-  sendLeadConfirmationEmail({ to: email.trim(), name: name.trim() }).catch((err) => {
-    console.error("Unexpected error sending lead confirmation email:", err);
-  });
+  // shouldn't hold up or fail the response to the visitor. No email on file
+  // for a minimal submission, nothing to send.
+  if (trimmedEmail) {
+    sendLeadConfirmationEmail({ to: trimmedEmail, name: name.trim() }).catch((err) => {
+      console.error("Unexpected error sending lead confirmation email:", err);
+    });
+  }
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

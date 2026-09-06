@@ -24,10 +24,11 @@ const MONTHLY_LEAD_BRACKETS = [
 type LeadFormProps = {
   defaultAgent?: InterestedAgent;
   /**
-   * "simple": original 5-field form (name, business, email, phone, which agent). Used by /get-started.
+   * "simple": original 5-field form (name, business, email, phone, which agent).
    * "discovery-call": adds business type, monthly WhatsApp lead volume, and a free-text notes field. Used by /contact and the lead calculator.
+   * "minimal": name + WhatsApp number only. Used by /get-started's fallback form, for visitors who won't message on WhatsApp directly.
    */
-  variant?: "simple" | "discovery-call";
+  variant?: "simple" | "discovery-call" | "minimal";
   submitLabel?: string;
 };
 
@@ -56,6 +57,7 @@ export default function LeadForm({
       businessType: String(data.get("businessType") || ""),
       monthlyWhatsappLeads: String(data.get("monthlyWhatsappLeads") || ""),
       notes: String(data.get("notes") || ""),
+      minimal: variant === "minimal",
     };
 
     try {
@@ -86,11 +88,53 @@ export default function LeadForm({
       <div className="lead-form-success" role="status">
         <p className="lead-form-success-title">Got it. We&apos;ll be in touch shortly.</p>
         <p className="lead-form-success-body">
-          {variant === "discovery-call"
-            ? "We reply on WhatsApp first, usually within a few hours."
-            : "Check your email, we usually reply within one business day."}
+          {variant === "minimal"
+            ? "We'll message you on WhatsApp shortly."
+            : variant === "discovery-call"
+              ? "We reply on WhatsApp first, usually within a few hours."
+              : "Check your email, we usually reply within one business day."}
         </p>
       </div>
+    );
+  }
+
+  if (variant === "minimal") {
+    return (
+      <form className="lead-form" onSubmit={handleSubmit} noValidate>
+        <div className="lead-form-row">
+          <label className="lead-form-label" htmlFor="lead-name-minimal">Name</label>
+          <input
+            id="lead-name-minimal"
+            name="name"
+            type="text"
+            required
+            className="lead-form-input"
+            autoComplete="name"
+          />
+        </div>
+
+        <div className="lead-form-row">
+          <label className="lead-form-label" htmlFor="lead-phone-minimal">WhatsApp number</label>
+          <input
+            id="lead-phone-minimal"
+            name="phone"
+            type="tel"
+            required
+            className="lead-form-input"
+            autoComplete="tel"
+          />
+        </div>
+
+        <input type="hidden" name="interestedAgent" value={defaultAgent || "general"} />
+
+        {status === "error" && (
+          <p className="lead-form-error" role="alert">{errorMessage}</p>
+        )}
+
+        <button type="submit" className="btn btn-primary" disabled={status === "submitting"}>
+          {status === "submitting" ? "Sending..." : submitLabel || "Message me instead"}
+        </button>
+      </form>
     );
   }
 
