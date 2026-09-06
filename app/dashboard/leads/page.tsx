@@ -49,10 +49,14 @@ export default async function LeadsPage() {
             <li key={lead.id} className="dashboard-lead-row">
               <div className="dashboard-lead-row-main">
                 <span className="dashboard-lead-row-name">{lead.name}</span>
-                <span className="dashboard-lead-row-business">{lead.business_name}</span>
+                <span className="dashboard-lead-row-business">{lead.business_name || "Not provided"}</span>
               </div>
               <div className="dashboard-lead-row-details">
-                <a href={`mailto:${lead.email}`}>{lead.email}</a>
+                {lead.email ? (
+                  <a href={`mailto:${lead.email}`}>{lead.email}</a>
+                ) : (
+                  <span>No email provided</span>
+                )}
                 {lead.phone && <span>{lead.phone}</span>}
                 <span className="dashboard-lead-row-agent">{lead.interested_agent}</span>
               </div>

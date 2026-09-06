@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -32,16 +31,6 @@ export default function SpeedToLeadPage() {
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" aria-hidden="true">
-            <Image
-              src="https://images.unsplash.com/photo-1676210134188-4c05dd172f89?fm=jpg&q=80&w=1920&auto=format&fit=crop"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-            />
-          </div>
-
           <div className="hero-inner">
             <div className="hero-content">
               <span className="hero-trust-pill">
@@ -68,7 +57,7 @@ export default function SpeedToLeadPage() {
                 <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
               </div>
 
-              <span className="form-note">No spam. 30 days free. No credit card needed.</span>
+              <span className="form-note">No spam. 2-week pilot to start.</span>
             </div>
 
             <div className="hero-ui" aria-hidden="true">
@@ -139,7 +128,7 @@ export default function SpeedToLeadPage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -467,12 +456,12 @@ export default function SpeedToLeadPage() {
             </h2>
 
             <p className="cta-sub">
-              Get started today. 30 days free. Live in 48 hours. No credit card. No
-              long-term contract.
+              Try it 2 weeks. Only pay next month if it books. We build and connect it
+              for you, live on your existing number in about a week.
             </p>
 
             <div className="cta-group">
-              <Link href="/get-started?agent=speed-to-lead" className="btn btn-primary">Get Started</Link>
+              <Link href="/get-started?agent=speed-to-lead" className="btn btn-primary">Start your 2-week pilot</Link>
               <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
             </div>
 

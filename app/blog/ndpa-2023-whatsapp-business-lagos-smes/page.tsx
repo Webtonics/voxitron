@@ -236,12 +236,12 @@ export default function Page() {
           to actually investigate what happened.
         </p>
         <p>
-          This is the specific, practical reason self-hosted infrastructure matters for NDPA compliance in
+          This is the specific, practical reason data isolation matters for NDPA-aware handling in
           a way that&apos;s easy to dismiss as a technical preference rather than a legal one. When your
-          WhatsApp automation runs on infrastructure you control, whether that&apos;s a server you own or
-          one you&apos;ve explicitly contracted for with clear data residency terms, you can actually
-          answer the questions NDPA requires you to answer: where the data lives, who can access it, what
-          happens to it if something goes wrong, and how fast you can act on a breach.
+          WhatsApp automation runs on infrastructure isolated to your business, whether that&apos;s a
+          server you own or one you&apos;ve explicitly contracted for with clear data residency terms,
+          you can actually answer the questions NDPA requires you to answer: where the data lives, who
+          can access it, what happens to it if something goes wrong, and how fast you can act on a breach.
         </p>
 
         <h2>The cross-border question most vendors won&apos;t answer directly</h2>

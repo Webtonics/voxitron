@@ -46,7 +46,6 @@ export default function Page() {
         dek="Nigeria's biggest diagnostic labs already use WhatsApp for booking. It's usually a human on the other end, and that works right up until volume outgrows what one person can track."
         publishedLabel="August 20, 2026"
         readingTime="10 min read"
-        coverImage="https://images.unsplash.com/photo-1614935151651-0bea6508db6b?fm=jpg&q=80&w=1200"
         coverAlt="A lab technician in gloves using a pipette with sample vials in a diagnostic laboratory"
         sources={[
           { label: "PMC — Audit of appointment booking system in a Nigerian ultrasound unit", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6618229/" },

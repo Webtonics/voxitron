@@ -46,7 +46,6 @@ export default function Page() {
         dek="Nigeria runs on WhatsApp. Most businesses still make customers wait hours for a reply. Here's the real cost of that gap, with 2026 pricing data, not guesswork."
         publishedLabel="August 20, 2026"
         readingTime="9 min read"
-        coverImage="https://images.unsplash.com/photo-1643917567366-5afb8cf4bac9?fm=jpg&q=80&w=1200"
         coverAlt="A smartphone home screen showing the WhatsApp app icon among other messaging apps"
         sources={[
           { label: "DataReportal — Digital 2026: Nigeria", href: "https://datareportal.com/reports/digital-2026-nigeria" },
@@ -73,7 +72,7 @@ export default function Page() {
         <p>
           According to DataReportal&apos;s Digital 2026 Nigeria report, the country&apos;s online
           population has passed 109 million people, and WhatsApp usage among internet users aged 16+
-          sits at roughly 96.5%, one of the highest adoption rates anywhere on the continent. Kenya and
+          sits at 95%+, one of the highest adoption rates anywhere on the continent. Kenya and
           South Africa are close behind, but Nigeria&apos;s sheer population means more people are
           reachable on WhatsApp in Lagos alone than through almost any other single channel in the
           country.
@@ -88,7 +87,7 @@ export default function Page() {
 
         <div className="article-stat-row">
           <div className="article-stat">
-            <span className="article-stat-number">96.5%</span>
+            <span className="article-stat-number">95%+</span>
             <span className="article-stat-label">of Nigerian internet users (16+) are active WhatsApp users, DataReportal 2026</span>
           </div>
           <div className="article-stat">
@@ -109,9 +108,9 @@ export default function Page() {
         </p>
         <ul>
           <li>
-            <strong>Service conversations (customer-initiated, replying within 24 hours):</strong> free.
-            Meta gives every business phone number 1,000 free service conversations a month, and this is
-            the category almost all customer replies fall under.
+            <strong>Service conversations (customer-initiated, replying within 24 hours):</strong> roughly
+            $0.010 per conversation, with the first 1,000 each month free. This is the category almost all
+            customer replies fall under.
           </li>
           <li>
             <strong>Utility conversations</strong> (order updates, appointment confirmations): roughly
@@ -186,17 +185,17 @@ export default function Page() {
           There&apos;s a mechanical reason speed matters even more than the conversion research alone
           suggests. When a customer messages your WhatsApp Business number, it opens what Meta calls a
           24-hour customer service window. Inside that window, you can reply with anything, text, images,
-          product catalogues, order confirmations, at no cost and with no restrictions. The moment that
-          window closes without a reply, the rules change completely: you can no longer send a free-form
-          message at all. You have to use a pre-approved template, in the paid marketing or utility
-          category, just to re-open the conversation.
+          product catalogues, order confirmations, as a free-form message with no template required. The
+          moment that window closes without a reply, the rules change completely: you can no longer send a
+          free-form message at all. You have to use a pre-approved template, in the paid marketing or
+          utility category, just to re-open the conversation.
         </p>
         <p>
           In practice, this means a slow business isn&apos;t just risking a worse impression, it&apos;s
           converting a free conversation into one that costs money, and adding a layer of friction (a
           templated message instead of a natural reply) exactly at the moment it needs to win the customer
-          back. A reply sent at hour 23 is technically still inside the free window. A reply sent at hour
-          25 has quietly become a different, more expensive, more awkward interaction. Most business
+          back. A reply sent at hour 23 is technically still inside the free-form window. A reply sent at
+          hour 25 has quietly become a different, more expensive, more awkward interaction. Most business
           owners have never looked at this distinction because they&apos;ve never needed to, their
           customers just stopped replying long before the 24 hours ran out.
         </p>
@@ -256,11 +255,11 @@ export default function Page() {
           there&apos;s one enquiry that hour or fifteen. A WhatsApp AI agent doesn&apos;t replace good
           judgment on complex requests, it answers the repetitive ones (price, stock, hours, booking) in
           seconds, 24 hours a day, and hands anything that actually needs a person straight to one, with
-          full context attached, well inside that 24-hour free window every time.
+          full context attached, well inside that 24-hour free-form window every time.
         </p>
         <p>
-          That&apos;s the gap between the 96.5% of Nigerians already on WhatsApp and the businesses still
-          treating it like a slow inbox. The customers are there. The channel is close to free to run.
+          That&apos;s the gap between the 95%+ of Nigerians already on WhatsApp and the businesses still
+          treating it like a slow inbox. The customers are there. The channel is inexpensive to run.
           What&apos;s missing, for most businesses, is simply someone (or something) answering in the
           first five minutes instead of the fifth hour.
         </p>

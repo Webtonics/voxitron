@@ -26,7 +26,7 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Discovery call and workflow mapping</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Your WhatsApp Business number connected</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Agent trained on your catalog and pricing</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Self-hosted infrastructure, under your control</span></li>
+            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Your data isolated and private, exportable any time</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Monthly tuning and quality checks</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Cancel any time, no lock-in</span></li>
           </ul>
@@ -54,7 +54,6 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Multiple languages, trained on how your customers actually message</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Multiple WhatsApp numbers or locations, one agent</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Booking and ordering flows combined</span></li>
-            <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>CRM or inventory system integration</span></li>
             <li><span className="pricing-card-bullet" aria-hidden="true">&#9679;</span><span>Priority tuning turnaround</span></li>
           </ul>
         )}

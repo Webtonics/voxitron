@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -30,27 +29,11 @@ export const metadata: Metadata = {
 export default function WhatsAppAgentPage() {
   return (
     <>
-      <Nav
-        activePage="whatsapp-agent"
-        ctaHref={WA_CTA_HREF}
-        ctaLabel="Chat on WhatsApp"
-        ctaExternal
-        showWhatsAppCta={false}
-      />
+      <Nav activePage="whatsapp-agent" />
 
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" aria-hidden="true">
-            <Image
-              src="https://images.unsplash.com/photo-1585540083814-ea6ee8af9e4f?fm=jpg&q=80&w=1920&auto=format&fit=crop"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-            />
-          </div>
-
           <div className="hero-inner">
             <div className="hero-content">
               <span className="hero-trust-pill">
@@ -151,7 +134,7 @@ export default function WhatsAppAgentPage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -598,7 +581,8 @@ export default function WhatsAppAgentPage() {
             </h2>
 
             <p className="cta-sub">
-              Message us on WhatsApp and see the agent reply live. 30 days free after that.
+              Message us on WhatsApp and see the agent reply live. Try it 2 weeks, only
+              pay next month if it books.
             </p>
 
             <div className="cta-group">

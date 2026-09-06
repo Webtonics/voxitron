@@ -39,7 +39,7 @@ export async function sendLeadConfirmationEmail({
     subject: "We've got your details, Voxitron",
     html: `
       <p>Hi ${firstName},</p>
-      <p>Thanks for reaching out to Voxitron. We've got your details and we're setting up your agent now, expect it live within 48 hours.</p>
+      <p>Thanks for reaching out to Voxitron. We've got your details and we're building and connecting your agent now, expect it live on your existing number in about a week.</p>
       <p>In the meantime, if anything's urgent, message us on WhatsApp: <a href="https://wa.me/2348120907050">wa.me/2348120907050</a></p>
       <p>Talk soon,<br>The Voxitron team</p>
     `,

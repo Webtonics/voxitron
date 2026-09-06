@@ -18,6 +18,19 @@ function timeAgo(iso: string) {
   return `${days}d ago`;
 }
 
+function initialsFor(name: string | null, phone: string) {
+  if (name) {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+  }
+  return phone.slice(-2);
+}
+
 export default function ConversationList({
   conversations,
   selectedId,
@@ -37,6 +50,9 @@ export default function ConversationList({
             className={`dashboard-conversation-row${c.needs_human ? " needs-human" : ""}${c.id === selectedId ? " is-selected" : ""}`}
           >
             <div className="dashboard-conversation-row-main">
+              <span className="dashboard-conversation-avatar" aria-hidden="true">
+                {initialsFor(c.contact_name, c.contact_phone)}
+              </span>
               <span className="dashboard-conversation-row-name">
                 {c.contact_name || c.contact_phone}
               </span>

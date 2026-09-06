@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 const RESPONSE_BRACKETS = [
   { value: "1", label: "Under 1 minute", recoveryRate: 0 },
@@ -10,11 +11,20 @@ const RESPONSE_BRACKETS = [
   { value: "1440", label: "Same day, but hours later", recoveryRate: 0.55 },
 ] as const;
 
+const RECOVERABLE_SHARE = 0.7;
+
+const WA_CTA_HREF =
+  "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%20just%20used%20the%20missed%20lead%20calculator";
+
 function formatNaira(value: number): string {
   return `₦${Math.round(value).toLocaleString("en-NG")}`;
 }
 
-export default function CalculatorTool() {
+type CalculatorToolProps = {
+  compact?: boolean;
+};
+
+export default function CalculatorTool({ compact = false }: CalculatorToolProps) {
   const [monthlyInquiries, setMonthlyInquiries] = useState(200);
   const [responseBracket, setResponseBracket] = useState<(typeof RESPONSE_BRACKETS)[number]["value"]>("60");
   const [dealValue, setDealValue] = useState(15000);
@@ -28,7 +38,7 @@ export default function CalculatorTool() {
     // Assumes the recoveryRate share of currently-lost deals would close if
     // response time dropped to under 60 seconds.
     const lost = totalPotentialRevenue * bracket.recoveryRate;
-    const recoverable = lost * 0.7; // conservative: not every recovered reply converts to a sale
+    const recoverable = lost * RECOVERABLE_SHARE; // conservative: not every recovered reply converts to a sale
     return { lostRevenue: lost, recoverableRevenue: recoverable };
   }, [monthlyInquiries, dealValue, closeRate, bracket]);
 
@@ -58,7 +68,16 @@ export default function CalculatorTool() {
               <option key={b.value} value={b.value}>{b.label}</option>
             ))}
           </select>
-          <span className="calculator-field-hint">Be honest, not aspirational. This drives the whole estimate.</span>
+          <span className="calculator-field-hint">
+            Be honest, not aspirational. This drives the whole estimate.
+            {!compact && (
+              <>
+                {" "}Assumption: at this response speed, we estimate you&apos;re currently
+                losing about {Math.round(bracket.recoveryRate * 100)}% of deals that would
+                otherwise close. Editable estimate, not a measured rate.
+              </>
+            )}
+          </span>
         </div>
 
         <div className="calculator-field">
@@ -97,12 +116,22 @@ export default function CalculatorTool() {
           <div className="calculator-result-value">{formatNaira(recoverableRevenue)}</div>
         </div>
 
-        <div className="calculator-formula">
-          <strong>How this is calculated:</strong> monthly inquiries &times; your close rate
-          &times; average deal value gives your total potential revenue. We assume a share
-          of that (based on your response-time bracket) is currently being lost to slow
-          replies, and that 70% of it is realistically recoverable once replies happen in
-          under 60 seconds. This is an estimate to guide your thinking, not a guarantee.
+        {!compact && (
+          <div className="calculator-formula">
+            <strong>How this is calculated:</strong> monthly inquiries &times; your close rate
+            &times; average deal value gives your total potential revenue. We assume a share
+            of that (based on your response-time bracket, an editable estimate above, not a
+            measured rate) is currently being lost to slow replies, and that {Math.round(RECOVERABLE_SHARE * 100)}%
+            of it is realistically recoverable, an editable assumption, once replies happen
+            in under 60 seconds. This is an estimate to guide your thinking, not a guarantee.
+          </div>
+        )}
+
+        <div className="calculator-cta-group">
+          <Link href="/get-started" className="btn btn-primary">Start your 2-week pilot</Link>
+          <a href={WA_CTA_HREF} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+            Chat on WhatsApp
+          </a>
         </div>
       </div>
     </div>

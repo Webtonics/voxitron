@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 
-const WA_NAV_HREF =
-  "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20know%20more";
+const CALCULATOR_HREF = "/tools/missed-lead-calculator";
 
 const SOLUTIONS = [
   {
@@ -107,22 +106,39 @@ type NavProps = {
   ctaHref?: string;
   ctaLabel?: string;
   ctaExternal?: boolean;
-  /** Hide the secondary "WhatsApp Us" nav CTA, for pages whose primary CTA is already a wa.me link. */
-  showWhatsAppCta?: boolean;
+  /** Hide the secondary "What would slow replies cost you?" nav CTA, for pages that already surface the calculator elsewhere. */
+  showSecondaryCta?: boolean;
 };
+
+const WA_CTA_HREF =
+  "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
 export default function Nav({
   activePage,
-  ctaHref = "/get-started",
-  ctaLabel = "Free Trial",
-  ctaExternal = false,
-  showWhatsAppCta = true,
+  ctaHref = WA_CTA_HREF,
+  ctaLabel = "Chat on WhatsApp",
+  ctaExternal = true,
+  showSecondaryCta = true,
 }: NavProps) {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
   const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
+
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function scheduleClose(close: () => void) {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(close, 200);
+  }
+
+  function cancelScheduledClose() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
 
   const isSolutionsActive = SOLUTIONS.some((item) => item.key === activePage);
   const isIndustriesActive = INDUSTRIES.some((item) => item.key === activePage);
@@ -141,7 +157,8 @@ export default function Nav({
       <div className="nav-links">
         <div
           className={`nav-dropdown${solutionsOpen ? " is-open" : ""}`}
-          onMouseLeave={() => setSolutionsOpen(false)}
+          onMouseEnter={cancelScheduledClose}
+          onMouseLeave={() => scheduleClose(() => setSolutionsOpen(false))}
         >
           <button
             type="button"
@@ -177,7 +194,8 @@ export default function Nav({
 
         <div
           className={`nav-dropdown${industriesOpen ? " is-open" : ""}`}
-          onMouseLeave={() => setIndustriesOpen(false)}
+          onMouseEnter={cancelScheduledClose}
+          onMouseLeave={() => scheduleClose(() => setIndustriesOpen(false))}
         >
           <button
             type="button"
@@ -215,15 +233,10 @@ export default function Nav({
         <Link href="/blog" className="nav-link">Blog</Link>
       </div>
       <div className="nav-cta-group">
-        {showWhatsAppCta && (
-          <a
-            href={WA_NAV_HREF}
-            className="nav-cta nav-cta-secondary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            WhatsApp Us
-          </a>
+        {showSecondaryCta && (
+          <Link href={CALCULATOR_HREF} className="nav-cta nav-cta-secondary">
+            What would slow replies cost you?
+          </Link>
         )}
         {ctaExternal ? (
           <a
@@ -323,16 +336,15 @@ export default function Nav({
           <Link href="/pricing" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Pricing</Link>
           <Link href="/blog" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Blog</Link>
 
-          {showWhatsAppCta && (
-            <a
-              href={WA_NAV_HREF}
+          {showSecondaryCta && (
+            <Link
+              href={CALCULATOR_HREF}
               className="nav-mobile-link"
-              target="_blank"
-              rel="noopener noreferrer"
+              role="menuitem"
               onClick={closeMobile}
             >
-              WhatsApp Us
-            </a>
+              What would slow replies cost you?
+            </Link>
           )}
         </div>
       )}

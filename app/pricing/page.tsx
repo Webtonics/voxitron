@@ -103,7 +103,7 @@ export default function PricingPage() {
               <div className="buy-column">
                 <h3 className="buy-column-title">What you&apos;re buying</h3>
                 <ul className="buy-column-list">
-                  <li><span className="buy-column-bullet" aria-hidden="true">&#9679;</span><span>Self-hosted agent infrastructure you control</span></li>
+                  <li><span className="buy-column-bullet" aria-hidden="true">&#9679;</span><span>Your data isolated and private, exportable any time</span></li>
                   <li><span className="buy-column-bullet" aria-hidden="true">&#9679;</span><span>Qualification logic built for your business</span></li>
                   <li><span className="buy-column-bullet" aria-hidden="true">&#9679;</span><span>Full conversation and customer data, kept by you</span></li>
                   <li><span className="buy-column-bullet" aria-hidden="true">&#9679;</span><span>Monthly tuning as your business changes</span></li>
@@ -264,11 +264,12 @@ export default function PricingPage() {
             </h2>
 
             <p className="cta-sub">
-              Book a free discovery call, or message us on WhatsApp for a quick answer.
+              Try it 2 weeks. Only pay next month if it books. Or message us on WhatsApp
+              for a quick answer.
             </p>
 
             <div className="cta-group">
-              <Link href="/contact" className="btn btn-primary">Book a discovery call</Link>
+              <Link href="/get-started" className="btn btn-primary">Start your 2-week pilot</Link>
               <a href={WA_CTA_HREF} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                 Chat on WhatsApp
               </a>

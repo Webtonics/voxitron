@@ -122,7 +122,7 @@ export default async function ComparisonPage({
             <ul className="offer-list" aria-label="Reasons to choose Voxitron">
               <li className="offer-item">
                 <span className="offer-bullet" aria-hidden="true">&#9679;</span>
-                <span><strong>Self-hosted infrastructure.</strong> Your data never lives on a rented platform.</span>
+                <span><strong>Data isolated and private.</strong> Your data never lives on a rented platform.</span>
               </li>
               <li className="offer-item">
                 <span className="offer-bullet" aria-hidden="true">&#9679;</span>

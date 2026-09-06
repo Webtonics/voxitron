@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -32,16 +31,6 @@ export default function QuotingAgentPage() {
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" aria-hidden="true">
-            <Image
-              src="https://images.unsplash.com/photo-1758101755915-462eddc23f57?fm=jpg&q=80&w=1920&auto=format&fit=crop"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-            />
-          </div>
-
           <div className="hero-inner">
             <div className="hero-content">
               <span className="hero-trust-pill">
@@ -69,7 +58,7 @@ export default function QuotingAgentPage() {
                 <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
               </div>
 
-              <span className="form-note">No spam. 30 days free. No credit card needed.</span>
+              <span className="form-note">No spam. 2-week pilot to start.</span>
             </div>
 
             <div className="hero-ui" aria-hidden="true">
@@ -141,7 +130,7 @@ export default function QuotingAgentPage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -160,9 +149,9 @@ export default function QuotingAgentPage() {
               <span className="stat-source">GetApp SMB Survey</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">£0</span>
-              <p className="stat-label">setup fee, no upfront cost, no hidden charges to get started</p>
-              <span className="stat-source">30 days free, then monthly</span>
+              <span className="stat-number">2 weeks</span>
+              <p className="stat-label">pilot period before your first monthly invoice, only pay if it books</p>
+              <span className="stat-source">Voxitron pilot offer</span>
             </div>
           </div>
         </Reveal>
@@ -282,8 +271,8 @@ export default function QuotingAgentPage() {
                   </svg>
                 </div>
                 <div className="feature-text">
-                  <p className="feature-title">Full quote history &amp; CRM sync</p>
-                  <p className="feature-body">Every quote logged and synced to your CRM. Nothing gets lost.</p>
+                  <p className="feature-title">Full quote history, logged automatically</p>
+                  <p className="feature-body">Every quote saved the moment it&apos;s sent. Nothing gets lost.</p>
                 </div>
               </div>
             </div>
@@ -450,9 +439,9 @@ export default function QuotingAgentPage() {
                   <span className="faq-icon" aria-hidden="true">+</span>
                 </summary>
                 <p className="faq-body">
-                  It integrates with Tradify, ServiceM8, and others via webhook. We&apos;ll
-                  confirm your stack during onboarding. If yours isn&apos;t listed, we&apos;ll
-                  work with you directly.
+                  Not on the standard plan today. CRM, job management, and payment
+                  integrations are on our roadmap and available as part of an Enterprise
+                  build. Talk to us if that&apos;s what you need.
                 </p>
               </details>
             </div>
@@ -469,12 +458,12 @@ export default function QuotingAgentPage() {
             </h2>
 
             <p className="cta-sub">
-              Get started today. 30 days free. Live in 48 hours. No credit card. No
-              long-term contract.
+              Try it 2 weeks. Only pay next month if it books. We build and connect it
+              for you, live on your existing number in about a week.
             </p>
 
             <div className="cta-group">
-              <Link href="/get-started?agent=quoting-agent" className="btn btn-primary">Get Started</Link>
+              <Link href="/get-started?agent=quoting-agent" className="btn btn-primary">Start your 2-week pilot</Link>
               <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
             </div>
 

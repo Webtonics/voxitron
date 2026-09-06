@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -27,21 +26,11 @@ export const metadata: Metadata = {
 export default function RealEstatePage() {
   return (
     <>
-      <Nav activePage="real-estate" ctaHref="/get-started?agent=both" ctaLabel="Get Started" />
+      <Nav activePage="real-estate" />
 
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" aria-hidden="true">
-            <Image
-              src="https://images.unsplash.com/photo-1628133287836-40bd5453bed1?fm=jpg&q=80&w=1920&auto=format&fit=crop"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-            />
-          </div>
-
           <div className="hero-inner">
             <div className="hero-content">
               <span className="hero-trust-pill">
@@ -71,7 +60,7 @@ export default function RealEstatePage() {
                 <Link href="/#services" className="btn btn-secondary">See all three agents</Link>
               </div>
 
-              <span className="form-note">No spam. 30 days free. No credit card needed.</span>
+              <span className="form-note">No spam. 2-week pilot to start.</span>
             </div>
 
             <div className="hero-ui" aria-hidden="true">
@@ -80,7 +69,7 @@ export default function RealEstatePage() {
                   <span className="ui-call-label">Missed enquiry</span>
                   <span className="ui-call-time">6:40 PM</span>
                 </div>
-                <p className="ui-caller">+1 (415) 555-0148</p>
+                <p className="ui-caller">+234 802 555 0148</p>
                 <div className="ui-call-status">
                   <span className="ui-status-dot"></span>
                   <span>Voxitron responding&hellip;</span>
@@ -91,8 +80,8 @@ export default function RealEstatePage() {
                 <div>
                   <p className="ui-msg-label">Voxitron &mdash; 40 seconds later</p>
                   <div className="ui-msg ui-msg-ai">
-                    Hi! Thanks for your interest in 214 Maple Ave. Would you like the full
-                    listing details or to book a viewing?
+                    Hi! Thanks for your interest in the Lekki Phase 1 duplex. Would you
+                    like the full listing details or to book a viewing?
                   </div>
                 </div>
                 <div className="ui-msg-group is-reply">
@@ -117,7 +106,7 @@ export default function RealEstatePage() {
                   </svg>
                   Viewing confirmed
                 </div>
-                <p className="ui-booking-title">214 Maple Ave</p>
+                <p className="ui-booking-title">Lekki Phase 1 duplex</p>
                 <p className="ui-booking-detail">
                   Saturday, 11:00 AM &middot; Response: 40 sec
                 </p>
@@ -141,7 +130,7 @@ export default function RealEstatePage() {
             <li className="proof-divider" role="separator" aria-hidden="true"></li>
             <li className="proof-item">
               <span className="proof-dot" aria-hidden="true">&#9679;</span>
-              <span>30 days free to start</span>
+              <span>2-week pilot to start</span>
             </li>
           </ul>
         </Reveal>
@@ -410,12 +399,12 @@ export default function RealEstatePage() {
             </h2>
 
             <p className="cta-sub">
-              Get started today. 30 days free. Live in 48 hours. No credit card. No
-              long-term contract.
+              Try it 2 weeks. Only pay next month if it books. We build and connect it
+              for you, live on your existing number in about a week.
             </p>
 
             <div className="cta-group">
-              <Link href="/get-started?agent=both" className="btn btn-primary">Get Started</Link>
+              <Link href="/get-started?agent=both" className="btn btn-primary">Start your 2-week pilot</Link>
               <Link href="/#services" className="btn btn-secondary">See all three agents</Link>
             </div>
 
