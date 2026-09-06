@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -7,6 +6,7 @@ import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import CalculatorTool from "@/components/CalculatorTool";
+import PhoneMockup from "@/components/PhoneMockup";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "WhatsApp Agent for Diagnostic Centres: Voxitron",
     description:
-      "Never leave a patient on read. Voxitron books tests, answers pricing questions, and follows up on results.",
+      "Your front desk never closes. Voxitron books tests, answers pricing questions, and follows up on results.",
     images: ["/assets/images/og-image.jpg"],
     url: "https://voxitron.com/diagnostic-centre",
     type: "website",
@@ -36,16 +36,6 @@ export default function DiagnosticCentrePage() {
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" aria-hidden="true">
-            <Image
-              src="https://images.unsplash.com/photo-1614935151651-0bea6508db6b?fm=jpg&q=80&w=1920&auto=format&fit=crop"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-            />
-          </div>
-
           <div className="hero-inner">
             <div className="hero-content">
               <span className="hero-trust-pill">
@@ -56,11 +46,11 @@ export default function DiagnosticCentrePage() {
               <span className="hero-kicker">WHATSAPP AI FOR DIAGNOSTIC CENTRES</span>
 
               <h1 id="hero-title" className="hero-title">
-                Never leave
+                Your front desk
                 <br />
-                a patient
+                never
                 <br />
-                <span className="accent">on read.</span>
+                <span className="accent">closes.</span>
               </h1>
 
               <p className="hero-sub">
@@ -78,45 +68,17 @@ export default function DiagnosticCentrePage() {
               <span className="form-note">Message us directly. See the agent reply in real time.</span>
             </div>
 
-            <div className="hero-ui" aria-hidden="true">
-              <div className="phone-frame">
-                <div className="phone-notch"></div>
-                <div className="phone-screen">
-                  <div className="wa-header">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.5 3.5L6 9L11.5 14.5" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="wa-avatar">LC</span>
-                    <span className="wa-header-info">
-                      <span className="wa-header-name">Lifeline Diagnostics</span>
-                      <span className="wa-header-status">online</span>
-                    </span>
-                    <span className="wa-header-icons">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 4.5C2 3.67 2.67 3 3.5 3H9.5C10.33 3 11 3.67 11 4.5V11.5C11 12.33 10.33 13 9.5 13H3.5C2.67 13 2 12.33 2 11.5V4.5Z" stroke="#FFFFFF" strokeWidth="1.1" />
-                        <path d="M11 6.5L14.5 4.5V11.5L11 9.5" stroke="#FFFFFF" strokeWidth="1.1" strokeLinejoin="round" />
-                      </svg>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 3.5C2 2.95 2.45 2.5 3 2.5H4.4C4.87 2.5 5.28 2.83 5.38 3.29L5.86 5.5C5.95 5.92 5.79 6.36 5.44 6.61L4.4 7.36C5.09 8.94 6.06 9.91 7.64 10.6L8.39 9.56C8.64 9.21 9.08 9.05 9.5 9.14L11.71 9.62C12.17 9.72 12.5 10.13 12.5 10.6V12C12.5 12.55 12.05 13 11.5 13C6.25 13 2 8.75 2 3.5Z" stroke="#FFFFFF" strokeWidth="1.1" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                  </div>
-
-                  <div className="wa-body wa-body-placeholder">
-                    <ImagePlaceholder label="Demo video: WhatsApp conversation" />
-                  </div>
-
-                  <div className="wa-input-bar">
-                    <span className="wa-input-pill">Message</span>
-                    <span className="wa-send-btn">
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11" stroke="#0B0F19" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-                <div className="phone-home-indicator"></div>
-              </div>
+            <div className="hero-ui">
+              <PhoneMockup
+                contactName="Lifeline Diagnostics"
+                contactInitials="LC"
+                messages={[
+                  { from: "in", text: "Hi, do you do full blood count tests? How much?", time: "09:14" },
+                  { from: "out", text: "Yes, FBC is ₦8,500. Want me to book a slot for you today?", time: "09:14" },
+                  { from: "in", text: "Yes please, this afternoon if possible", time: "09:15" },
+                  { from: "out", text: "Booked for 2pm. Come fasted, we'll text when your results are ready.", time: "09:15" },
+                ]}
+              />
             </div>
           </div>
         </section>

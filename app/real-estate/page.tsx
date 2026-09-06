@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -32,16 +31,6 @@ export default function RealEstatePage() {
       <main>
         {/* HERO */}
         <section id="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" aria-hidden="true">
-            <Image
-              src="https://images.unsplash.com/photo-1628133287836-40bd5453bed1?fm=jpg&q=80&w=1920&auto=format&fit=crop"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-            />
-          </div>
-
           <div className="hero-inner">
             <div className="hero-content">
               <span className="hero-trust-pill">
@@ -80,7 +69,7 @@ export default function RealEstatePage() {
                   <span className="ui-call-label">Missed enquiry</span>
                   <span className="ui-call-time">6:40 PM</span>
                 </div>
-                <p className="ui-caller">+1 (415) 555-0148</p>
+                <p className="ui-caller">+234 802 555 0148</p>
                 <div className="ui-call-status">
                   <span className="ui-status-dot"></span>
                   <span>Voxitron responding&hellip;</span>
@@ -91,8 +80,8 @@ export default function RealEstatePage() {
                 <div>
                   <p className="ui-msg-label">Voxitron &mdash; 40 seconds later</p>
                   <div className="ui-msg ui-msg-ai">
-                    Hi! Thanks for your interest in 214 Maple Ave. Would you like the full
-                    listing details or to book a viewing?
+                    Hi! Thanks for your interest in the Lekki Phase 1 duplex. Would you
+                    like the full listing details or to book a viewing?
                   </div>
                 </div>
                 <div className="ui-msg-group is-reply">
@@ -117,7 +106,7 @@ export default function RealEstatePage() {
                   </svg>
                   Viewing confirmed
                 </div>
-                <p className="ui-booking-title">214 Maple Ave</p>
+                <p className="ui-booking-title">Lekki Phase 1 duplex</p>
                 <p className="ui-booking-detail">
                   Saturday, 11:00 AM &middot; Response: 40 sec
                 </p>
