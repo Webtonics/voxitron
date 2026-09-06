@@ -177,6 +177,15 @@ body, p, .section-body {
 /* =============================================
    NAV
    ============================================= */
+/* Floating glass pill: .site-nav keeps its original fixed 56px box
+   (every page's hero clearance math is calc(56px + ...)), but the visible
+   bar is now an inset, rounded, frosted panel inside it instead of a
+   flat edge-to-edge fill. It's fixed at the top of the viewport, where
+   every page starts with a dark #hero/.page-hero, but scrolls back over
+   that same spot once the user scrolls into the light content below, so
+   the fill is a dark, translucent tint (darkens either background
+   slightly) with light text/icons throughout, rather than a light tint
+   that would only work on one of the two. */
 .site-nav {
   position: fixed;
   top: 0;
@@ -187,16 +196,35 @@ body, p, .section-body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--gutter);
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border);
+  padding: 8px var(--gutter) 0;
+  background: transparent;
+  border-bottom: none;
+}
+
+.site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 8px calc(var(--gutter) - 10px) 0;
+  z-index: -1;
+  background: rgba(11, 31, 42, 0.66);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .site-nav::before {
+    background: var(--ink);
+  }
 }
 
 .nav-brand {
   font-family: var(--font-mono);
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
   letter-spacing: 0.14em;
   text-decoration: none;
 }
@@ -218,13 +246,13 @@ body, p, .section-body {
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--paper-muted);
   text-decoration: none;
   letter-spacing: 0.01em;
   transition: color 0.2s ease;
 }
 
-.nav-link:hover { color: var(--text-primary); }
+.nav-link:hover { color: #FFFFFF; }
 
 .nav-link.is-active {
   color: var(--accent);
@@ -246,7 +274,7 @@ body, p, .section-body {
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--paper-muted);
   letter-spacing: 0.01em;
   padding: 0;
   transition: color 0.2s ease;
@@ -255,7 +283,7 @@ body, p, .section-body {
 .nav-dropdown:hover .nav-dropdown-trigger,
 .nav-dropdown-trigger:focus-visible,
 .nav-dropdown.is-open .nav-dropdown-trigger {
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .nav-dropdown-trigger .is-active {
@@ -368,14 +396,14 @@ body, p, .section-body {
 
 .nav-cta-secondary {
   background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-mid);
+  color: var(--paper-muted);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .nav-cta-secondary:hover {
   opacity: 1;
   border-color: var(--accent);
-  color: var(--accent);
+  color: #FFFFFF;
 }
 
 @media (max-width: 767px) {
@@ -389,9 +417,9 @@ body, p, .section-body {
   width: 36px;
   height: 36px;
   border-radius: var(--r-md);
-  border: 1px solid var(--border-mid);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
   cursor: pointer;
 }
 
@@ -401,15 +429,16 @@ body, p, .section-body {
 
 .nav-mobile-panel {
   position: fixed;
-  top: 56px;
-  left: 0;
-  right: 0;
-  max-height: calc(100vh - 56px);
+  top: 64px;
+  left: calc(var(--gutter) - 10px);
+  right: calc(var(--gutter) - 10px);
+  max-height: calc(100vh - 80px);
   overflow-y: auto;
   background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border);
+  border: 1px solid var(--border-mid);
   box-shadow: var(--shadow-md);
-  padding: var(--space-4) var(--gutter) var(--space-6);
+  border-radius: var(--r-lg);
+  padding: var(--space-4) var(--space-4) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
