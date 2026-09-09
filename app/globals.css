@@ -1460,7 +1460,7 @@ body, p, .section-body {
 .stats-strip {
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
-  padding: var(--space-9) var(--gutter);
+  padding: var(--space-8) var(--gutter);
 }
 
 .stats-grid {
@@ -1468,7 +1468,7 @@ body, p, .section-body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-8);
+  gap: var(--space-6);
 }
 
 .stat-item { display: flex; flex-direction: column; gap: var(--space-2); position: relative; }
@@ -1476,19 +1476,26 @@ body, p, .section-body {
 .stats-grid .stat-item::before {
   content: '';
   display: block;
-  width: 28px;
-  height: 3px;
-  background: var(--accent);
-  /* radius: kept as a literal 2px, not part of the r-sm/r-md/r-lg scale;
-     a 3px-tall decorative accent bar, not a card/button/badge. */
-  border-radius: 2px;
-  margin-bottom: var(--space-3);
+  width: 30px;
+  height: 30px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--r-sm);
+  background-color: var(--accent-light);
+  /* three ascending bars, drawn as stacked gradients so every stat gets the
+     same trend-line glyph regardless of its content, no per-stat icon markup */
+  background-image:
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-size: 4px 8px, 4px 12px, 4px 16px;
+  background-position: 9px center, 15px center, 21px center;
 }
 
 .stat-number {
   font-family: var(--font-mono);
   font-size: var(--text-xl);
-  font-weight: 400;
+  font-weight: 500;
   color: var(--accent);
   line-height: 1;
   letter-spacing: -0.02em;
