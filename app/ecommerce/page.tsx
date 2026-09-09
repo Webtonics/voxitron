@@ -68,7 +68,7 @@ export default function EcommercePage() {
                 <a href={WA_CTA_HREF} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                   Chat on WhatsApp
                 </a>
-                <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
+                <Link href="/#services" className="btn btn-secondary">See all solutions</Link>
               </div>
 
               <span className="form-note">Message us directly. See the agent reply in real time.</span>
@@ -464,7 +464,7 @@ export default function EcommercePage() {
               <a href={WA_CTA_HREF} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                 Chat on WhatsApp
               </a>
-              <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
+              <Link href="/#services" className="btn btn-secondary">See all solutions</Link>
             </div>
 
             <span className="form-note">No forms. No waiting. Just message us.</span>

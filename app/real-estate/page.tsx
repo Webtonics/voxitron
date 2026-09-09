@@ -58,7 +58,7 @@ export default function RealEstatePage() {
                 <Link href="/get-started?agent=both" className="btn btn-primary">
                   Get Started
                 </Link>
-                <Link href="/#services" className="btn btn-secondary">See all three agents</Link>
+                <Link href="/#services" className="btn btn-secondary">See all solutions</Link>
               </div>
 
               <span className="form-note">No spam. 2-week pilot to start.</span>
@@ -406,7 +406,7 @@ export default function RealEstatePage() {
 
             <div className="cta-group">
               <Link href="/get-started?agent=both" className="btn btn-primary">Start your 2-week pilot</Link>
-              <Link href="/#services" className="btn btn-secondary">See all three agents</Link>
+              <Link href="/#services" className="btn btn-secondary">See all solutions</Link>
             </div>
 
             <span className="form-note">No spam. No long-term contract. Cancel any time.</span>

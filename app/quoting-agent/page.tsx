@@ -55,7 +55,7 @@ export default function QuotingAgentPage() {
 
               <div className="cta-group">
                 <Link href="/get-started?agent=quoting-agent" className="btn btn-primary">Get Started</Link>
-                <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
+                <Link href="/#services" className="btn btn-secondary">See all solutions</Link>
               </div>
 
               <span className="form-note">No spam. 2-week pilot to start.</span>
@@ -464,7 +464,7 @@ export default function QuotingAgentPage() {
 
             <div className="cta-group">
               <Link href="/get-started?agent=quoting-agent" className="btn btn-primary">Start your 2-week pilot</Link>
-              <Link href="/#services" className="btn btn-secondary">See the other agents</Link>
+              <Link href="/#services" className="btn btn-secondary">See all solutions</Link>
             </div>
 
             <span className="form-note">No spam. No long-term contract. Cancel any time.</span>

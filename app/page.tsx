@@ -501,7 +501,7 @@ export default function Home() {
         {/* INDUSTRIES: intro + four full-width sections, each on the pricing-teaser's
             dark ink treatment, alternating --ink/--ink-2 and image side per section.
             id="services" kept on the intro for backward-compat: every other page's
-            "See the other agents" CTA links to /#services */}
+            "See all solutions" CTA links to /#services */}
         <Reveal as="section" id="services" aria-labelledby="industries-title" className="industries-intro">
           <div className="section-inner-wide-header">
             <span className="section-label">BUILT FOR YOUR INDUSTRY</span>
