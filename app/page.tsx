@@ -15,6 +15,17 @@ import CalculatorTool from "@/components/CalculatorTool";
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
+const INDUSTRIES_SERVED = [
+  "Fashion Retailers",
+  "Real Estate Agencies",
+  "Diagnostic Centres",
+  "Restaurants",
+  "Electronics Sellers",
+  "Salons & Spas",
+  "Clinics",
+  "Logistics",
+];
+
 export const metadata: Metadata = {
   title: "Voxitron: WhatsApp AI Agents for Lagos Businesses",
   description:
@@ -127,31 +138,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* INDUSTRY STRIP */}
+        {/* INDUSTRY STRIP: continuous left-to-right ticker */}
         <div className="industry-strip" aria-label="Industries served">
           <ParticleNetwork />
           <div className="industry-inner">
             <span className="industry-label">Built for:</span>
-            <div className="industry-items">
-              {[
-                "Fashion Retailers",
-                "Real Estate Agencies",
-                "Diagnostic Centres",
-                "Restaurants",
-                "Electronics Sellers",
-                "Salons & Spas",
-                "Clinics",
-                "Logistics",
-              ].map((item, i, arr) => (
-                <span key={item} style={{ display: "contents" }}>
-                  <span className="industry-item">{item}</span>
-                  {i < arr.length - 1 && (
-                    <span className="industry-sep" aria-hidden="true">
-                      &middot;
-                    </span>
-                  )}
-                </span>
-              ))}
+            <div className="industry-ticker">
+              <div className="industry-track">
+                {[0, 1].map((copy) => (
+                  <div className="industry-items" key={copy} aria-hidden={copy === 1}>
+                    {INDUSTRIES_SERVED.map((item, i) => (
+                      <span key={item} style={{ display: "contents" }}>
+                        <span className="industry-item">{item}</span>
+                        {i < INDUSTRIES_SERVED.length - 1 && (
+                          <span className="industry-sep" aria-hidden="true">
+                            &middot;
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

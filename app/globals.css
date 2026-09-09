@@ -727,17 +727,17 @@ body, p, .section-body {
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: 800;
+  font-size: clamp(3rem, 6vw, 4.25rem);
+  font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   margin-bottom: var(--space-5);
 }
 
 .hero-title .accent {
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .hero-sub {
@@ -1281,7 +1281,7 @@ body, p, .section-body {
   position: relative;
   background: var(--ink);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   padding: var(--space-4) var(--gutter);
   overflow: hidden;
 }
@@ -1299,13 +1299,12 @@ body, p, .section-body {
   max-width: var(--container-full);
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-4);
 }
 
 .industry-label {
+  flex-shrink: 0;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--paper-muted);
@@ -1313,12 +1312,43 @@ body, p, .section-body {
   text-transform: uppercase;
 }
 
+/* Ticker viewport: clips the track, fades its own edges into the section
+   background so items scroll in/out smoothly instead of hard-clipping. */
+.industry-ticker {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+}
+
+.industry-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: industry-ticker-scroll 32s linear infinite;
+}
+
+.industry-strip:hover .industry-track {
+  animation-play-state: paused;
+}
+
+@keyframes industry-ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .industry-track { animation: none; }
+}
+
 .industry-items {
   display: flex;
-  flex-wrap: wrap;
+  flex-shrink: 0;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-2) var(--space-3);
+  gap: var(--space-3);
+  padding-right: var(--space-3);
+  white-space: nowrap;
 }
 
 .industry-item {
@@ -1338,6 +1368,7 @@ body, p, .section-body {
    ============================================= */
 .built-on-strip {
   background: var(--ink-2);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding: var(--space-5) var(--gutter);
 }
 
