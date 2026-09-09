@@ -1581,6 +1581,7 @@ body, p, .section-body {
 #why-voxitron,
 #table,
 #calculator,
+#calculator-teaser,
 #how-to-use,
 #results-meaning {
   padding: var(--space-9) var(--gutter);
