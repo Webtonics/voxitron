@@ -6,6 +6,7 @@ import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import PhoneMockup from "@/components/PhoneMockup";
+import StepIcon from "@/components/StepIcon";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -78,9 +79,9 @@ export default function EcommercePage() {
                 contactName="Lumo Store"
                 contactInitials="LS"
                 messages={[
-                  { from: "in", text: "Just paid for the sneakers, order #4521", time: "16:02" },
+                  { from: "in", image: { alt: "Screenshot of payment receipt for order #4521", caption: "Payment receipt" }, text: "Just paid for the sneakers, order #4521", time: "16:02" },
                   { from: "out", text: "Payment confirmed, thank you! Your order is being packed now.", time: "16:02" },
-                  { from: "in", text: "When will it ship?", time: "16:03" },
+                  { from: "in", voicenote: { duration: "0:08" }, time: "16:03" },
                   { from: "out", text: "Tomorrow morning. You'll get a tracking link the moment it's picked up.", time: "16:03" },
                 ]}
               />
@@ -361,7 +362,7 @@ export default function EcommercePage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: WhatsApp number connected" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Connect your WhatsApp Business number</h3>
@@ -369,7 +370,7 @@ export default function EcommercePage() {
                 <p className="step-body">No new number. Customers message the one they already have.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: store and courier connection" className="step-visual" />
+                <StepIcon icon="sync" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">We connect your store and courier data</h3>
@@ -377,7 +378,16 @@ export default function EcommercePage() {
                 <p className="step-body">Order status and tracking, pulled automatically, no manual lookups.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: live WhatsApp conversation" className="step-visual" />
+                <div className="step-visual step-visual-phone">
+                  <PhoneMockup
+                    contactName="Lumo Store"
+                    contactInitials="LS"
+                    messages={[
+                      { from: "in", text: "Where's my order?", time: "10:05" },
+                      { from: "out", text: "On the way, tracking shows it's out for delivery today.", time: "10:05" },
+                    ]}
+                  />
+                </div>
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>

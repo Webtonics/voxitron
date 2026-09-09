@@ -6,6 +6,7 @@ import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 import PhoneMockup from "@/components/PhoneMockup";
+import StepIcon from "@/components/StepIcon";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -72,9 +73,9 @@ export default function RetailPage() {
                 contactName="Adaeze Fabrics"
                 contactInitials="AF"
                 messages={[
-                  { from: "in", text: "Do you have the blue ankara in stock? How much per yard?", time: "12:41" },
+                  { from: "in", image: { alt: "Photo sent by customer of blue ankara fabric" }, text: "Do you have this blue ankara in stock? How much per yard?", time: "12:41" },
                   { from: "out", text: "Yes, in stock. ₦4,500 per yard. Want me to hold some for you?", time: "12:41" },
-                  { from: "in", text: "Yes, 6 yards please", time: "12:42" },
+                  { from: "in", voicenote: { duration: "0:14" }, time: "12:42" },
                   { from: "out", text: "Held for you, ₦27,000 total. Come by any time today.", time: "12:42" },
                 ]}
               />
@@ -355,7 +356,7 @@ export default function RetailPage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: WhatsApp number connected" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Connect your WhatsApp Business number</h3>
@@ -363,7 +364,7 @@ export default function RetailPage() {
                 <p className="step-body">No new number. Customers message the one they already have.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: catalog and pricing setup" className="step-visual" />
+                <StepIcon icon="catalog" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">We load your catalog and prices</h3>
@@ -371,7 +372,16 @@ export default function RetailPage() {
                 <p className="step-body">Your products, stock, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: live WhatsApp conversation" className="step-visual" />
+                <div className="step-visual step-visual-phone">
+                  <PhoneMockup
+                    contactName="Adaeze Fabrics"
+                    contactInitials="AF"
+                    messages={[
+                      { from: "in", text: "Do you have size M in stock?", time: "11:20" },
+                      { from: "out", text: "Yes, available. ₦18,000. Want me to hold it?", time: "11:20" },
+                    ]}
+                  />
+                </div>
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>

@@ -6,13 +6,25 @@ import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import BuiltOnStrip from "@/components/BuiltOnStrip";
 import ParticleNetwork from "@/components/ParticleNetwork";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
+import PhoneMockup from "@/components/PhoneMockup";
+import DashboardMockup from "@/components/DashboardMockup";
 import Tick from "@/components/Tick";
 import RepliedThread from "@/components/RepliedThread";
 import CalculatorTool from "@/components/CalculatorTool";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
+
+const INDUSTRIES_SERVED = [
+  "Fashion Retailers",
+  "Real Estate Agencies",
+  "Diagnostic Centres",
+  "Restaurants",
+  "Electronics Sellers",
+  "Salons & Spas",
+  "Clinics",
+  "Logistics",
+];
 
 export const metadata: Metadata = {
   title: "Voxitron: WhatsApp AI Agents for Lagos Businesses",
@@ -126,31 +138,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* INDUSTRY STRIP */}
+        {/* INDUSTRY STRIP: continuous left-to-right ticker */}
         <div className="industry-strip" aria-label="Industries served">
           <ParticleNetwork />
           <div className="industry-inner">
             <span className="industry-label">Built for:</span>
-            <div className="industry-items">
-              {[
-                "Fashion Retailers",
-                "Real Estate Agencies",
-                "Diagnostic Centres",
-                "Restaurants",
-                "Electronics Sellers",
-                "Salons & Spas",
-                "Clinics",
-                "Logistics",
-              ].map((item, i, arr) => (
-                <span key={item} style={{ display: "contents" }}>
-                  <span className="industry-item">{item}</span>
-                  {i < arr.length - 1 && (
-                    <span className="industry-sep" aria-hidden="true">
-                      &middot;
-                    </span>
-                  )}
-                </span>
-              ))}
+            <div className="industry-ticker">
+              <div className="industry-track">
+                {[0, 1].map((copy) => (
+                  <div className="industry-items" key={copy} aria-hidden={copy === 1}>
+                    {INDUSTRIES_SERVED.map((item, i) => (
+                      <span key={item} style={{ display: "contents" }}>
+                        <span className="industry-item">{item}</span>
+                        {i < INDUSTRIES_SERVED.length - 1 && (
+                          <span className="industry-sep" aria-hidden="true">
+                            &middot;
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -458,7 +467,7 @@ export default function Home() {
             <div className="stat-item">
               <span className="stat-number mono">00:03</span>
               <p className="stat-label">typical time for the agent to answer a new message, at any hour</p>
-              <span className="stat-source mono">Measured, Voxitron</span>
+              <span className="stat-source mono">Voxitron internal average, first 30 days live</span>
             </div>
           </div>
         </Reveal>
@@ -499,7 +508,16 @@ export default function Home() {
         <Reveal as="section" id="industry-real-estate" aria-labelledby="industry-real-estate-title" className="industry-section">
           <div className="industry-inner">
             <div className="industry-visual">
-              <ImagePlaceholder label="Real estate agent replying to a buyer on WhatsApp, coming soon" />
+              <PhoneMockup
+                contactName="Lekki Phase 1 Listing"
+                contactInitials="LP"
+                messages={[
+                  { from: "in", image: { alt: "Photo of the Lekki Phase 1 duplex listing" }, text: "Is this duplex still available? What's the asking price?", time: "18:12" },
+                  { from: "out", text: "Yes, still available. Asking price is ₦120m. Want to book a viewing?", time: "18:12" },
+                  { from: "in", voicenote: { duration: "0:19" }, time: "18:13" },
+                  { from: "out", text: "Saturday 11am works. I've booked it, you'll get a reminder the day before.", time: "18:13" },
+                ]}
+              />
             </div>
             <div>
               <span className="service-kicker">REAL ESTATE</span>
@@ -527,7 +545,16 @@ export default function Home() {
               <Link href="/diagnostic-centre" className="service-link">See how it works</Link>
             </div>
             <div className="industry-visual">
-              <ImagePlaceholder label="Diagnostic centre booking confirmation on WhatsApp, coming soon" />
+              <PhoneMockup
+                contactName="Lifeline Diagnostics"
+                contactInitials="LC"
+                messages={[
+                  { from: "in", text: "Hi, do you do full blood count tests? How much?", time: "09:14" },
+                  { from: "out", text: "Yes, FBC is ₦8,500. Want me to book a slot for you today?", time: "09:14" },
+                  { from: "in", voicenote: { duration: "0:11" }, time: "09:15" },
+                  { from: "out", image: { alt: "Booking confirmation card for 2pm appointment", caption: "Booking confirmed" }, text: "Booked for 2pm. Come fasted, we'll text when your results are ready.", time: "09:15" },
+                ]}
+              />
             </div>
           </div>
         </Reveal>
@@ -535,7 +562,16 @@ export default function Home() {
         <Reveal as="section" id="industry-retailers" aria-labelledby="industry-retailers-title" className="industry-section">
           <div className="industry-inner">
             <div className="industry-visual">
-              <ImagePlaceholder label="Retail catalog and order confirmation on WhatsApp, coming soon" />
+              <PhoneMockup
+                contactName="Adaeze Fabrics"
+                contactInitials="AF"
+                messages={[
+                  { from: "in", image: { alt: "Photo sent by customer of blue ankara fabric" }, text: "Do you have this blue ankara in stock? How much per yard?", time: "12:41" },
+                  { from: "out", text: "Yes, in stock. ₦4,500 per yard. Want me to hold some for you?", time: "12:41" },
+                  { from: "in", voicenote: { duration: "0:14" }, time: "12:42" },
+                  { from: "out", text: "Held for you, ₦27,000 total. Come by any time today.", time: "12:42" },
+                ]}
+              />
             </div>
             <div>
               <span className="service-kicker">RETAILERS</span>
@@ -563,7 +599,16 @@ export default function Home() {
               <Link href="/ecommerce" className="service-link">See how it works</Link>
             </div>
             <div className="industry-visual">
-              <ImagePlaceholder label="Order confirmation and delivery update on WhatsApp, coming soon" />
+              <PhoneMockup
+                contactName="Lumo Store"
+                contactInitials="LS"
+                messages={[
+                  { from: "in", image: { alt: "Screenshot of payment receipt for order #4521", caption: "Payment receipt" }, text: "Just paid for the sneakers, order #4521", time: "16:02" },
+                  { from: "out", text: "Payment confirmed, thank you! Your order is being packed now.", time: "16:02" },
+                  { from: "in", voicenote: { duration: "0:08" }, time: "16:03" },
+                  { from: "out", text: "Tomorrow morning. You'll get a tracking link the moment it's picked up.", time: "16:03" },
+                ]}
+              />
             </div>
           </div>
         </Reveal>
@@ -572,7 +617,7 @@ export default function Home() {
         <Reveal as="section" id="what-is-this" aria-labelledby="what-is-this-title">
           <div className="product-frame-inner">
             <div className="product-frame-visual">
-              <ImagePlaceholder label="Product screenshot: live chat view coming soon" />
+              <DashboardMockup />
             </div>
 
             <div>
@@ -645,7 +690,7 @@ export default function Home() {
                 </summary>
                 <p className="faq-body">
                   We build with NDPA 2023 in mind: data minimisation, clear consent, and
-                  infrastructure you control rather than a foreign platform's black box.
+                  infrastructure you control rather than a foreign platform&apos;s black box.
                 </p>
               </details>
 
