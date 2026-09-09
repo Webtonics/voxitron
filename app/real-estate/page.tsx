@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
-import PhoneMockup from "@/components/PhoneMockup";
 import StepIcon from "@/components/StepIcon";
 
 export const metadata: Metadata = {
@@ -323,16 +322,7 @@ export default function RealEstatePage() {
                 <p className="step-body">Your existing line and booking calendar. No new hardware.</p>
               </li>
               <li className="step">
-                <div className="step-visual step-visual-phone">
-                  <PhoneMockup
-                    contactName="Lekki Phase 1 Listing"
-                    contactInitials="LP"
-                    messages={[
-                      { from: "in", text: "Can I book a viewing this weekend?", time: "17:40" },
-                      { from: "out", text: "Saturday 11am is open. I've booked it for you.", time: "17:40" },
-                    ]}
-                  />
-                </div>
+                <StepIcon icon="handoff" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">Every enquiry becomes a booked viewing</h3>

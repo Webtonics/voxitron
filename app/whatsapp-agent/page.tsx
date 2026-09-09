@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
-import PhoneMockup from "@/components/PhoneMockup";
 import DashboardMockup from "@/components/DashboardMockup";
 import StepIcon from "@/components/StepIcon";
 
@@ -447,16 +446,7 @@ export default function WhatsAppAgentPage() {
                 <p className="step-body">Your products, services, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <div className="step-visual step-visual-phone">
-                  <PhoneMockup
-                    contactName="Chidinma A."
-                    contactInitials="CA"
-                    messages={[
-                      { from: "in", text: "Hi, are you open right now?", time: "23:47" },
-                      { from: "out", text: "Yes, we're open 24/7 on WhatsApp. How can I help?", time: "23:47" },
-                    ]}
-                  />
-                </div>
+                <StepIcon icon="handoff" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>

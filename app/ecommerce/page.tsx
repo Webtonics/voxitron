@@ -378,16 +378,7 @@ export default function EcommercePage() {
                 <p className="step-body">Order status and tracking, pulled automatically, no manual lookups.</p>
               </li>
               <li className="step">
-                <div className="step-visual step-visual-phone">
-                  <PhoneMockup
-                    contactName="Lumo Store"
-                    contactInitials="LS"
-                    messages={[
-                      { from: "in", text: "Where's my order?", time: "10:05" },
-                      { from: "out", text: "On the way, tracking shows it's out for delivery today.", time: "10:05" },
-                    ]}
-                  />
-                </div>
+                <StepIcon icon="handoff" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>

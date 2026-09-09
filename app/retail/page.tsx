@@ -372,16 +372,7 @@ export default function RetailPage() {
                 <p className="step-body">Your products, stock, and pricing, ready in a short setup session.</p>
               </li>
               <li className="step">
-                <div className="step-visual step-visual-phone">
-                  <PhoneMockup
-                    contactName="Adaeze Fabrics"
-                    contactInitials="AF"
-                    messages={[
-                      { from: "in", text: "Do you have size M in stock?", time: "11:20" },
-                      { from: "out", text: "Yes, available. ₦18,000. Want me to hold it?", time: "11:20" },
-                    ]}
-                  />
-                </div>
+                <StepIcon icon="handoff" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">It goes live, answering every message</h3>
