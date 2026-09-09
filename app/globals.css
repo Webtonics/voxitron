@@ -2401,6 +2401,10 @@ body, p, .section-body {
 @media (min-width: 760px) {
   .steps-list {
     grid-template-columns: repeat(3, 1fr);
+    /* start, not stretch: a step with a full PhoneMockup visual is much
+       taller than one with a small icon card, and stretching every column
+       to match it just leaves dead space under the shorter steps. */
+    align-items: start;
   }
 }
 

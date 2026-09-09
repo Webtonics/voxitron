@@ -11,4 +11,4 @@
  * /dashboard/leads stays unreachable for everyone, which is the correct,
  * honest behavior: there's no real Voxitron tenant row to check against yet.
  */
-export const VOXITRON_CUSTOMER_ID: string | null = null;
+export const VOXITRON_CUSTOMER_ID: string | null = "e0f37601-375b-40c1-8b67-d2168f4c7c2a";
