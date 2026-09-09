@@ -196,7 +196,7 @@ body, p, .section-body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px var(--gutter) 0;
+  padding: 0 var(--gutter);
   background: transparent;
   border-bottom: none;
 }
@@ -204,13 +204,12 @@ body, p, .section-body {
 .site-nav::before {
   content: "";
   position: absolute;
-  inset: 0 calc(var(--gutter) - 10px) 0;
+  inset: 0;
   z-index: -1;
   background: rgba(11, 31, 42, 0.88);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--r-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow-md);
 }
 
