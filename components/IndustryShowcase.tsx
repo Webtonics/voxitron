@@ -12,8 +12,8 @@ const INDUSTRIES: Industry[] = [
   {
     name: "Retail",
     href: "/retail",
-    image: "https://images.unsplash.com/photo-1572851569977-e18b9ea6edbe?fm=jpg&q=80&w=900&auto=format&fit=crop",
-    alt: "A busy African market stall with fresh produce",
+    image: "https://images.unsplash.com/photo-1601600576337-c1d8a0d1373c?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    alt: "A stocked supermarket aisle with refrigerated produce and drinks",
   },
   {
     name: "E-commerce",
