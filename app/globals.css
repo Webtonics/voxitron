@@ -62,7 +62,7 @@
   /* Spacing */
   --space-1:  4px;   --space-2:  8px;   --space-3:  12px;
   --space-4:  16px;  --space-5:  24px;  --space-6:  32px;
-  --space-7:  48px;  --space-8:  64px;  --space-9:  96px;
+  --space-7:  48px;  --space-8:  56px;  --space-9:  72px;
   --space-10: 128px;
 
   --container:         640px;
@@ -2255,6 +2255,152 @@ body, p, .section-body {
   #services::before { animation: none; }
 }
 
+/* =============================================
+   INDUSTRY SHOWCASE: horizontal row of expanding
+   photo cards, one per real Voxitron industry
+   ============================================= */
+.industry-showcase {
+  padding: var(--space-9) var(--gutter);
+  background: var(--bg-primary);
+}
+
+.industry-showcase-inner {
+  max-width: var(--container-full);
+  margin: 0 auto;
+}
+
+.industry-showcase-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+}
+
+@media (min-width: 760px) {
+  .industry-showcase-header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+}
+
+.industry-showcase-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.industry-showcase-sub {
+  margin-top: var(--space-3);
+  max-width: 460px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.industry-showcase-link {
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-mid);
+  padding-bottom: 2px;
+  white-space: nowrap;
+  transition: border-color 0.2s ease;
+}
+
+.industry-showcase-link:hover {
+  border-color: var(--accent);
+}
+
+.industry-showcase-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (min-width: 760px) {
+  .industry-showcase-row {
+    display: flex;
+    align-items: stretch;
+    height: 420px;
+  }
+}
+
+.industry-showcase-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  text-decoration: none;
+}
+
+@media (min-width: 760px) {
+  .industry-showcase-card {
+    aspect-ratio: auto;
+    flex: 1 1 0%;
+    height: 100%;
+    transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .industry-showcase-row:hover .industry-showcase-card {
+    flex-grow: 0.6;
+  }
+
+  .industry-showcase-row:hover .industry-showcase-card:hover,
+  .industry-showcase-card:focus-visible {
+    flex-grow: 3;
+  }
+}
+
+.industry-showcase-photo {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.industry-showcase-card:hover .industry-showcase-photo {
+  transform: scale(1.04);
+}
+
+.industry-showcase-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(11, 31, 42, 0.75) 0%, rgba(11, 31, 42, 0.05) 55%, transparent 100%);
+}
+
+.industry-showcase-label {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  right: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.industry-showcase-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .industry-showcase-card,
+  .industry-showcase-photo {
+    transition: none;
+  }
+}
+
 .features-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -2578,21 +2724,26 @@ body, p, .section-body {
   align-items: center;
   justify-content: center;
   min-height: 160px;
-  background: var(--bg-elevated);
+  background: var(--accent-light);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
 }
 
 .step-icon-badge {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--r-md);
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-lg);
   background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--accent-ink);
-  box-shadow: 0 2px 10px rgba(36, 86, 229, 0.25);
+  box-shadow: 0 8px 20px rgba(36, 86, 229, 0.25);
+}
+
+.step-icon-badge svg {
+  width: 30px;
+  height: 30px;
 }
 
 .step-heading {

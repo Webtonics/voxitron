@@ -11,6 +11,7 @@ import DashboardMockup from "@/components/DashboardMockup";
 import Tick from "@/components/Tick";
 import RepliedThread from "@/components/RepliedThread";
 import CalculatorTool from "@/components/CalculatorTool";
+import IndustryShowcase from "@/components/IndustryShowcase";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -55,7 +56,7 @@ export default function Home() {
             <div className="hero-content">
               <span className="hero-trust-pill">
                 <span className="dot" aria-hidden="true"></span>
-                Live &amp; replying on WhatsApp right now
+                #1 AI for Customer Service &amp; Sales
               </span>
 
               <span className="hero-kicker">WHATSAPP AI FOR LAGOS BUSINESSES</span>
@@ -488,6 +489,13 @@ export default function Home() {
               See the full breakdown
             </Link>
           </div>
+        </Reveal>
+
+        {/* INDUSTRY SHOWCASE: quick visual browse of the real industries Voxitron
+            builds for, before the detailed dark-treatment sections below. Each card
+            links straight to that industry's real page. */}
+        <Reveal as="section" id="industry-showcase" aria-labelledby="industry-showcase-heading" className="industry-showcase">
+          <IndustryShowcase />
         </Reveal>
 
         {/* INDUSTRIES: intro + four full-width sections, each on the pricing-teaser's
