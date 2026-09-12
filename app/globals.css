@@ -5084,6 +5084,66 @@ textarea.lead-form-input {
   font-weight: 600;
 }
 
+/* =============================================
+   DASHBOARD: debug-mode raw error panel (Voxitron team only)
+   ============================================= */
+.dashboard-debug-panel {
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: #FFD9A3;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.dashboard-debug-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  background: transparent;
+  border: 1px solid rgba(251, 250, 246, 0.14);
+  border-radius: var(--r-md);
+  color: rgba(251, 250, 246, 0.55);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-debug-toggle:hover {
+  border-color: rgba(251, 250, 246, 0.28);
+  color: rgba(251, 250, 246, 0.85);
+}
+
+.dashboard-debug-toggle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(251, 250, 246, 0.3);
+  flex-shrink: 0;
+}
+
+.dashboard-debug-toggle.is-on {
+  border-color: rgba(232, 137, 12, 0.5);
+  color: #FFD9A3;
+}
+
+.dashboard-debug-toggle.is-on .dashboard-debug-toggle-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232, 137, 12, 0.22);
+}
+
 .dashboard-sidebar-signout {
   flex-shrink: 0;
   height: 36px;

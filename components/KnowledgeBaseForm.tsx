@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Select from "@/components/dashboard/Select";
+import { isDebugModeEnabled } from "@/lib/dashboard/debugMode";
 
 type Status = "idle" | "submitting" | "processing" | "error" | "success";
 type SourceType = "paste" | "website" | "file" | "sheet";
@@ -26,6 +27,7 @@ const MAX_POLL_ATTEMPTS = 60; // 60 * 2s = 2 minutes: generous for a large file/
 export default function KnowledgeBaseForm({ customerId }: { customerId: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [messageDebug, setMessageDebug] = useState<unknown>(null);
   const [sourceType, setSourceType] = useState<SourceType>("paste");
   const formRef = useRef<HTMLFormElement>(null);
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -77,15 +79,18 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
     event.preventDefault();
     setStatus("submitting");
     setMessage("");
+    setMessageDebug(null);
 
     const formData = new FormData(event.currentTarget);
     formData.set("customerId", customerId);
+    const debugMode = isDebugModeEnabled();
 
     let response: Response;
     try {
       response = await fetch("/api/knowledge-base", {
         method: "POST",
         body: formData,
+        headers: debugMode ? { "X-Debug": "1" } : undefined,
       });
     } catch {
       setStatus("error");
@@ -93,7 +98,7 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
       return;
     }
 
-    let data: { jobId?: string; error?: string };
+    let data: { jobId?: string; error?: string; debug?: unknown };
     try {
       data = await response.json();
     } catch {
@@ -105,6 +110,7 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
     if (!response.ok || !data.jobId) {
       setStatus("error");
       setMessage(data.error || "That didn't go through. Check the content and try again.");
+      if (debugMode && data.debug) setMessageDebug(data.debug);
       return;
     }
 
@@ -198,7 +204,12 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
       )}
 
       {status === "error" && (
-        <p className="lead-form-error" role="alert">{message}</p>
+        <div>
+          <p className="lead-form-error" role="alert">{message}</p>
+          {messageDebug !== null && (
+            <pre className="dashboard-debug-panel">{JSON.stringify(messageDebug, null, 2)}</pre>
+          )}
+        </div>
       )}
 
       {(status === "processing" || status === "success") && (

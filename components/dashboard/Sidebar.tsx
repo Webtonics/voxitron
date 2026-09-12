@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { isDebugModeEnabled, setDebugModeEnabled } from "@/lib/dashboard/debugMode";
 
 type Customer = { id: string; business_name: string; industry: string | null };
 
@@ -99,6 +100,13 @@ export default function Sidebar({
 
   const [inboxCount, setInboxCount] = useState(0);
   const [liveNumber, setLiveNumber] = useState<string | null>(null);
+  const [debugMode, setDebugModeState] = useState(() => isDebugModeEnabled());
+
+  function toggleDebugMode() {
+    const next = !debugMode;
+    setDebugModeState(next);
+    setDebugModeEnabled(next);
+  }
 
   useEffect(() => {
     if (!activeId) return;
@@ -211,6 +219,19 @@ export default function Sidebar({
           </>
         )}
       </nav>
+
+      {isVoxitronTeam && (
+        <button
+          type="button"
+          className={`dashboard-debug-toggle${debugMode ? " is-on" : ""}`}
+          onClick={toggleDebugMode}
+          aria-pressed={debugMode}
+          title="Show raw errors from n8n/Supabase instead of the friendly message"
+        >
+          <span className="dashboard-debug-toggle-dot" aria-hidden="true" />
+          Debug mode {debugMode ? "on" : "off"}
+        </button>
+      )}
 
       <button type="button" className="dashboard-sidebar-signout" onClick={handleSignOut}>
         Sign out

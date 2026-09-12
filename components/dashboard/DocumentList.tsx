@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { isDebugModeEnabled } from "@/lib/dashboard/debugMode";
 
 export type DocumentRow = {
   title: string;
@@ -29,20 +30,29 @@ export default function DocumentList({
   const [pendingRemoval, setPendingRemoval] = useState<string | null>(null);
   const [rows, setRows] = useState(documents);
   const [error, setError] = useState<string | null>(null);
+  const [errorDebug, setErrorDebug] = useState<unknown>(null);
 
   async function confirmRemove(title: string) {
     setRemoving(title);
     setError(null);
+    setErrorDebug(null);
 
     const formData = new FormData();
     formData.set("customerId", customerId);
     formData.set("documentTitle", title);
     formData.set("sourceType", "delete");
 
+    const debugMode = isDebugModeEnabled();
+
     try {
-      const response = await fetch("/api/knowledge-base", { method: "POST", body: formData });
+      const response = await fetch("/api/knowledge-base", {
+        method: "POST",
+        body: formData,
+        headers: debugMode ? { "X-Debug": "1" } : undefined,
+      });
       const data = await response.json();
       if (!response.ok || !data.jobId) {
+        if (debugMode && data.debug) setErrorDebug(data.debug);
         throw new Error(data.error || "Something went wrong.");
       }
       setRows((prev) => prev.filter((d) => d.title !== title));
@@ -61,9 +71,12 @@ export default function DocumentList({
   return (
     <div>
       {error && (
-        <p className="lead-form-error" role="alert" style={{ marginBottom: "var(--space-3)" }}>
-          {error}
-        </p>
+        <div style={{ marginBottom: "var(--space-3)" }}>
+          <p className="lead-form-error" role="alert">{error}</p>
+          {errorDebug !== null && (
+            <pre className="dashboard-debug-panel">{JSON.stringify(errorDebug, null, 2)}</pre>
+          )}
+        </div>
       )}
       <ul className="dashboard-doc-list">
         {rows.map((doc) => (

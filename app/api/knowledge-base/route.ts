@@ -14,7 +14,21 @@ function isSourceType(value: unknown): value is SourceType {
   return typeof value === "string" && (SOURCE_TYPES as readonly string[]).includes(value);
 }
 
+// Voxitron-team-only escape hatch (see components/dashboard/Sidebar.tsx's
+// debug toggle and lib/dashboard/debugMode.ts): when the request sends this
+// header, error responses include the real status/body from n8n instead of
+// only the friendly one-liner. Never sent by a customer-facing form unless
+// the team member viewing it flipped the sidebar toggle on, and even then
+// this route doesn't check who's asking, it only ever adds detail to an
+// error response that would otherwise already be an error.
+const DEBUG_HEADER = "x-debug";
+
+function isDebugRequest(request: Request): boolean {
+  return request.headers.get(DEBUG_HEADER) === "1";
+}
+
 export async function POST(request: Request) {
+  const debug = isDebugRequest(request);
   const supabase = await createServerClient();
 
   const {
@@ -137,7 +151,16 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Failed to reach the knowledge base ingest workflow:", error);
     return NextResponse.json(
-      { error: "Couldn't reach the ingest workflow. Try again in a moment." },
+      {
+        error: "Couldn't reach the ingest workflow. Try again in a moment.",
+        ...(debug && {
+          debug: {
+            stage: "fetch",
+            webhookUrl,
+            message: error instanceof Error ? error.message : String(error),
+          },
+        }),
+      },
       { status: 502 }
     );
   }
@@ -149,7 +172,19 @@ export async function POST(request: Request) {
   } catch {
     console.error("Ingest workflow returned a non-JSON response:", responseText);
     return NextResponse.json(
-      { error: "The ingest workflow returned an unexpected response." },
+      {
+        error: "The ingest workflow returned an unexpected response.",
+        ...(debug && {
+          debug: {
+            stage: "parse-response",
+            webhookUrl,
+            requestPayload: { ...payload, content: payload.content ? `[${payload.content.length} chars]` : undefined },
+            n8nStatus: n8nResponse.status,
+            n8nStatusText: n8nResponse.statusText,
+            n8nBody: responseText.slice(0, 4000),
+          },
+        }),
+      },
       { status: 502 }
     );
   }
