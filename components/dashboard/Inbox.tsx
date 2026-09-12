@@ -48,9 +48,10 @@ export default function Inbox({
       const supabase = createClient();
       const { data } = await supabase
         .from("messages")
-        .select("id, direction, body, sent_at")
+        .select("id, direction, body, sent_at, type")
         .eq("conversation_id", selectedId)
-        .order("sent_at", { ascending: true });
+        .order("sent_at", { ascending: true })
+        .returns<ThreadMessage[]>();
 
       if (!cancelled) {
         setMessages(data || []);

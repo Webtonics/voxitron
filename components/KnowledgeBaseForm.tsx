@@ -3,31 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
+import Select from "@/components/dashboard/Select";
 
 type Status = "idle" | "submitting" | "processing" | "error" | "success";
-type SourceType = "paste" | "website" | "file" | "sheet" | "delete";
+type SourceType = "paste" | "website" | "file" | "sheet";
 
 const SOURCE_TYPE_LABELS: Record<SourceType, string> = {
   paste: "Paste text",
   website: "Website page",
-  file: "File (PDF or Word)",
+  file: "File, PDF or Word",
   sheet: "Google Sheet",
-  delete: "Delete Document",
 };
+
+const SOURCE_TYPE_OPTIONS = (Object.keys(SOURCE_TYPE_LABELS) as SourceType[]).map((value) => ({
+  value,
+  label: SOURCE_TYPE_LABELS[value],
+}));
 
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60; // 60 * 2s = 2 minutes: generous for a large file/website fetch, but don't poll forever
 
-export default function KnowledgeBaseForm({
-  customerId,
-  currentTitles,
-}: {
-  customerId: string;
-  currentTitles: string[];
-}) {
+export default function KnowledgeBaseForm({ customerId }: { customerId: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [sourceType, setSourceType] = useState<SourceType>("paste");
+  const formRef = useRef<HTMLFormElement>(null);
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function KnowledgeBaseForm({
     };
   }, []);
 
-  async function pollJob(jobId: string, attempt: number, form: HTMLFormElement, operation: SourceType) {
+  async function pollJob(jobId: string, attempt: number) {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("kb_ingest_jobs")
@@ -52,19 +52,15 @@ export default function KnowledgeBaseForm({
 
     if (data.status === "success") {
       setStatus("success");
-      setMessage(
-        operation === "delete"
-          ? "Removed."
-          : `Ingested (${data.chunk_count ?? "?"} chunk${data.chunk_count === 1 ? "" : "s"}).`
-      );
-      form.reset();
+      setMessage("Added. Your agent knows this now.");
+      formRef.current?.reset();
       setSourceType("paste");
       return;
     }
 
     if (data.status === "failed") {
       setStatus("error");
-      setMessage(data.error_message || "Ingest failed for an unknown reason.");
+      setMessage(data.error_message || "That didn't go through. Check the content and try again.");
       return;
     }
 
@@ -74,7 +70,7 @@ export default function KnowledgeBaseForm({
       return;
     }
 
-    pollTimeoutRef.current = setTimeout(() => pollJob(jobId, attempt + 1, form, operation), POLL_INTERVAL_MS);
+    pollTimeoutRef.current = setTimeout(() => pollJob(jobId, attempt + 1), POLL_INTERVAL_MS);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -82,8 +78,7 @@ export default function KnowledgeBaseForm({
     setStatus("submitting");
     setMessage("");
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
+    const formData = new FormData(event.currentTarget);
     formData.set("customerId", customerId);
 
     let response: Response;
@@ -109,62 +104,43 @@ export default function KnowledgeBaseForm({
 
     if (!response.ok || !data.jobId) {
       setStatus("error");
-      setMessage(data.error || "Something went wrong. Try again.");
+      setMessage(data.error || "That didn't go through. Check the content and try again.");
       return;
     }
 
     setStatus("processing");
-    setMessage("Processing...");
-    pollJob(data.jobId, 1, form, sourceType);
+    setMessage("Teaching the agent...");
+    pollJob(data.jobId, 1);
   }
 
   const isBusy = status === "submitting" || status === "processing";
 
   return (
-    <form className="lead-form" onSubmit={handleSubmit} noValidate>
+    <form className="lead-form" onSubmit={handleSubmit} noValidate ref={formRef}>
       <div className="lead-form-row">
-        <label className="lead-form-label" htmlFor="kb-source-type">Source Type</label>
-        <select
-          id="kb-source-type"
+        <label className="lead-form-label" htmlFor="kb-source-type">Where it comes from</label>
+        <Select
           name="sourceType"
-          required
-          className="lead-form-input"
+          ariaLabel="Where it comes from"
+          options={SOURCE_TYPE_OPTIONS}
           value={sourceType}
-          onChange={(event) => setSourceType(event.target.value as SourceType)}
-        >
-          {(Object.keys(SOURCE_TYPE_LABELS) as SourceType[]).map((type) => (
-            <option key={type} value={type}>{SOURCE_TYPE_LABELS[type]}</option>
-          ))}
-        </select>
+          onChange={(value) => setSourceType(value as SourceType)}
+        />
       </div>
 
-      {sourceType === "delete" ? (
-        <div className="lead-form-row">
-          <label className="lead-form-label" htmlFor="kb-title">Document to remove</label>
-          {currentTitles.length === 0 ? (
-            <p className="lead-form-hint">Nothing in your knowledge base yet.</p>
-          ) : (
-            <select id="kb-title" name="documentTitle" required className="lead-form-input" defaultValue="">
-              <option value="" disabled>Choose a document</option>
-              {currentTitles.map((title) => (
-                <option key={title} value={title}>{title}</option>
-              ))}
-            </select>
-          )}
-        </div>
-      ) : (
-        <div className="lead-form-row">
-          <label className="lead-form-label" htmlFor="kb-title">Document title</label>
-          <input
-            id="kb-title"
-            name="documentTitle"
-            type="text"
-            required
-            className="lead-form-input"
-            placeholder="e.g. Price List, Delivery Policy"
-          />
-        </div>
-      )}
+      <div className="lead-form-row">
+        <label className="lead-form-label" htmlFor="kb-title">
+          Title <span className="lead-form-hint">so you can find it later</span>
+        </label>
+        <input
+          id="kb-title"
+          name="documentTitle"
+          type="text"
+          required
+          className="lead-form-input"
+          placeholder="e.g. Scan price list"
+        />
+      </div>
 
       {sourceType === "paste" && (
         <div className="lead-form-row">
@@ -174,7 +150,7 @@ export default function KnowledgeBaseForm({
             name="content"
             className="lead-form-input"
             rows={6}
-            placeholder="The raw text, prices, stock policy, FAQs, whatever the agent should know."
+            placeholder="Paste the raw text: prices, hours, booking rules, common questions."
           />
         </div>
       )}
@@ -230,7 +206,7 @@ export default function KnowledgeBaseForm({
       )}
 
       <button type="submit" className="btn btn-primary" disabled={isBusy}>
-        {status === "submitting" ? "Submitting..." : status === "processing" ? "Processing..." : "Ingest"}
+        {status === "submitting" ? "Submitting..." : status === "processing" ? "Teaching the agent..." : "Teach the agent"}
       </button>
     </form>
   );

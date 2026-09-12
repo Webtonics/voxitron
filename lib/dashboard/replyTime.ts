@@ -49,6 +49,20 @@ export function computeAverageReplyTimeSeconds(
   return deltas.reduce((sum, d) => sum + d, 0) / deltas.length;
 }
 
+/**
+ * Median first-reply time in seconds across the given conversations. Median
+ * resists a single slow outlier better than a mean, which is why Overview
+ * uses this instead of computeAverageReplyTimeSeconds for its hero metric.
+ * Returns null when there's nothing to report yet, not a zero.
+ */
+export function computeMedianReplyTimeSeconds(firstReplySeconds: (number | null)[]): number | null {
+  const values = firstReplySeconds.filter((v): v is number => v !== null).sort((a, b) => a - b);
+  if (values.length === 0) return null;
+
+  const mid = Math.floor(values.length / 2);
+  return values.length % 2 === 0 ? (values[mid - 1] + values[mid]) / 2 : values[mid];
+}
+
 export function formatReplyTimeMono(seconds: number): string {
   const totalSeconds = Math.round(seconds);
   const minutes = Math.floor(totalSeconds / 60);

@@ -33,3 +33,13 @@ desktop.ini
 
 # Local scratch SQL for testing, contains real auth UUIDs once filled in
 supabase/demo-user.sql
+
+# Markdown: ignored by default (one-off design/prompt notes dropped in the
+# repo root), except the docs this project treats as living reference
+*.md
+!CLAUDE.md
+!MASTER_PROMPT.md
+!DASHBOARD_UI.md
+!kb-ingest-frontend-handoff.md
+!n8n/*.md
+!supabase/industry-templates.md

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 /**
- * The inbox is now a single-page split view (see Inbox.tsx): selecting a
- * conversation happens client-side inside /dashboard, it no longer
+ * The inbox is a single-page split view (see Inbox.tsx): selecting a
+ * conversation happens client-side inside /dashboard/inbox, it no longer
  * navigates to its own route. This page only exists so an old bookmark or
  * shared link to a specific conversation still lands somewhere useful,
  * it redirects into the inbox with ?open=<id> for Inbox to auto-select.
@@ -21,5 +21,5 @@ export default async function ConversationPage({
   if (customerParam) query.set("customer", customerParam);
   query.set("open", id);
 
-  redirect(`/dashboard?${query.toString()}`);
+  redirect(`/dashboard/inbox?${query.toString()}`);
 }

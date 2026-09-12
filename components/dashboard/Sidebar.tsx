@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -7,8 +8,9 @@ import { createClient } from "@/lib/supabase/client";
 type Customer = { id: string; business_name: string; industry: string | null };
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Inbox", icon: "inbox" as const },
-  { href: "/dashboard/knowledge-base", label: "Knowledge Base", icon: "kb" as const },
+  { href: "/dashboard", label: "Overview", icon: "overview" as const },
+  { href: "/dashboard/inbox", label: "Inbox", icon: "inbox" as const },
+  { href: "/dashboard/knowledge-base", label: "Knowledge base", icon: "kb" as const },
   { href: "/dashboard/settings", label: "Settings", icon: "settings" as const },
 ];
 
@@ -17,8 +19,17 @@ const TEAM_NAV_ITEMS = [
   { href: "/dashboard/onboarding", label: "Onboarding", icon: "onboarding" as const },
 ];
 
-function NavIcon({ name }: { name: "inbox" | "leads" | "kb" | "onboarding" | "settings" }) {
+function NavIcon({ name }: { name: "overview" | "inbox" | "leads" | "kb" | "onboarding" | "settings" }) {
   const paths: Record<typeof name, React.ReactNode> = {
+    overview: (
+      <path
+        d="M3 12L5 10L9 14L14 7L17 10M3 17H17"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
     inbox: (
       <path
         d="M3 8L5 3H15L17 8M3 8V15C3 15.55 3.45 16 4 16H16C16.55 16 17 15.55 17 15V8M3 8H7.5C7.5 9.38 8.62 10.5 10 10.5C11.38 10.5 12.5 9.38 12.5 8H17"
@@ -86,6 +97,41 @@ export default function Sidebar({
   const activeId = searchParams.get("customer") || customers[0]?.id;
   const active = customers.find((c) => c.id === activeId) || customers[0];
 
+  const [inboxCount, setInboxCount] = useState(0);
+  const [liveNumber, setLiveNumber] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!activeId) return;
+    let cancelled = false;
+
+    async function loadSidebarStats() {
+      const supabase = createClient();
+
+      const [{ count }, { data: numbers }] = await Promise.all([
+        supabase
+          .from("conversations")
+          .select("id", { count: "exact", head: true })
+          .eq("customer_id", activeId)
+          .eq("needs_human", true),
+        supabase
+          .from("customer_whatsapp_numbers")
+          .select("whatsapp_number")
+          .eq("customer_id", activeId)
+          .limit(1),
+      ]);
+
+      if (!cancelled) {
+        setInboxCount(count || 0);
+        setLiveNumber(numbers?.[0]?.whatsapp_number || null);
+      }
+    }
+
+    loadSidebarStats();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeId]);
+
   function handleSwitch(id: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("customer", id);
@@ -114,6 +160,12 @@ export default function Sidebar({
         {active?.industry && (
           <span className="dashboard-nav-tenant-badge">{active.industry}</span>
         )}
+        {liveNumber && (
+          <span className="dashboard-sidebar-tenant-live">
+            <span className="dashboard-sidebar-live-dot" aria-hidden="true" />
+            Agent live on {liveNumber}
+          </span>
+        )}
         {customers.length > 1 && (
           <select
             className="dashboard-sidebar-switcher"
@@ -137,6 +189,9 @@ export default function Sidebar({
           >
             <NavIcon name={item.icon} />
             {item.label}
+            {item.icon === "inbox" && inboxCount > 0 && (
+              <span className="dashboard-sidebar-badge">{inboxCount}</span>
+            )}
           </Link>
         ))}
 

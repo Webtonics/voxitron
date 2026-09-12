@@ -5,6 +5,7 @@ export type ConversationListItem = {
   needs_human: boolean;
   latest_message_body: string | null;
   latest_message_at: string | null;
+  latest_message_type?: "text" | "voice" | "photo";
 };
 
 function timeAgo(iso: string) {
@@ -62,7 +63,28 @@ export default function ConversationList({
               <p className="dashboard-conversation-row-preview">{c.latest_message_body}</p>
             )}
             {c.latest_message_at && (
-              <span className="dashboard-conversation-row-time">{timeAgo(c.latest_message_at)}</span>
+              <span className="dashboard-conversation-row-time">
+                {timeAgo(c.latest_message_at)}
+                {c.latest_message_type === "voice" && (
+                  <span className="dashboard-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3z" />
+                      <path d="M5 11a7 7 0 0014 0M12 18v3" />
+                    </svg>
+                    voice
+                  </span>
+                )}
+                {c.latest_message_type === "photo" && (
+                  <span className="dashboard-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <circle cx="9" cy="11" r="2" />
+                      <path d="M21 17l-5-5-8 7" />
+                    </svg>
+                    photo
+                  </span>
+                )}
+              </span>
             )}
           </button>
         </li>

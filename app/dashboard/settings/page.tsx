@@ -44,13 +44,19 @@ export default async function SettingsPage({
   return (
     <div className="dashboard-page">
       <div className="dashboard-page-header">
-        <h1 className="dashboard-page-title">Settings</h1>
+        <div>
+          <h1 className="dashboard-page-title">Settings</h1>
+          <p className="dashboard-page-subtitle">Your business details and how your agent behaves</p>
+        </div>
       </div>
 
       <div className="dashboard-settings-section">
-        <span className="dashboard-settings-section-title">Business</span>
+        <span className="dashboard-settings-section-title">Business profile</span>
+        <p className="dashboard-settings-section-note" style={{ textTransform: "none", letterSpacing: 0 }}>
+          Shown to customers and used by the agent when it introduces itself.
+        </p>
         <div className="dashboard-settings-info">
-          <span className="dashboard-lead-row-agent">Industry</span>
+          <span className="dashboard-settings-field-label">Industry</span>
           <p>{active.industry || "Not set. Contact Voxitron to update this."}</p>
         </div>
         <SettingsForm
@@ -61,13 +67,15 @@ export default async function SettingsPage({
       </div>
 
       <div className="dashboard-settings-section">
-        <span className="dashboard-settings-section-title">How your agent behaves</span>
-        <span className="dashboard-settings-section-note">
-          Set by Voxitron at onboarding. Contact us to change these.
-        </span>
+        <div className="dashboard-settings-section-heading">
+          <span className="dashboard-settings-section-title">How your agent behaves</span>
+          <span className="dashboard-badge-managed">Managed by Voxitron</span>
+        </div>
 
         <div>
-          <span className="dashboard-lead-row-agent">Tone</span>
+          <span className="dashboard-settings-field-label">
+            Tone <span className="dashboard-settings-field-hint">How it speaks to your customers</span>
+          </span>
           <p className="dashboard-settings-readonly-value" style={{ marginTop: "var(--space-2)" }}>
             {config.tone_notes || "Not set yet. Contact Voxitron to configure your agent's tone."}
           </p>
@@ -75,7 +83,9 @@ export default async function SettingsPage({
 
         {config.escalation_triggers && config.escalation_triggers.length > 0 && (
           <div>
-            <span className="dashboard-lead-row-agent">Escalates to you when</span>
+            <span className="dashboard-settings-field-label">
+              When it passes to you <span className="dashboard-settings-field-hint">Escalation triggers</span>
+            </span>
             <ul className="dashboard-settings-tag-list" style={{ marginTop: "var(--space-2)" }}>
               {config.escalation_triggers.map((trigger) => (
                 <li key={trigger} className="dashboard-settings-tag">{trigger}</li>
@@ -83,6 +93,11 @@ export default async function SettingsPage({
             </ul>
           </div>
         )}
+
+        <p className="dashboard-settings-contact-note">
+          Want to change any of these? <a href="mailto:hello@voxitron.com">Message your Voxitron contact</a> and we
+          will update it for you.
+        </p>
       </div>
     </div>
   );
