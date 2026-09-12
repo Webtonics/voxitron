@@ -128,8 +128,10 @@ export default function Inbox({
               {selected.needs_human && <span className="dashboard-badge-needs-you">Needs you</span>}
             </div>
             {loading ? (
-              <div className="dashboard-empty-state dashboard-inbox-thread-loading">
-                <p>Loading...</p>
+              <div className="dashboard-route-loading dashboard-inbox-thread-loading" role="status" aria-label="Loading conversation">
+                <span className="dashboard-route-loading-dot" />
+                <span className="dashboard-route-loading-dot" />
+                <span className="dashboard-route-loading-dot" />
               </div>
             ) : (
               <ConversationThread messages={messages} escalationReason={selected.escalation_reason} />
