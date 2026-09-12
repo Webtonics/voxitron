@@ -11,6 +11,7 @@ import AfterHoursBand, { type HourBucket } from "@/components/dashboard/AfterHou
 import MessageTypeBars from "@/components/dashboard/MessageTypeBars";
 import LeadsTable, { type LeadRow } from "@/components/dashboard/LeadsTable";
 import EmptyState from "@/components/dashboard/EmptyState";
+import NumberSwitcher from "@/components/dashboard/NumberSwitcher";
 
 export const metadata: Metadata = { title: "Overview | Voxitron" };
 
@@ -45,9 +46,9 @@ function statusFor(outcome: string | null): LeadRow["status"] {
 export default async function OverviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ customer?: string; range?: string }>;
+  searchParams: Promise<{ customer?: string; range?: string; number?: string }>;
 }) {
-  const { customer: customerParam, range: rangeParam } = await searchParams;
+  const { customer: customerParam, range: rangeParam, number: numberParam } = await searchParams;
   const range: Range = rangeParam === "today" || rangeParam === "30days" ? rangeParam : "week";
   const supabase = await createServerClient();
 
@@ -63,6 +64,19 @@ export default async function OverviewPage({
   const active = resolveActiveCustomer(customers, customerParam);
   const customerQuery = customerParam ? `customer=${customerParam}&` : "";
 
+  const inboxParams = new URLSearchParams();
+  if (customerParam) inboxParams.set("customer", customerParam);
+  if (numberParam) inboxParams.set("number", numberParam);
+  const inboxHref = inboxParams.toString() ? `/dashboard/inbox?${inboxParams}` : "/dashboard/inbox";
+
+  const { data: numbers } = await supabase
+    .from("customer_whatsapp_numbers")
+    .select("id, label, whatsapp_number")
+    .eq("customer_id", active.id);
+
+  const activeNumberId =
+    numberParam && (numbers || []).some((n) => n.id === numberParam) ? numberParam : undefined;
+
   const { data: customerRow } = await supabase
     .from("customers")
     .select("business_hours")
@@ -76,17 +90,25 @@ export default async function OverviewPage({
   const priorRangeStart = new Date(now - 2 * RANGE_MS[range]).toISOString();
   const fourteenDaysAgo = new Date(now - 14 * 24 * 60 * 60 * 1000).toISOString();
 
-  const { data: conversations } = await supabase
+  let conversationsQuery = supabase
     .from("conversations")
     .select("id, is_lead, outcome, needs_human, first_reply_seconds, started_at, contact_name, contact_phone")
     .eq("customer_id", active.id)
     .gte("started_at", priorRangeStart);
+  if (activeNumberId) {
+    conversationsQuery = conversationsQuery.eq("whatsapp_number_id", activeNumberId);
+  }
+  const { data: conversations } = await conversationsQuery;
 
-  const { data: trendConversations } = await supabase
+  let trendQuery = supabase
     .from("conversations")
     .select("started_at")
     .eq("customer_id", active.id)
     .gte("started_at", fourteenDaysAgo);
+  if (activeNumberId) {
+    trendQuery = trendQuery.eq("whatsapp_number_id", activeNumberId);
+  }
+  const { data: trendConversations } = await trendQuery;
 
   const conversationIds = (conversations || []).map((c) => c.id);
   const { data: messages } = conversationIds.length
@@ -214,16 +236,24 @@ export default async function OverviewPage({
           <h1 className="dashboard-page-title">Here is what your agent did</h1>
           <p className="dashboard-page-subtitle">{active.business_name} &middot; {RANGE_LABELS[range].toLowerCase()}</p>
         </div>
-        <div className="dashboard-range-pill">
-          {(Object.keys(RANGE_LABELS) as Range[]).map((r) => (
-            <Link
-              key={r}
-              href={`/dashboard?${customerQuery}range=${r}`}
-              className={r === range ? "is-active" : ""}
-            >
-              {RANGE_LABELS[r]}
-            </Link>
-          ))}
+        <div className="dashboard-page-header-controls">
+          <NumberSwitcher
+            basePath="/dashboard"
+            numbers={numbers || []}
+            activeNumberId={activeNumberId}
+            extraParams={{ customer: customerParam, range }}
+          />
+          <div className="dashboard-range-pill">
+            {(Object.keys(RANGE_LABELS) as Range[]).map((r) => (
+              <Link
+                key={r}
+                href={`/dashboard?${customerQuery}range=${r}${activeNumberId ? `&number=${activeNumberId}` : ""}`}
+                className={r === range ? "is-active" : ""}
+              >
+                {RANGE_LABELS[r]}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -308,7 +338,9 @@ export default async function OverviewPage({
         <div className="dashboard-card">
           <div className="dashboard-card-header">
             <span className="dashboard-card-header-title">Leads captured</span>
-            <Link href="/dashboard/inbox" className="dashboard-card-header-meta">See inbox</Link>
+            <Link href={inboxHref} className="dashboard-card-header-meta">
+              See inbox
+            </Link>
           </div>
           <div className="dashboard-card-body">
             <LeadsTable rows={leadRows} />

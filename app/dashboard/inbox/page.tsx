@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 import Inbox, { type ExtendedConversationListItem } from "@/components/dashboard/Inbox";
+import NumberSwitcher from "@/components/dashboard/NumberSwitcher";
 
 export const metadata: Metadata = { title: "Inbox | Voxitron" };
 
@@ -24,8 +25,6 @@ export default async function InboxPage({
 
   const customers = await getUserCustomers(supabase, user.id);
   const active = resolveActiveCustomer(customers, customerParam);
-  const customerQuery = customerParam ? `?customer=${customerParam}` : "";
-
   const { data: numbers } = await supabase
     .from("customer_whatsapp_numbers")
     .select("id, label, whatsapp_number")
@@ -118,30 +117,12 @@ export default async function InboxPage({
           <p className="dashboard-page-subtitle">Conversations your agent is handling right now</p>
         </div>
 
-        {(numbers || []).length > 1 && (
-          <div className="dashboard-number-switcher">
-            <a
-              href={`/dashboard/inbox${customerQuery}`}
-              className={`dashboard-number-tab${!activeNumberId ? " is-active" : ""}`}
-            >
-              All numbers
-            </a>
-            {(numbers || []).map((n) => {
-              const params = new URLSearchParams();
-              if (customerParam) params.set("customer", customerParam);
-              params.set("number", n.id);
-              return (
-                <a
-                  key={n.id}
-                  href={`/dashboard/inbox?${params.toString()}`}
-                  className={`dashboard-number-tab${activeNumberId === n.id ? " is-active" : ""}`}
-                >
-                  {n.label || n.whatsapp_number}
-                </a>
-              );
-            })}
-          </div>
-        )}
+        <NumberSwitcher
+          basePath="/dashboard/inbox"
+          numbers={numbers || []}
+          activeNumberId={activeNumberId}
+          extraParams={{ customer: customerParam }}
+        />
       </div>
 
       <Inbox
