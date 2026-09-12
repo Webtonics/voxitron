@@ -231,6 +231,7 @@ export default function Nav({
 
         <Link href="/pricing" className="nav-link">Pricing</Link>
         <Link href="/blog" className="nav-link">Blog</Link>
+        <Link href="/dashboard" className="nav-link">Portal</Link>
       </div>
       <div className="nav-cta-group">
         {showSecondaryCta && (
@@ -335,6 +336,7 @@ export default function Nav({
 
           <Link href="/pricing" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Pricing</Link>
           <Link href="/blog" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Blog</Link>
+          <Link href="/dashboard" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Portal</Link>
 
           {showSecondaryCta && (
             <Link
