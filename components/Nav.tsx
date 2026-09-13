@@ -3,8 +3,6 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 
-const CALCULATOR_HREF = "/tools/missed-lead-calculator";
-
 const SOLUTIONS = [
   {
     href: "/whatsapp-agent",
@@ -106,7 +104,7 @@ type NavProps = {
   ctaHref?: string;
   ctaLabel?: string;
   ctaExternal?: boolean;
-  /** Hide the secondary "What would slow replies cost you?" nav CTA, for pages that already surface the calculator elsewhere. */
+  /** Hide the secondary "Portal" nav CTA. */
   showSecondaryCta?: boolean;
 };
 
@@ -231,12 +229,11 @@ export default function Nav({
 
         <Link href="/pricing" className="nav-link">Pricing</Link>
         <Link href="/blog" className="nav-link">Blog</Link>
-        <Link href="/dashboard" className="nav-link">Portal</Link>
       </div>
       <div className="nav-cta-group">
         {showSecondaryCta && (
-          <Link href={CALCULATOR_HREF} className="nav-cta nav-cta-secondary">
-            What would slow replies cost you?
+          <Link href="/dashboard" className="nav-cta nav-cta-secondary">
+            Portal
           </Link>
         )}
         {ctaExternal ? (
@@ -336,16 +333,15 @@ export default function Nav({
 
           <Link href="/pricing" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Pricing</Link>
           <Link href="/blog" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Blog</Link>
-          <Link href="/dashboard" className="nav-mobile-link" role="menuitem" onClick={closeMobile}>Portal</Link>
 
           {showSecondaryCta && (
             <Link
-              href={CALCULATOR_HREF}
+              href="/dashboard"
               className="nav-mobile-link"
               role="menuitem"
               onClick={closeMobile}
             >
-              What would slow replies cost you?
+              Portal
             </Link>
           )}
         </div>

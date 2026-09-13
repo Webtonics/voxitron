@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import LeadForm from "@/components/LeadForm";
 
@@ -145,7 +144,6 @@ export default function ContactPage() {
       </main>
 
       <Footer />
-      <WaFloat />
     </>
   );
 }

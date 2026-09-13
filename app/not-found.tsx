@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 
 export default function NotFound() {
   return (
@@ -27,7 +26,6 @@ export default function NotFound() {
         </section>
       </main>
       <Footer />
-      <WaFloat />
     </>
   );
 }

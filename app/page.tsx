@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import BuiltOnStrip from "@/components/BuiltOnStrip";
 import ParticleNetwork from "@/components/ParticleNetwork";
@@ -765,7 +764,6 @@ export default function Home() {
       </main>
 
       <Footer />
-      <WaFloat />
     </>
   );
 }

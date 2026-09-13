@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 
@@ -473,7 +472,6 @@ export default function QuotingAgentPage() {
       </main>
 
       <Footer />
-      <WaFloat />
     </>
   );
 }

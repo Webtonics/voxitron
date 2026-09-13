@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect } from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 
 export default function ErrorPage({
   error,
@@ -42,7 +41,6 @@ export default function ErrorPage({
         </section>
       </main>
       <Footer />
-      <WaFloat />
     </>
   );
 }

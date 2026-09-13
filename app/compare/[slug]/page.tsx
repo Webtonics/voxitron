@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 import Reveal from "@/components/Reveal";
 import { COMPETITORS, getCompetitor } from "@/lib/compareData";
 
@@ -250,7 +249,6 @@ export default async function ComparisonPage({
       </main>
 
       <Footer />
-      <WaFloat />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import WaFloat from "@/components/WaFloat";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="en" className={`${bricolage.variable} ${hanken.variable} ${spaceMono.variable}`}>
       <body>
         {children}
+        <WaFloat />
         <Analytics />
       </body>
     </html>

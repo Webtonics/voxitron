@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import WaFloat from "@/components/WaFloat";
 import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 export const metadata: Metadata = {
@@ -90,7 +89,6 @@ export default function BlogIndexPage() {
         </div>
       </main>
       <Footer />
-      <WaFloat />
     </>
   );
 }
