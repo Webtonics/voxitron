@@ -402,14 +402,16 @@ body, p, .section-body {
 
 .nav-cta-secondary {
   background: transparent;
-  color: var(--paper-muted);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  font-weight: 700;
 }
 
 .nav-cta-secondary:hover {
   opacity: 1;
-  border-color: var(--accent);
-  color: #FFFFFF;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 @media (max-width: 767px) {
