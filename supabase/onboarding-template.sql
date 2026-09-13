@@ -48,10 +48,18 @@ values ('<<CUSTOMER_ID_FROM_STEP_1>>', '<<AUTH_USER_ID_FROM_STEP_0>>');
 
 -- STEP 3: add the customer's WhatsApp number(s), once known.
 -- whatsapp_number stores Meta's phone_number_id (not the human phone
--- number), see n8n/README.md. Skip this step entirely if the number isn't
--- provisioned in Meta yet, add it later with the same statement.
-insert into customer_whatsapp_numbers (customer_id, whatsapp_number, label)
-values ('<<CUSTOMER_ID_FROM_STEP_1>>', '<<META_PHONE_NUMBER_ID>>', '<<OPTIONAL_LABEL_E.G._MAIN_LINE>>');
+-- number), see n8n/README.md. display_number is the actual dialable number
+-- (e.g. "+234 812 090 7050"), shown to the customer in the dashboard
+-- instead of the Meta id, never leave it null if you know the number.
+-- Skip this step entirely if the number isn't provisioned in Meta yet, add
+-- it later with the same statement.
+insert into customer_whatsapp_numbers (customer_id, whatsapp_number, display_number, label)
+values (
+  '<<CUSTOMER_ID_FROM_STEP_1>>',
+  '<<META_PHONE_NUMBER_ID>>',
+  '<<HUMAN_PHONE_NUMBER_E.G._+234_812_090_7050>>',
+  '<<OPTIONAL_LABEL_E.G._MAIN_LINE>>'
+);
 
 -- Repeat Step 3 for each additional number this customer operates.
 
@@ -79,5 +87,5 @@ values ('<<CUSTOMER_ID_FROM_STEP_1>>', '<<META_PHONE_NUMBER_ID>>', '<<OPTIONAL_L
 --   select id, '00000000-0000-0000-0000-000000000000'::uuid from new_customer
 --   returning customer_id
 -- )
--- insert into customer_whatsapp_numbers (customer_id, whatsapp_number, label)
--- select id, '000000000000000', 'Main line' from new_customer;
+-- insert into customer_whatsapp_numbers (customer_id, whatsapp_number, display_number, label)
+-- select id, '000000000000000', '+234 800 000 0000', 'Main line' from new_customer;

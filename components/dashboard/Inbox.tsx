@@ -6,6 +6,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import ConversationList, { type ConversationListItem } from "@/components/dashboard/ConversationList";
 import ConversationThread, { type ThreadMessage } from "@/components/dashboard/ConversationThread";
+import SegmentTabs, { type Segment } from "@/components/dashboard/SegmentTabs";
+import InboxSearch from "@/components/dashboard/InboxSearch";
+import InboxCalmState from "@/components/dashboard/InboxCalmState";
 
 export type ExtendedConversationListItem = ConversationListItem & {
   escalation_reason: string | null;
@@ -13,19 +16,29 @@ export type ExtendedConversationListItem = ConversationListItem & {
 
 export default function Inbox({
   conversations,
+  segment,
+  counts,
+  query,
+  calmStats,
   numberConnected,
   knowledgeBaseLoaded,
   agentConfigured,
+  openParam,
 }: {
   conversations: ExtendedConversationListItem[];
+  segment: Segment;
+  counts: Record<Segment, number>;
+  query: string;
+  calmStats: { handledThisWeek: number; leadsCaptured: number; avgReplySeconds: number | null };
   numberConnected: boolean;
   knowledgeBaseLoaded: boolean;
   agentConfigured: boolean;
+  openParam?: string;
 }) {
   const searchParams = useSearchParams();
-  const openParam = searchParams.get("open");
+  const openFromUrl = openParam || searchParams.get("open");
   const initialId =
-    (openParam && conversations.some((c) => c.id === openParam) ? openParam : null) ||
+    (openFromUrl && conversations.some((c) => c.id === openFromUrl) ? openFromUrl : null) ||
     conversations[0]?.id ||
     null;
 
@@ -35,6 +48,7 @@ export default function Inbox({
   // selectedId (instead of a separate imperative `loading` boolean flipped
   // at the top of the effect) avoids a synchronous setState at effect start.
   const [loadedForId, setLoadedForId] = useState<string | null>(null);
+  const [resolving, setResolving] = useState(false);
 
   const selected = conversations.find((c) => c.id === selectedId) || null;
   const loading = selectedId !== null && selectedId !== loadedForId;
@@ -65,7 +79,38 @@ export default function Inbox({
     };
   }, [selectedId]);
 
-  if (conversations.length === 0) {
+  async function toggleResolved() {
+    if (!selected) return;
+    setResolving(true);
+    try {
+      await fetch(`/api/dashboard/conversations/${selected.id}/resolve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resolved: !selected.resolved }),
+      });
+      window.location.reload();
+    } finally {
+      setResolving(false);
+    }
+  }
+
+  if (conversations.length === 0 && segment === "needs-you" && !query) {
+    return (
+      <div className="dashboard-inbox-body">
+        <div className="dashboard-inbox-side">
+          <SegmentTabs segment={segment} counts={counts} />
+          <InboxSearch initialQuery={query} />
+        </div>
+        <InboxCalmState
+          handledThisWeek={calmStats.handledThisWeek}
+          leadsCaptured={calmStats.leadsCaptured}
+          avgReplySeconds={calmStats.avgReplySeconds}
+        />
+      </div>
+    );
+  }
+
+  if (counts.all === 0) {
     return (
       <div className="dashboard-empty-hero">
         <p className="dashboard-empty-hero-title">Your agent is live</p>
@@ -109,48 +154,65 @@ export default function Inbox({
   }
 
   return (
-    <div className="dashboard-inbox">
-      <div className="dashboard-inbox-list">
-        <ConversationList
-          conversations={conversations}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-        />
+    <div className="dashboard-inbox-body">
+      <div className="dashboard-inbox-side">
+        <SegmentTabs segment={segment} counts={counts} />
+        <InboxSearch initialQuery={query} />
       </div>
 
-      <div className="dashboard-inbox-thread">
-        {selected ? (
-          <>
-            <div className="dashboard-inbox-thread-header">
-              <span className="dashboard-inbox-thread-name">
-                {selected.contact_name || selected.contact_phone}
-              </span>
-              {selected.needs_human && <span className="dashboard-badge-needs-you">Needs you</span>}
+      <div className="dashboard-inbox">
+        <div className="dashboard-inbox-list">
+          {conversations.length === 0 ? (
+            <div className="dashboard-empty-state">
+              <p>{query ? "No conversations match your search." : "Nothing in this segment yet."}</p>
             </div>
-            {loading ? (
-              <div className="dashboard-route-loading dashboard-inbox-thread-loading" role="status" aria-label="Loading conversation">
-                <span className="dashboard-route-loading-dot" />
-                <span className="dashboard-route-loading-dot" />
-                <span className="dashboard-route-loading-dot" />
+          ) : (
+            <ConversationList conversations={conversations} selectedId={selectedId} onSelect={setSelectedId} />
+          )}
+        </div>
+
+        <div className="dashboard-inbox-thread">
+          {selected ? (
+            <>
+              <div className="dashboard-inbox-thread-header">
+                <span className="dashboard-inbox-thread-name">
+                  {selected.contact_name || selected.contact_phone}
+                </span>
+                {selected.needs_human && <span className="dashboard-badge-needs-you">Needs you</span>}
+                <button
+                  type="button"
+                  className="btn btn-outline dashboard-inbox-resolve-btn"
+                  onClick={toggleResolved}
+                  disabled={resolving}
+                >
+                  {selected.resolved ? "Reopen" : "Mark resolved"}
+                </button>
               </div>
-            ) : (
-              <ConversationThread messages={messages} escalationReason={selected.escalation_reason} />
-            )}
-            <div className="dashboard-thread-footer">
-              <span className="dashboard-thread-footer-status">
-                <span className="dashboard-thread-footer-dot" aria-hidden="true" />
-                AI is handling this chat
-              </span>
-              <button type="button" className="btn btn-outline">
-                Take over
-              </button>
+              {loading ? (
+                <div className="dashboard-route-loading dashboard-inbox-thread-loading" role="status" aria-label="Loading conversation">
+                  <span className="dashboard-route-loading-dot" />
+                  <span className="dashboard-route-loading-dot" />
+                  <span className="dashboard-route-loading-dot" />
+                </div>
+              ) : (
+                <ConversationThread messages={messages} escalationReason={selected.escalation_reason} />
+              )}
+              <div className="dashboard-thread-footer">
+                <span className="dashboard-thread-footer-status">
+                  <span className="dashboard-thread-footer-dot" aria-hidden="true" />
+                  AI is handling this chat
+                </span>
+                <button type="button" className="btn btn-outline">
+                  Take over
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="dashboard-empty-state dashboard-inbox-thread-loading">
+              <p>Select a conversation to see its messages.</p>
             </div>
-          </>
-        ) : (
-          <div className="dashboard-empty-state dashboard-inbox-thread-loading">
-            <p>Select a conversation to see its messages.</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-export type SwitcherNumber = { id: string; label: string | null; whatsapp_number: string };
+export type SwitcherNumber = { id: string; label: string | null; display_number: string | null };
 
 /**
  * Filters a dashboard page down to one of the customer's WhatsApp numbers,
@@ -41,7 +41,7 @@ export default function NumberSwitcher({
           href={hrefFor(n.id)}
           className={`dashboard-number-tab${activeNumberId === n.id ? " is-active" : ""}`}
         >
-          {n.label || n.whatsapp_number}
+          {n.label || n.display_number || "WhatsApp number"}
         </a>
       ))}
     </div>

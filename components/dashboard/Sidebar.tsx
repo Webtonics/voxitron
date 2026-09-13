@@ -123,14 +123,14 @@ export default function Sidebar({
           .eq("needs_human", true),
         supabase
           .from("customer_whatsapp_numbers")
-          .select("whatsapp_number")
+          .select("display_number, label")
           .eq("customer_id", activeId)
           .limit(1),
       ]);
 
       if (!cancelled) {
         setInboxCount(count || 0);
-        setLiveNumber(numbers?.[0]?.whatsapp_number || null);
+        setLiveNumber(numbers?.[0]?.display_number || numbers?.[0]?.label || null);
       }
     }
 

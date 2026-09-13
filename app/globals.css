@@ -5991,6 +5991,195 @@ a.dashboard-card-header-meta:hover {
   flex-shrink: 0;
 }
 
+.dashboard-inbox-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: var(--space-4);
+}
+
+.dashboard-inbox-side {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+.dashboard-segment-tabs {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.dashboard-segment-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.dashboard-segment-tab:hover {
+  background: var(--bg-primary);
+}
+
+.dashboard-segment-tab-count {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.dashboard-segment-tab.is-active {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border-color: var(--border);
+}
+
+.dashboard-segment-tab.is-active .dashboard-segment-tab-count {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.dashboard-segment-tab.is-alert:not(.is-active) .dashboard-segment-tab-count {
+  background: var(--amber-soft);
+  color: var(--amber-press);
+}
+
+.dashboard-inbox-search {
+  position: relative;
+  flex: 1;
+  max-width: 360px;
+}
+
+.dashboard-inbox-search svg {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.dashboard-inbox-search input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3) var(--space-2) calc(var(--space-3) * 2 + 15px);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-md);
+  background: var(--bg-elevated);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.dashboard-inbox-search input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.dashboard-inbox-resolve-btn {
+  margin-left: auto;
+}
+
+.dashboard-conversation-bucket {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: var(--space-3) var(--space-5) var(--space-1);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+}
+
+.dashboard-inbox-calm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-9);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+}
+
+.dashboard-inbox-calm-halo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-lg);
+  background: var(--teal-soft);
+  color: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+}
+
+.dashboard-inbox-calm-halo svg {
+  width: 30px;
+  height: 30px;
+}
+
+.dashboard-inbox-calm h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  color: var(--text-primary);
+}
+
+.dashboard-inbox-calm p {
+  color: var(--text-secondary);
+  max-width: 42ch;
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.dashboard-inbox-calm-stats {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-6);
+}
+
+.dashboard-inbox-calm-stat {
+  text-align: center;
+}
+
+.dashboard-inbox-calm-stat-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.dashboard-inbox-calm-stat-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+@media (max-width: 720px) {
+  .dashboard-inbox-calm-stats {
+    gap: var(--space-5);
+  }
+}
+
 .dashboard-number-switcher {
   display: flex;
   flex-wrap: wrap;

@@ -27,7 +27,7 @@ export default async function SettingsPage({
 
   const { data: numbers } = await supabase
     .from("customer_whatsapp_numbers")
-    .select("id, label, whatsapp_number")
+    .select("id, label, display_number")
     .eq("customer_id", active.id);
 
   const { data: customerConfig } = await supabase

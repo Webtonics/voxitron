@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
-type WhatsAppNumber = { id: string; label: string | null; whatsapp_number: string };
+type WhatsAppNumber = { id: string; label: string | null; display_number: string | null };
 
 type Status = "idle" | "submitting" | "error" | "success";
 
@@ -79,7 +79,7 @@ export default function SettingsForm({
       {numbers.map((n) => (
         <div className="lead-form-row" key={n.id}>
           <label className="lead-form-label" htmlFor={`settings-number-${n.id}`}>
-            Label for {n.whatsapp_number}
+            Label for {n.display_number || "this number"}
           </label>
           <input
             id={`settings-number-${n.id}`}
