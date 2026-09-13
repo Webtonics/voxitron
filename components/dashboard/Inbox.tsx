@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import ConversationList, { type ConversationListItem } from "@/components/dashboard/ConversationList";
@@ -35,6 +35,7 @@ export default function Inbox({
   agentConfigured: boolean;
   openParam?: string;
 }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const openFromUrl = openParam || searchParams.get("open");
   const initialId =
@@ -49,6 +50,9 @@ export default function Inbox({
   // at the top of the effect) avoids a synchronous setState at effect start.
   const [loadedForId, setLoadedForId] = useState<string | null>(null);
   const [resolving, setResolving] = useState(false);
+  const [navPending, setNavPending] = useState(false);
+  const [isRefreshing, startRefresh] = useTransition();
+  const listPending = navPending || isRefreshing;
 
   const selected = conversations.find((c) => c.id === selectedId) || null;
   const loading = selectedId !== null && selectedId !== loadedForId;
@@ -88,7 +92,9 @@ export default function Inbox({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resolved: !selected.resolved }),
       });
-      window.location.reload();
+      startRefresh(() => {
+        router.refresh();
+      });
     } finally {
       setResolving(false);
     }
@@ -96,10 +102,10 @@ export default function Inbox({
 
   if (conversations.length === 0 && segment === "needs-you" && !query) {
     return (
-      <div className="dashboard-inbox-body">
+      <div className={`dashboard-inbox-body${listPending ? " is-navigating" : ""}`}>
         <div className="dashboard-inbox-side">
-          <SegmentTabs segment={segment} counts={counts} />
-          <InboxSearch initialQuery={query} />
+          <SegmentTabs segment={segment} counts={counts} onPendingChange={setNavPending} />
+          <InboxSearch initialQuery={query} onPendingChange={setNavPending} />
         </div>
         <InboxCalmState
           handledThisWeek={calmStats.handledThisWeek}
@@ -154,13 +160,20 @@ export default function Inbox({
   }
 
   return (
-    <div className="dashboard-inbox-body">
+    <div className={`dashboard-inbox-body${listPending ? " is-navigating" : ""}`}>
       <div className="dashboard-inbox-side">
-        <SegmentTabs segment={segment} counts={counts} />
-        <InboxSearch initialQuery={query} />
+        <SegmentTabs segment={segment} counts={counts} onPendingChange={setNavPending} />
+        <InboxSearch initialQuery={query} onPendingChange={setNavPending} />
       </div>
 
       <div className="dashboard-inbox">
+        {listPending && (
+          <div className="dashboard-inbox-nav-overlay" role="status" aria-label="Loading conversations">
+            <span className="dashboard-route-loading-dot" />
+            <span className="dashboard-route-loading-dot" />
+            <span className="dashboard-route-loading-dot" />
+          </div>
+        )}
         <div className="dashboard-inbox-list">
           {conversations.length === 0 ? (
             <div className="dashboard-empty-state">
@@ -185,7 +198,7 @@ export default function Inbox({
                   onClick={toggleResolved}
                   disabled={resolving}
                 >
-                  {selected.resolved ? "Reopen" : "Mark resolved"}
+                  {resolving ? "Saving..." : selected.resolved ? "Reopen" : "Mark resolved"}
                 </button>
               </div>
               {loading ? (

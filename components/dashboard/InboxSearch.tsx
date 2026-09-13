@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 /**
@@ -9,11 +9,18 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
  * forward) remounts this component with the right starting value, instead
  * of syncing local state to a prop via an effect.
  */
-export default function InboxSearch({ initialQuery }: { initialQuery: string }) {
+export default function InboxSearch({
+  initialQuery,
+  onPendingChange,
+}: {
+  initialQuery: string;
+  onPendingChange?: (pending: boolean) => void;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(initialQuery);
+  const [isPending, startTransition] = useTransition();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function handleChange(next: string) {
@@ -27,12 +34,15 @@ export default function InboxSearch({ initialQuery }: { initialQuery: string }) 
         params.delete("q");
       }
       params.delete("open");
-      router.push(`${pathname}?${params.toString()}`);
+      onPendingChange?.(true);
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`);
+      });
     }, 300);
   }
 
   return (
-    <div className="dashboard-inbox-search">
+    <div className={`dashboard-inbox-search${isPending ? " is-pending" : ""}`}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <circle cx="11" cy="11" r="7" />
         <path d="M21 21l-4-4" />
@@ -43,7 +53,9 @@ export default function InboxSearch({ initialQuery }: { initialQuery: string }) 
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         aria-label="Search conversations"
+        aria-busy={isPending}
       />
+      {isPending && <span className="dashboard-inbox-search-spinner" aria-hidden="true" />}
     </div>
   );
 }
