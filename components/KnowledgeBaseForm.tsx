@@ -3,23 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
-import Select from "@/components/dashboard/Select";
+import SourceTypeCards, { type SourceTypeOption } from "@/components/dashboard/SourceTypeCards";
 import { isDebugModeEnabled } from "@/lib/dashboard/debugMode";
 
 type Status = "idle" | "submitting" | "processing" | "error" | "success";
 type SourceType = "paste" | "website" | "file" | "sheet";
 
-const SOURCE_TYPE_LABELS: Record<SourceType, string> = {
-  paste: "Paste text",
-  website: "Website page",
-  file: "File, PDF or Word",
-  sheet: "Google Sheet",
-};
-
-const SOURCE_TYPE_OPTIONS = (Object.keys(SOURCE_TYPE_LABELS) as SourceType[]).map((value) => ({
-  value,
-  label: SOURCE_TYPE_LABELS[value],
-}));
+const SOURCE_TYPE_OPTIONS: (SourceTypeOption & { value: SourceType })[] = [
+  { value: "paste", label: "Paste text", hint: "Type or paste it in" },
+  { value: "website", label: "Website page", hint: "Pull from a live URL" },
+  { value: "file", label: "File, PDF or Word", hint: "Upload a document" },
+  { value: "sheet", label: "Google Sheet", hint: "Sync a shared sheet" },
+];
 
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60; // 60 * 2s = 2 minutes: generous for a large file/website fetch, but don't poll forever
@@ -124,10 +119,9 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
   return (
     <form className="lead-form" onSubmit={handleSubmit} noValidate ref={formRef}>
       <div className="lead-form-row">
-        <label className="lead-form-label" htmlFor="kb-source-type">Where it comes from</label>
-        <Select
+        <label className="lead-form-label">Where it comes from</label>
+        <SourceTypeCards
           name="sourceType"
-          ariaLabel="Where it comes from"
           options={SOURCE_TYPE_OPTIONS}
           value={sourceType}
           onChange={(value) => setSourceType(value as SourceType)}
