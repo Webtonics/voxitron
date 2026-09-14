@@ -4192,6 +4192,60 @@ textarea.lead-form-input {
   color: var(--accent);
 }
 
+.upload-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.upload-progress-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.upload-progress-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.upload-progress-percent {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.upload-progress-track {
+  position: relative;
+  height: 6px;
+  border-radius: var(--r-sm);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.upload-progress-fill.is-complete {
+  background: var(--teal);
+}
+
+.upload-progress-track.is-indeterminate .upload-progress-fill {
+  width: 40%;
+  animation: upload-progress-indeterminate 1.2s ease-in-out infinite;
+}
+
+@keyframes upload-progress-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
 .lead-form-success {
   max-width: 420px;
   padding: var(--space-5);
@@ -6763,6 +6817,43 @@ a.dashboard-card-header-meta:hover {
 .dashboard-doc-row-confirm-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+/* =============================================
+   SETTINGS: WhatsApp numbers list
+   ============================================= */
+.dashboard-numbers-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.dashboard-numbers-row-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.dashboard-numbers-row-toggle {
+  flex-shrink: 0;
+  padding: 4px var(--space-3);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.dashboard-numbers-row-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.dashboard-numbers-row-label-input {
+  height: 36px;
+  font-size: var(--text-sm);
 }
 
 /* =============================================

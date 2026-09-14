@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 import SettingsForm from "@/components/dashboard/SettingsForm";
+import WhatsAppNumbersList from "@/components/dashboard/WhatsAppNumbersList";
 
 export const metadata: Metadata = { title: "Settings | Voxitron" };
 
@@ -27,12 +28,13 @@ export default async function SettingsPage({
 
   const { data: numbers } = await supabase
     .from("customer_whatsapp_numbers")
-    .select("id, label, display_number")
-    .eq("customer_id", active.id);
+    .select("id, label, display_number, is_active")
+    .eq("customer_id", active.id)
+    .order("created_at", { ascending: true });
 
   const { data: customerConfig } = await supabase
     .from("customers")
-    .select("config")
+    .select("config, owner_whatsapp_number, owner_email")
     .eq("id", active.id)
     .single();
 
@@ -62,8 +64,17 @@ export default async function SettingsPage({
         <SettingsForm
           customerId={active.id}
           initialBusinessName={active.business_name}
-          numbers={numbers || []}
+          initialOwnerWhatsappNumber={customerConfig?.owner_whatsapp_number || ""}
+          initialOwnerEmail={customerConfig?.owner_email || ""}
         />
+      </div>
+
+      <div className="dashboard-settings-section">
+        <span className="dashboard-settings-section-title">WhatsApp numbers</span>
+        <p className="dashboard-settings-section-note" style={{ textTransform: "none", letterSpacing: 0 }}>
+          The numbers your agent replies on. Deactivate one you no longer use, or update its label.
+        </p>
+        <WhatsAppNumbersList customerId={active.id} numbers={numbers || []} />
       </div>
 
       <div className="dashboard-settings-section">

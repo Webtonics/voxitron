@@ -125,6 +125,7 @@ export default function Sidebar({
           .from("customer_whatsapp_numbers")
           .select("display_number, label")
           .eq("customer_id", activeId)
+          .eq("is_active", true)
           .limit(1),
       ]);
 

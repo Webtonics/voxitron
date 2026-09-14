@@ -3,23 +3,22 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
-type WhatsAppNumber = { id: string; label: string | null; display_number: string | null };
-
 type Status = "idle" | "submitting" | "error" | "success";
 
 export default function SettingsForm({
   customerId,
   initialBusinessName,
-  numbers,
+  initialOwnerWhatsappNumber,
+  initialOwnerEmail,
 }: {
   customerId: string;
   initialBusinessName: string;
-  numbers: WhatsAppNumber[];
+  initialOwnerWhatsappNumber: string;
+  initialOwnerEmail: string;
 }) {
   const [businessName, setBusinessName] = useState(initialBusinessName);
-  const [labels, setLabels] = useState<Record<string, string>>(
-    Object.fromEntries(numbers.map((n) => [n.id, n.label || ""]))
-  );
+  const [ownerWhatsappNumber, setOwnerWhatsappNumber] = useState(initialOwnerWhatsappNumber);
+  const [ownerEmail, setOwnerEmail] = useState(initialOwnerEmail);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
 
@@ -33,7 +32,12 @@ export default function SettingsForm({
       response = await fetch("/api/dashboard/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customerId, businessName, numberLabels: labels }),
+        body: JSON.stringify({
+          customerId,
+          businessName,
+          ownerWhatsappNumber,
+          ownerEmail,
+        }),
       });
     } catch {
       setStatus("error");
@@ -76,21 +80,36 @@ export default function SettingsForm({
         />
       </div>
 
-      {numbers.map((n) => (
-        <div className="lead-form-row" key={n.id}>
-          <label className="lead-form-label" htmlFor={`settings-number-${n.id}`}>
-            Label for {n.display_number || "this number"}
-          </label>
-          <input
-            id={`settings-number-${n.id}`}
-            type="text"
-            className="lead-form-input"
-            placeholder="e.g. Main line, Lagos store"
-            value={labels[n.id] ?? ""}
-            onChange={(e) => setLabels((prev) => ({ ...prev, [n.id]: e.target.value }))}
-          />
-        </div>
-      ))}
+      <div className="lead-form-row">
+        <label className="lead-form-label" htmlFor="settings-owner-whatsapp">
+          Your WhatsApp number <span className="lead-form-hint">for escalation alerts</span>
+        </label>
+        <input
+          id="settings-owner-whatsapp"
+          type="tel"
+          className="lead-form-input"
+          placeholder="+234 812 090 7050"
+          value={ownerWhatsappNumber}
+          onChange={(e) => setOwnerWhatsappNumber(e.target.value)}
+        />
+        <p className="lead-form-hint">
+          Where your agent messages you when a conversation needs a human.
+        </p>
+      </div>
+
+      <div className="lead-form-row">
+        <label className="lead-form-label" htmlFor="settings-owner-email">
+          Your email <span className="lead-form-hint">for escalation alerts</span>
+        </label>
+        <input
+          id="settings-owner-email"
+          type="email"
+          className="lead-form-input"
+          placeholder="you@yourbusiness.com"
+          value={ownerEmail}
+          onChange={(e) => setOwnerEmail(e.target.value)}
+        />
+      </div>
 
       {status === "error" && (
         <p className="lead-form-error" role="alert">{message}</p>
