@@ -29,11 +29,12 @@ Header Auth, server-side calls only — **never expose this in browser/client co
 
 ## File uploads — important, don't send raw bytes
 
-Upload the file to Supabase Storage **first**, get back a signed URL, send that URL as `fileUrl`. Do not POST the file directly to this webhook.
+The file never passes through this webhook, or through the Next.js app's server at all. Vercel serverless functions cap request bodies at ~4.5MB, so any real PDF/DOCX would 413 if it were proxied through an API route first.
 
+- **Implemented 2026-09-14, `app/api/kb-upload-url/route.ts` + `app/api/knowledge-base/route.ts`**: the browser uploads the file **directly to Supabase Storage** using a signed upload URL, then calls `/api/knowledge-base` with just `{ storagePath, documentTitle, sourceType: "file" }` (no bytes). That route re-derives `customerId` from the session, re-checks `storagePath` starts with `<customerId>/`, mints a 600-second signed **download** URL server-side (service role, `lib/supabase/admin.ts`), and forwards it as `fileUrl` in the payload below.
+- Bucket: `kb-uploads`, private, path `<customerId>/<uuid>.<ext>`, path is always server-chosen (see `kb-upload-url/route.ts`), never accepted from the client. Migration: `supabase/migrations/022_kb_uploads_bucket.sql`.
 - The Storage object's filename must keep its real extension (`.pdf` / `.docx`) — the workflow uses that to tell PDF and Word files apart.
 - A signed URL is preferred over a public bucket URL, since the signature itself is the access control — no extra auth needed on the n8n side for that download.
-- **Implemented in `app/api/knowledge-base/route.ts` (2026-08-2X)**: uploads to a bucket named `kb-uploads`, path `<customerId>/<uuid>.<ext>`, using the service-role client (`lib/supabase/admin.ts`), then generates a 1-hour signed URL. **The `kb-uploads` bucket does not exist yet** — create it in the Supabase dashboard (Storage > New bucket, keep it private/non-public, the signed URL is what grants access) before file-type ingests can work. Paste/website/sheet ingests don't touch Storage and aren't blocked by this.
 
 ## Response
 

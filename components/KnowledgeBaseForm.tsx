@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import SourceTypeCards, { type SourceTypeOption } from "@/components/dashboard/SourceTypeCards";
 import { isDebugModeEnabled } from "@/lib/dashboard/debugMode";
 
-type Status = "idle" | "submitting" | "processing" | "error" | "success";
+type Status = "idle" | "uploading" | "submitting" | "processing" | "error" | "success";
 type SourceType = "paste" | "website" | "file" | "sheet";
 
 const SOURCE_TYPE_OPTIONS: (SourceTypeOption & { value: SourceType })[] = [
@@ -70,27 +70,24 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
     pollTimeoutRef.current = setTimeout(() => pollJob(jobId, attempt + 1), POLL_INTERVAL_MS);
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setStatus("submitting");
-    setMessage("");
-    setMessageDebug(null);
-
-    const formData = new FormData(event.currentTarget);
-    formData.set("customerId", customerId);
-    const debugMode = isDebugModeEnabled();
-
+  async function submitIngest(
+    body: FormData | Record<string, string>,
+    debugMode: boolean
+  ): Promise<{ ok: true } | { ok: false }> {
     let response: Response;
     try {
       response = await fetch("/api/knowledge-base", {
         method: "POST",
-        body: formData,
-        headers: debugMode ? { "X-Debug": "1" } : undefined,
+        body: body instanceof FormData ? body : JSON.stringify(body),
+        headers: {
+          ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+          ...(debugMode ? { "X-Debug": "1" } : {}),
+        },
       });
     } catch {
       setStatus("error");
       setMessage("Couldn't reach the server. Try again in a moment.");
-      return;
+      return { ok: false };
     }
 
     let data: { jobId?: string; error?: string; debug?: unknown };
@@ -99,22 +96,114 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
     } catch {
       setStatus("error");
       setMessage("Unexpected response from the server.");
-      return;
+      return { ok: false };
     }
 
     if (!response.ok || !data.jobId) {
       setStatus("error");
       setMessage(data.error || "That didn't go through. Check the content and try again.");
       if (debugMode && data.debug) setMessageDebug(data.debug);
-      return;
+      return { ok: false };
     }
 
     setStatus("processing");
     setMessage("Teaching the agent...");
     pollJob(data.jobId, 1);
+    return { ok: true };
   }
 
-  const isBusy = status === "submitting" || status === "processing";
+  async function handleFileSubmit(event: FormEvent<HTMLFormElement>, debugMode: boolean) {
+    const form = event.currentTarget;
+    const fileInput = form.elements.namedItem("file") as HTMLInputElement | null;
+    const file = fileInput?.files?.[0];
+    const documentTitle = String(new FormData(form).get("documentTitle") || "");
+
+    if (!file) {
+      setStatus("error");
+      setMessage("Choose a file to upload.");
+      return;
+    }
+
+    setStatus("uploading");
+    setMessage("Uploading file...");
+
+    let uploadUrlResponse: Response;
+    try {
+      uploadUrlResponse = await fetch("/api/kb-upload-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId,
+          filename: file.name,
+          contentType: file.type,
+          size: file.size,
+        }),
+      });
+    } catch {
+      setStatus("error");
+      setMessage("Couldn't reach the server. Try again in a moment.");
+      return;
+    }
+
+    let uploadUrlData: { path?: string; token?: string; signedUrl?: string; error?: string };
+    try {
+      uploadUrlData = await uploadUrlResponse.json();
+    } catch {
+      setStatus("error");
+      setMessage("Unexpected response from the server.");
+      return;
+    }
+
+    if (!uploadUrlResponse.ok || !uploadUrlData.path || !uploadUrlData.token) {
+      setStatus("error");
+      setMessage(uploadUrlData.error || "Upload failed. Couldn't prepare the file for upload.");
+      return;
+    }
+
+    const supabase = createClient();
+    const { error: uploadError } = await supabase.storage
+      .from("kb-uploads")
+      .uploadToSignedUrl(uploadUrlData.path, uploadUrlData.token, file);
+
+    if (uploadError) {
+      setStatus("error");
+      setMessage("Upload failed. Try again.");
+      return;
+    }
+
+    setStatus("submitting");
+    setMessage("Uploaded. Starting ingest...");
+
+    await submitIngest(
+      {
+        customerId,
+        documentTitle,
+        sourceType: "file",
+        storagePath: uploadUrlData.path,
+      },
+      debugMode
+    );
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("submitting");
+    setMessage("");
+    setMessageDebug(null);
+
+    const debugMode = isDebugModeEnabled();
+
+    if (sourceType === "file") {
+      await handleFileSubmit(event, debugMode);
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    formData.set("customerId", customerId);
+    await submitIngest(formData, debugMode);
+  }
+
+  const isBusy = status === "uploading" || status === "submitting" || status === "processing";
 
   return (
     <form className="lead-form" onSubmit={handleSubmit} noValidate ref={formRef}>
@@ -206,12 +295,18 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
         </div>
       )}
 
-      {(status === "processing" || status === "success") && (
+      {(status === "uploading" || status === "processing" || status === "success") && (
         <p className="lead-form-status" role="status">{message}</p>
       )}
 
       <button type="submit" className="btn btn-primary" disabled={isBusy}>
-        {status === "submitting" ? "Submitting..." : status === "processing" ? "Teaching the agent..." : "Teach the agent"}
+        {status === "uploading"
+          ? "Uploading..."
+          : status === "submitting"
+            ? "Submitting..."
+            : status === "processing"
+              ? "Teaching the agent..."
+              : "Teach the agent"}
       </button>
     </form>
   );

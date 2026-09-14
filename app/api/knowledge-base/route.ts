@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 
 const KB_UPLOADS_BUCKET = "kb-uploads";
-const SIGNED_URL_TTL_SECONDS = 60 * 60; // 1 hour, only needs to survive the n8n workflow's download step
+const SIGNED_URL_TTL_SECONDS = 600; // 10 minutes: enough for n8n to fetch, short enough to be safe
 
 const SOURCE_TYPES = ["paste", "website", "file", "sheet", "delete"] as const;
 type SourceType = (typeof SOURCE_TYPES)[number];
@@ -49,20 +48,29 @@ export async function POST(request: Request) {
     );
   }
 
-  let incoming: FormData;
+  const contentType = request.headers.get("content-type") || "";
+  const isJson = contentType.includes("application/json");
+
+  let incoming: FormData | Record<string, unknown>;
   try {
-    incoming = await request.formData();
+    incoming = isJson ? await request.json() : await request.formData();
   } catch {
-    return NextResponse.json({ error: "Invalid form submission." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  function field(key: string): string {
+    if (incoming instanceof FormData) return String(incoming.get(key) || "");
+    const value = (incoming as Record<string, unknown>)[key];
+    return typeof value === "string" ? value : "";
   }
 
   const customers = await getUserCustomers(supabase, user.id);
-  const requestedCustomerId = String(incoming.get("customerId") || "");
+  const requestedCustomerId = field("customerId");
   const active = resolveActiveCustomer(customers, requestedCustomerId || undefined);
   const customerId = active.id;
 
-  const documentTitle = String(incoming.get("documentTitle") || "");
-  const sourceTypeRaw = incoming.get("sourceType");
+  const documentTitle = field("documentTitle");
+  const sourceTypeRaw = field("sourceType");
 
   if (!documentTitle) {
     return NextResponse.json({ error: "Document title is required." }, { status: 400 });
@@ -79,19 +87,19 @@ export async function POST(request: Request) {
   };
 
   if (sourceType === "paste") {
-    const content = String(incoming.get("content") || "");
+    const content = field("content");
     if (!content.trim()) {
       return NextResponse.json({ error: "Content is required for pasted text." }, { status: 400 });
     }
     payload.content = content;
   } else if (sourceType === "website") {
-    const pageUrl = String(incoming.get("pageUrl") || "");
+    const pageUrl = field("pageUrl");
     if (!/^https?:\/\//.test(pageUrl)) {
       return NextResponse.json({ error: "A valid http(s) Page URL is required." }, { status: 400 });
     }
     payload.pageUrl = pageUrl;
   } else if (sourceType === "sheet") {
-    const googleSheetUrl = String(incoming.get("googleSheetUrl") || "");
+    const googleSheetUrl = field("googleSheetUrl");
     if (!/^https?:\/\/docs\.google\.com\/spreadsheets\//.test(googleSheetUrl)) {
       return NextResponse.json(
         { error: "A valid docs.google.com/spreadsheets URL is required." },
@@ -100,31 +108,21 @@ export async function POST(request: Request) {
     }
     payload.googleSheetUrl = googleSheetUrl;
   } else if (sourceType === "file") {
-    const file = incoming.get("file");
-    if (!(file instanceof File) || file.size === 0) {
-      return NextResponse.json({ error: "A file is required." }, { status: 400 });
+    const storagePath = field("storagePath");
+    if (!storagePath) {
+      return NextResponse.json({ error: "No uploaded file to ingest." }, { status: 400 });
     }
 
-    const extension = file.name.includes(".") ? file.name.slice(file.name.lastIndexOf(".")) : "";
-    if (![".pdf", ".docx"].includes(extension.toLowerCase())) {
-      return NextResponse.json({ error: "Only .pdf and .docx files are supported." }, { status: 400 });
+    // The path is server-chosen at upload time (`{customerId}/{uuid}.{ext}`,
+    // see app/api/kb-upload-url/route.ts) but this request's customerId is
+    // resolved fresh from the session above, not trusted from the client,
+    // so this re-check is what actually stops one tenant from pointing at
+    // another tenant's uploaded object.
+    if (!storagePath.startsWith(`${customerId}/`)) {
+      return NextResponse.json({ error: "That file doesn't belong to this account." }, { status: 403 });
     }
 
     const admin = createAdminClient();
-    const storagePath = `${customerId}/${randomUUID()}${extension}`;
-
-    const { error: uploadError } = await admin.storage
-      .from(KB_UPLOADS_BUCKET)
-      .upload(storagePath, file, {
-        contentType: file.type || undefined,
-        upsert: false,
-      });
-
-    if (uploadError) {
-      console.error("Failed to upload KB source file to Storage:", uploadError);
-      return NextResponse.json({ error: "Couldn't upload the file. Try again." }, { status: 500 });
-    }
-
     const { data: signedUrlData, error: signedUrlError } = await admin.storage
       .from(KB_UPLOADS_BUCKET)
       .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS);
