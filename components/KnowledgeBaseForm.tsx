@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SourceTypeCards, { type SourceTypeOption } from "@/components/dashboard/SourceTypeCards";
+import UploadProgress from "@/components/dashboard/UploadProgress";
 import { isDebugModeEnabled } from "@/lib/dashboard/debugMode";
 
 type Status = "idle" | "uploading" | "submitting" | "processing" | "error" | "success";
@@ -24,14 +25,41 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
   const [message, setMessage] = useState("");
   const [messageDebug, setMessageDebug] = useState<unknown>(null);
   const [sourceType, setSourceType] = useState<SourceType>("paste");
+  const [uploadPercent, setUploadPercent] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const uploadTickRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     return () => {
       if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+      if (uploadTickRef.current) clearInterval(uploadTickRef.current);
     };
   }, []);
+
+  // Supabase's uploadToSignedUrl() doesn't expose byte-level progress, so
+  // this simulates a steadily-advancing bar while the PUT is in flight:
+  // quick at first, slowing as it approaches 90% so it never claims
+  // "done" before the request actually resolves. stopUploadTick snaps to
+  // 100% once the real request completes.
+  function startUploadTick() {
+    setUploadPercent(8);
+    uploadTickRef.current = setInterval(() => {
+      setUploadPercent((current) => {
+        if (current >= 90) return current;
+        const step = current < 50 ? 6 : current < 75 ? 3 : 1;
+        return Math.min(current + step, 90);
+      });
+    }, 250);
+  }
+
+  function stopUploadTick(finalPercent: number) {
+    if (uploadTickRef.current) {
+      clearInterval(uploadTickRef.current);
+      uploadTickRef.current = null;
+    }
+    setUploadPercent(finalPercent);
+  }
 
   async function pollJob(jobId: string, attempt: number) {
     const supabase = createClient();
@@ -74,10 +102,21 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
     body: FormData | Record<string, string>,
     debugMode: boolean
   ): Promise<{ ok: true } | { ok: false }> {
+    // Force any pending token refresh to finish and its cookie to be
+    // written before this request goes out. The file flow can spend
+    // several seconds uploading between the /api/kb-upload-url call and
+    // this one, long enough for the browser Supabase client's background
+    // refresh to fire; without waiting for it here, this fetch can race
+    // that refresh and go out with a cookie the server no longer accepts,
+    // which is what was producing the 401 on this call specifically (the
+    // upload-url call, made right at submit, wasn't racing anything).
+    await createClient().auth.getSession();
+
     let response: Response;
     try {
       response = await fetch("/api/knowledge-base", {
         method: "POST",
+        credentials: "same-origin",
         body: body instanceof FormData ? body : JSON.stringify(body),
         headers: {
           ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
@@ -126,11 +165,13 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
 
     setStatus("uploading");
     setMessage("Uploading file...");
+    startUploadTick();
 
     let uploadUrlResponse: Response;
     try {
       uploadUrlResponse = await fetch("/api/kb-upload-url", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerId,
@@ -140,6 +181,7 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
         }),
       });
     } catch {
+      stopUploadTick(0);
       setStatus("error");
       setMessage("Couldn't reach the server. Try again in a moment.");
       return;
@@ -149,12 +191,14 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
     try {
       uploadUrlData = await uploadUrlResponse.json();
     } catch {
+      stopUploadTick(0);
       setStatus("error");
       setMessage("Unexpected response from the server.");
       return;
     }
 
     if (!uploadUrlResponse.ok || !uploadUrlData.path || !uploadUrlData.token) {
+      stopUploadTick(0);
       setStatus("error");
       setMessage(uploadUrlData.error || "Upload failed. Couldn't prepare the file for upload.");
       return;
@@ -166,11 +210,13 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
       .uploadToSignedUrl(uploadUrlData.path, uploadUrlData.token, file);
 
     if (uploadError) {
+      stopUploadTick(0);
       setStatus("error");
       setMessage("Upload failed. Try again.");
       return;
     }
 
+    stopUploadTick(100);
     setStatus("submitting");
     setMessage("Uploaded. Starting ingest...");
 
@@ -295,7 +341,12 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
         </div>
       )}
 
-      {(status === "uploading" || status === "processing" || status === "success") && (
+      {sourceType === "file" &&
+        (status === "uploading" || status === "submitting" || status === "processing" || status === "success") && (
+          <UploadProgress stage={status} percent={uploadPercent} />
+        )}
+
+      {sourceType !== "file" && (status === "processing" || status === "success") && (
         <p className="lead-form-status" role="status">{message}</p>
       )}
 
