@@ -46,6 +46,7 @@ export default function Page() {
         dek="The diaspora is becoming Nigeria's largest source of real estate capital. Most of that demand is arriving on WhatsApp, outside Lagos office hours, and going unanswered."
         publishedLabel="August 20, 2026"
         readingTime="10 min read"
+        coverImage="https://images.unsplash.com/photo-1521791055366-0d553872125f?fm=jpg&q=80&w=1600"
         coverAlt="A modern high-end residential property exterior at dusk"
         sources={[
           { label: "Guardian Nigeria — How diaspora investments are reshaping real estate", href: "https://guardian.ng/property/how-diaspora-investments-are-reshaping-real-estate-market/" },

@@ -5084,6 +5084,18 @@ textarea.lead-form-input {
   box-shadow: 0 0 0 1px var(--accent-mid) inset;
 }
 
+.calculator-result-empty {
+  text-align: center;
+}
+
+.calculator-result-empty .calculator-result-label {
+  margin-bottom: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
 .calculator-result-label {
   font-family: var(--font-mono);
   font-size: var(--text-xs);

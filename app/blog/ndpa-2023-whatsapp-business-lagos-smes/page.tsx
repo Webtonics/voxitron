@@ -46,7 +46,8 @@ export default function Page() {
         dek="Nigeria's data protection regulator has moved from writing guidance to actively fining companies. If you're putting customer conversations through an automated system, here's what the law actually requires of you."
         publishedLabel="August 20, 2026"
         readingTime="11 min read"
-        coverAlt="Photo: an NDPA compliance file, registration certificate and privacy policy documents"
+        coverImage="https://images.unsplash.com/photo-1643297550841-1386b3a10612?fm=jpg&q=80&w=1600"
+        coverAlt="A person signing a compliance document at a desk"
         sources={[
           { label: "Techmoonshot — Nigeria Collected ₦7.2 Billion in Data Privacy Penalties", href: "https://techmoonshot.com/2026/02/10/nigeria-just-collected-%E2%82%A67-2-billion-in-data-privacy-penalties-and-its-just-getting-started/" },
           { label: "AllAfrica — Nigeria Targets 1,368 Firms in Data Protection Crackdown", href: "https://allafrica.com/stories/202509020009.html" },

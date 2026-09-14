@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
 import DashboardMockup from "@/components/DashboardMockup";
 import StepIcon from "@/components/StepIcon";
 
@@ -180,7 +180,12 @@ export default function WhatsAppAgentPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="Photo: a Lagos market seller serving one customer while a WhatsApp message from another waits unread" />
+              <Image
+                src="https://images.unsplash.com/photo-1687422809654-579d81c29d32?fm=jpg&q=80&w=900&auto=format&fit=crop"
+                alt="A market seller at her stall, checking her phone"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>

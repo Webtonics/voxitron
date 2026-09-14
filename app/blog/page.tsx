@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
 
 export const metadata: Metadata = {
   title: "Blog | Voxitron",
@@ -19,8 +18,8 @@ const POSTS = [
     title: "How Much Are Slow WhatsApp Replies Costing Your Lagos Business? (2026 Data)",
     excerpt:
       "Nigeria has over 50 million WhatsApp users. Most businesses still reply in hours. Here's what that gap actually costs, with real 2026 pricing data.",
-    image: null,
-    imagePlaceholderLabel: "Photo: a phone showing an unanswered WhatsApp business chat",
+    image: "https://images.unsplash.com/photo-1643917567366-5afb8cf4bac9?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    imageAlt: "A smartphone home screen showing the WhatsApp app icon among other messaging apps",
     readingTime: "9 min read",
   },
   {
@@ -29,8 +28,8 @@ const POSTS = [
     title: "Real Estate Agents in Lagos Are Losing Diaspora Buyers to Time Zones, Not Bad Listings",
     excerpt:
       "Diaspora remittances into Nigerian real estate are projected to hit $23 billion in 2026. Most of that money is being lost to slow replies across time zones.",
-    image: null,
-    imagePlaceholderLabel: "Photo: a world clock showing overlapping Lagos and diaspora time zones",
+    image: "https://images.unsplash.com/photo-1521791055366-0d553872125f?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    imageAlt: "A modern high-end residential property exterior at dusk",
     readingTime: "10 min read",
   },
   {
@@ -39,8 +38,8 @@ const POSTS = [
     title: "NDPA 2023 and Your WhatsApp Business Number: What Lagos SMEs Actually Need to Do",
     excerpt:
       "The NDPC has already collected over ₦7.2 billion in penalties. Here's what the law actually requires if you're automating customer conversations.",
-    image: null,
-    imagePlaceholderLabel: "Photo: an NDPA compliance file, registration certificate and privacy policy documents",
+    image: "https://images.unsplash.com/photo-1643297550841-1386b3a10612?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    imageAlt: "A person signing a compliance document at a desk",
     readingTime: "11 min read",
   },
   {
@@ -49,8 +48,8 @@ const POSTS = [
     title: "Why Nigerian Diagnostic Centres Still Book Tests by Manual WhatsApp Message",
     excerpt:
       "Africa's no-show rate for medical appointments runs as high as 43%. Manual WhatsApp booking is part of why, and part of the fix.",
-    image: null,
-    imagePlaceholderLabel: "Photo: a diagnostic centre reception desk with a phone mid-conversation",
+    image: "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    imageAlt: "A lab technician in gloves using a pipette with sample vials in a diagnostic laboratory",
     readingTime: "10 min read",
   },
 ] as const;
@@ -73,11 +72,7 @@ export default function BlogIndexPage() {
           {POSTS.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-card">
               <div className="blog-card-image">
-                {post.image ? (
-                  <Image src={post.image} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" />
-                ) : (
-                  <ImagePlaceholder label={post.imagePlaceholderLabel} />
-                )}
+                <Image src={post.image} alt={post.imageAlt} fill sizes="(max-width: 720px) 100vw, 50vw" />
               </div>
               <div className="blog-card-body">
                 <span className="blog-card-meta">{post.category} &middot; {post.readingTime}</span>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
 import StepIcon from "@/components/StepIcon";
 import CalculatorTool from "@/components/CalculatorTool";
 import PhoneMockup from "@/components/PhoneMockup";
@@ -162,7 +162,12 @@ export default function DiagnosticCentrePage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="Photo: a diagnostic centre reception desk, closed for the night" />
+              <Image
+                src="https://images.unsplash.com/photo-1631507623442-fee09e89c6a8?fm=jpg&q=80&w=900&auto=format&fit=crop"
+                alt="A medical clinic storefront lit up at night, shutter down"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>

@@ -25,14 +25,17 @@ type CalculatorToolProps = {
 };
 
 export default function CalculatorTool({ compact = false }: CalculatorToolProps) {
-  const [monthlyInquiries, setMonthlyInquiries] = useState(200);
-  const [responseBracket, setResponseBracket] = useState<(typeof RESPONSE_BRACKETS)[number]["value"]>("60");
-  const [dealValue, setDealValue] = useState(15000);
-  const [closeRate, setCloseRate] = useState(20);
+  const [monthlyInquiries, setMonthlyInquiries] = useState<number | "">("");
+  const [responseBracket, setResponseBracket] = useState<(typeof RESPONSE_BRACKETS)[number]["value"] | "">("");
+  const [dealValue, setDealValue] = useState<number | "">("");
+  const [closeRate, setCloseRate] = useState<number | "">("");
 
-  const bracket = RESPONSE_BRACKETS.find((b) => b.value === responseBracket) ?? RESPONSE_BRACKETS[2];
+  const bracket = RESPONSE_BRACKETS.find((b) => b.value === responseBracket);
+  const hasAllInputs =
+    monthlyInquiries !== "" && dealValue !== "" && closeRate !== "" && bracket !== undefined;
 
   const { lostRevenue, recoverableRevenue } = useMemo(() => {
+    if (!hasAllInputs) return { lostRevenue: 0, recoverableRevenue: 0 };
     const closeRateDecimal = Math.max(0, Math.min(100, closeRate)) / 100;
     const totalPotentialRevenue = monthlyInquiries * closeRateDecimal * dealValue;
     // Assumes the recoveryRate share of currently-lost deals would close if
@@ -40,7 +43,7 @@ export default function CalculatorTool({ compact = false }: CalculatorToolProps)
     const lost = totalPotentialRevenue * bracket.recoveryRate;
     const recoverable = lost * RECOVERABLE_SHARE; // conservative: not every recovered reply converts to a sale
     return { lostRevenue: lost, recoverableRevenue: recoverable };
-  }, [monthlyInquiries, dealValue, closeRate, bracket]);
+  }, [monthlyInquiries, dealValue, closeRate, bracket, hasAllInputs]);
 
   return (
     <div className="calculator-card">
@@ -51,8 +54,9 @@ export default function CalculatorTool({ compact = false }: CalculatorToolProps)
             id="calc-inquiries"
             type="number"
             min={0}
+            placeholder="e.g. 200"
             value={monthlyInquiries}
-            onChange={(e) => setMonthlyInquiries(Number(e.target.value) || 0)}
+            onChange={(e) => setMonthlyInquiries(e.target.value === "" ? "" : Number(e.target.value))}
           />
           <span className="calculator-field-hint">How many new customer messages you get per month.</span>
         </div>
@@ -64,13 +68,14 @@ export default function CalculatorTool({ compact = false }: CalculatorToolProps)
             value={responseBracket}
             onChange={(e) => setResponseBracket(e.target.value as typeof responseBracket)}
           >
+            <option value="" disabled>Select one</option>
             {RESPONSE_BRACKETS.map((b) => (
               <option key={b.value} value={b.value}>{b.label}</option>
             ))}
           </select>
           <span className="calculator-field-hint">
             Be honest, not aspirational. This drives the whole estimate.
-            {!compact && (
+            {!compact && bracket && (
               <>
                 {" "}Assumption: at this response speed, we estimate you&apos;re currently
                 losing about {Math.round(bracket.recoveryRate * 100)}% of deals that would
@@ -86,8 +91,9 @@ export default function CalculatorTool({ compact = false }: CalculatorToolProps)
             id="calc-deal-value"
             type="number"
             min={0}
+            placeholder="e.g. 15000"
             value={dealValue}
-            onChange={(e) => setDealValue(Number(e.target.value) || 0)}
+            onChange={(e) => setDealValue(e.target.value === "" ? "" : Number(e.target.value))}
           />
           <span className="calculator-field-hint">What a typical order or booking is worth to you.</span>
         </div>
@@ -99,24 +105,33 @@ export default function CalculatorTool({ compact = false }: CalculatorToolProps)
             type="number"
             min={0}
             max={100}
+            placeholder="e.g. 20"
             value={closeRate}
-            onChange={(e) => setCloseRate(Number(e.target.value) || 0)}
+            onChange={(e) => setCloseRate(e.target.value === "" ? "" : Number(e.target.value))}
           />
           <span className="calculator-field-hint">Of inquiries that reply, roughly what share become paying customers.</span>
         </div>
       </div>
 
       <div className="calculator-results">
-        <div className="calculator-result">
-          <div className="calculator-result-label">Estimated monthly revenue lost</div>
-          <div className="calculator-result-value">{formatNaira(lostRevenue)}</div>
-        </div>
-        <div className="calculator-result is-primary">
-          <div className="calculator-result-label">Potential recovery under 60 seconds</div>
-          <div className="calculator-result-value">{formatNaira(recoverableRevenue)}</div>
-        </div>
+        {hasAllInputs ? (
+          <>
+            <div className="calculator-result">
+              <div className="calculator-result-label">Estimated monthly revenue lost</div>
+              <div className="calculator-result-value">{formatNaira(lostRevenue)}</div>
+            </div>
+            <div className="calculator-result is-primary">
+              <div className="calculator-result-label">Potential recovery under 60 seconds</div>
+              <div className="calculator-result-value">{formatNaira(recoverableRevenue)}</div>
+            </div>
+          </>
+        ) : (
+          <div className="calculator-result calculator-result-empty">
+            <div className="calculator-result-label">Fill in your numbers to see your estimate</div>
+          </div>
+        )}
 
-        {!compact && (
+        {!compact && hasAllInputs && (
           <div className="calculator-formula">
             <strong>How this is calculated:</strong> monthly inquiries &times; your close rate
             &times; average deal value gives your total potential revenue. We assume a share

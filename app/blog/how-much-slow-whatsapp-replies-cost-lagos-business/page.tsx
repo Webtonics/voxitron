@@ -46,6 +46,7 @@ export default function Page() {
         dek="Nigeria runs on WhatsApp. Most businesses still make customers wait hours for a reply. Here's the real cost of that gap, with 2026 pricing data, not guesswork."
         publishedLabel="August 20, 2026"
         readingTime="9 min read"
+        coverImage="https://images.unsplash.com/photo-1643917567366-5afb8cf4bac9?fm=jpg&q=80&w=1600"
         coverAlt="A smartphone home screen showing the WhatsApp app icon among other messaging apps"
         sources={[
           { label: "DataReportal — Digital 2026: Nigeria", href: "https://datareportal.com/reports/digital-2026-nigeria" },

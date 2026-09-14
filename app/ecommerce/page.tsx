@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
 import PhoneMockup from "@/components/PhoneMockup";
 import StepIcon from "@/components/StepIcon";
 
@@ -149,7 +149,12 @@ export default function EcommercePage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="Photo: a delivery package awaiting dispatch, order confirmation pending" />
+              <Image
+                src="https://images.unsplash.com/photo-1543499459-d1460946bdc6?fm=jpg&q=80&w=900&auto=format&fit=crop"
+                alt="A courier carrying a package for delivery"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
+import StepIcon from "@/components/StepIcon";
 
 export const metadata: Metadata = {
   title: "Automated Quoting Agent: Professional Quotes on Autopilot | Voxitron",
@@ -174,7 +175,12 @@ export default function QuotingAgentPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="Photo: a tradesperson on the phone at the end of a long day, quote requests piling up" />
+              <Image
+                src="https://images.unsplash.com/photo-1761599933387-f7488c02427d?fm=jpg&q=80&w=900&auto=format&fit=crop"
+                alt="A tradesperson in a hard hat on the phone at the end of a work day"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>
@@ -303,7 +309,7 @@ export default function QuotingAgentPage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: pricing and quote template setup" className="step-visual" />
+                <StepIcon icon="catalog" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">Tell Voxitron your services and pricing</h3>
@@ -311,7 +317,7 @@ export default function QuotingAgentPage() {
                 <p className="step-body">20 minutes. We configure your rates and build your branded quote template.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: connected channels" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">Connect your phone or WhatsApp number</h3>
@@ -319,7 +325,7 @@ export default function QuotingAgentPage() {
                 <p className="step-body">Call, text, WhatsApp, or web form. Voxitron picks up all of it. No new number.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: quote sent to customer" className="step-visual" />
+                <StepIcon icon="handoff" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">Every enquiry becomes a quote in minutes</h3>

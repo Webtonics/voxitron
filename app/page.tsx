@@ -16,14 +16,10 @@ const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
 const INDUSTRIES_SERVED = [
-  "Fashion Retailers",
+  "Retailers",
   "Real Estate Agencies",
   "Diagnostic Centres",
-  "Restaurants",
-  "Electronics Sellers",
-  "Salons & Spas",
-  "Clinics",
-  "Logistics",
+  "E-commerce Brands",
 ];
 
 export const metadata: Metadata = {
@@ -233,13 +229,13 @@ export default function Home() {
                 <div className="night-row">
                   <span className="night-time mono">03:22</span>
                   <div className="night-body">
-                    <span className="q">&quot;Can I book for 9am?&quot;</span>
+                    <span className="q">&quot;Can I book for 9am? Also, can you do it for &#8358;5,000 less?&quot;</span>
                     <span className="r">
-                      Booked, confirmed <Tick /> <span className="mono">03:22</span>
+                      Flagged for you, replied <Tick /> <span className="mono">03:22</span>
                     </span>
                   </div>
                 </div>
-                <div className="night-verdict mono">3 enquiries in &middot; 3 booked</div>
+                <div className="night-verdict mono">3 enquiries in &middot; 2 booked &middot; 1 handed to you</div>
               </div>
             </div>
           </div>
@@ -398,7 +394,7 @@ export default function Home() {
               <h2 id="how-title" className="section-title">
                 Live on your existing number
                 <br />
-                <span className="accent">in a week.</span>
+                <span className="accent">in 4 days.</span>
               </h2>
             </div>
 
@@ -465,9 +461,9 @@ export default function Home() {
               <span className="stat-source mono">Meta</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number mono">00:03</span>
-              <p className="stat-label">typical time for the agent to answer a new message, at any hour</p>
-              <span className="stat-source mono">Voxitron internal average, first 30 days live</span>
+              <span className="stat-number mono">67%</span>
+              <p className="stat-label">of customers prefer messaging a business over calling or emailing</p>
+              <span className="stat-source mono">Meta</span>
             </div>
           </div>
         </Reveal>

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
+import StepIcon from "@/components/StepIcon";
 
 export const metadata: Metadata = {
   title: "Speed to Lead Agent: Respond in Under 60 Seconds | Voxitron",
@@ -172,7 +173,12 @@ export default function SpeedToLeadPage() {
               </div>
             </div>
             <div className="pain-photo">
-              <ImagePlaceholder label="Photo: a tradesperson mid-repair, phone ringing unanswered on the bench" />
+              <Image
+                src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?fm=jpg&q=80&w=900&auto=format&fit=crop"
+                alt="A tradesperson's hands working on an engine with a wrench, mid-repair"
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+              />
             </div>
           </div>
         </Reveal>
@@ -302,7 +308,7 @@ export default function SpeedToLeadPage() {
 
             <ol className="steps-list">
               <li className="step">
-                <ImagePlaceholder label="Screenshot: agent configuration" className="step-visual" />
+                <StepIcon icon="catalog" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">01</span>
                   <h3 className="step-title">We configure your agent</h3>
@@ -310,7 +316,7 @@ export default function SpeedToLeadPage() {
                 <p className="step-body">15 minutes. We train it on your business so messages sound like you.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: number connection" className="step-visual" />
+                <StepIcon icon="connect" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">02</span>
                   <h3 className="step-title">Connect your phone number</h3>
@@ -318,7 +324,7 @@ export default function SpeedToLeadPage() {
                 <p className="step-body">Your existing number. No new SIM, no new hardware.</p>
               </li>
               <li className="step">
-                <ImagePlaceholder label="Screenshot: missed call converted to booking" className="step-visual" />
+                <StepIcon icon="handoff" className="step-visual" />
                 <div className="step-heading">
                   <span className="step-number" aria-hidden="true">03</span>
                   <h3 className="step-title">Every missed call becomes a conversation</h3>
