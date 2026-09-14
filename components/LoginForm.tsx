@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 type Status = "idle" | "submitting" | "error";
 
 export default function LoginForm() {
-  const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -30,8 +29,15 @@ export default function LoginForm() {
       return;
     }
 
-    router.push("/dashboard");
-    router.refresh();
+    // A client-side router.push() here raced the auth cookie: Next.js could
+    // fetch the dashboard's RSC payload before the browser had actually
+    // attached the cookie signInWithPassword just set, so DashboardLayout's
+    // getUser() saw no session, bounced back to /login, and the form looked
+    // stuck on "Logging in..." (status never left "submitting" on the
+    // success path either, compounding it) until a manual reload sent the
+    // cookie fresh. A full navigation guarantees the cookie is on the
+    // request, so this goes through window.location instead of the router.
+    window.location.assign("/dashboard");
   }
 
   return (
@@ -49,7 +55,12 @@ export default function LoginForm() {
       </div>
 
       <div className="lead-form-row">
-        <label className="lead-form-label" htmlFor="login-password">Password</label>
+        <div className="login-password-row">
+          <label className="lead-form-label" htmlFor="login-password">Password</label>
+          <Link href="/forgot-password" className="login-inline-link">
+            Forgot password?
+          </Link>
+        </div>
         <input
           id="login-password"
           name="password"

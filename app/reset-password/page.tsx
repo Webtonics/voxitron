@@ -1,26 +1,25 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
-import LoginForm from "@/components/LoginForm";
+import ResetPasswordForm from "@/components/ResetPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Log In | Voxitron",
-  description: "Log in to your Voxitron dashboard.",
+  title: "Set New Password | Voxitron",
+  description: "Set a new password for your Voxitron dashboard.",
 };
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   return (
     <main className="login-page">
       <Reveal as="div" className="login-card">
         <a href="/" className="login-wordmark" aria-label="Voxitron home">
           VOXITRON
         </a>
-        <h1 className="login-title">Log in to your dashboard.</h1>
+        <h1 className="login-title">Set a new password.</h1>
         <p className="login-sub">
-          Access is set up by Voxitron when your agent goes live. If you don&apos;t have an
-          account yet, message us on WhatsApp.
+          Choose a new password for your Voxitron dashboard.
         </p>
 
-        <LoginForm />
+        <ResetPasswordForm />
       </Reveal>
     </main>
   );
