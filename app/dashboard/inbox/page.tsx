@@ -51,7 +51,7 @@ export default async function InboxPage({
   let baseQuery = supabase
     .from("conversations")
     .select(
-      "id, contact_name, contact_phone, needs_human, escalation_reason, is_lead, resolved, first_reply_seconds, started_at"
+      "id, contact_name, contact_phone, needs_human, escalation_reason, is_lead, resolved, ai_paused, first_reply_seconds, started_at"
     )
     .eq("customer_id", active.id);
 
@@ -136,6 +136,7 @@ export default async function InboxPage({
       escalation_reason: c.escalation_reason,
       is_lead: c.is_lead,
       resolved: c.resolved,
+      ai_paused: c.ai_paused,
       latest_message_body: latest?.body || null,
       latest_message_at: latest?.sent_at || c.started_at,
       latest_message_type: (latest?.type || "text") as "text" | "voice" | "photo",

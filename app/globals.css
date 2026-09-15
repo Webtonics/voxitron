@@ -4408,6 +4408,89 @@ textarea.lead-form-input {
 }
 
 /* =============================================
+   TAKEOVER: standalone, no-login single-conversation
+   page opened from an owner-notification link
+   ============================================= */
+.takeover-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--gutter);
+  background: var(--bg-secondary);
+}
+
+.takeover-card {
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - var(--space-9));
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.takeover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.takeover-header-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.takeover-thread {
+  flex: 1;
+  min-height: 200px;
+  overflow-y: auto;
+  margin-bottom: var(--space-4);
+}
+
+.takeover-composer {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  flex-shrink: 0;
+}
+
+.takeover-composer .lead-form-input {
+  flex: 1;
+}
+
+.takeover-footnote {
+  margin-top: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .takeover-page {
+    padding: var(--space-4) var(--gutter);
+    align-items: stretch;
+  }
+
+  .takeover-card {
+    max-width: none;
+    max-height: none;
+    min-height: 100%;
+  }
+}
+
+/* =============================================
    BLOG: index grid + long-form article body
    ============================================= */
 .blog-hero {

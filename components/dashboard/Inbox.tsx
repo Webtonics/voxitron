@@ -50,6 +50,7 @@ export default function Inbox({
   // at the top of the effect) avoids a synchronous setState at effect start.
   const [loadedForId, setLoadedForId] = useState<string | null>(null);
   const [resolving, setResolving] = useState(false);
+  const [takingOver, setTakingOver] = useState(false);
   const [navPending, setNavPending] = useState(false);
   const [isRefreshing, startRefresh] = useTransition();
   const listPending = navPending || isRefreshing;
@@ -97,6 +98,23 @@ export default function Inbox({
       });
     } finally {
       setResolving(false);
+    }
+  }
+
+  async function toggleTakeover() {
+    if (!selected) return;
+    setTakingOver(true);
+    try {
+      await fetch(`/api/dashboard/conversations/${selected.id}/takeover`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paused: !selected.ai_paused }),
+      });
+      startRefresh(() => {
+        router.refresh();
+      });
+    } finally {
+      setTakingOver(false);
     }
   }
 
@@ -212,11 +230,15 @@ export default function Inbox({
               )}
               <div className="dashboard-thread-footer">
                 <span className="dashboard-thread-footer-status">
-                  <span className="dashboard-thread-footer-dot" aria-hidden="true" />
-                  AI is handling this chat
+                  <span
+                    className="dashboard-thread-footer-dot"
+                    style={{ background: selected.ai_paused ? "var(--accent)" : "var(--teal)" }}
+                    aria-hidden="true"
+                  />
+                  {selected.ai_paused ? "You're handling this chat" : "AI is handling this chat"}
                 </span>
-                <button type="button" className="btn btn-outline">
-                  Take over
+                <button type="button" className="btn btn-outline" onClick={toggleTakeover} disabled={takingOver}>
+                  {takingOver ? "Saving..." : selected.ai_paused ? "Give back to agent" : "Take over"}
                 </button>
               </div>
             </>

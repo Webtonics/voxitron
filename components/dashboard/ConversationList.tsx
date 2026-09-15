@@ -7,6 +7,7 @@ export type ConversationListItem = {
   needs_human: boolean;
   is_lead?: boolean;
   resolved?: boolean;
+  ai_paused?: boolean;
   latest_message_body: string | null;
   latest_message_at: string | null;
   latest_message_type?: "text" | "voice" | "photo";
