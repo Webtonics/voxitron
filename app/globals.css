@@ -128,25 +128,32 @@ a {
 /* ── Type scale rules ───────────────────────────
    Display face carries headlines, body face stays quiet, mono does the
    instant/technical work (timestamps, stat figures, the tick). */
+/* Fraunces (the display serif) carries more visual density per line than
+   the grotesque it replaced, especially at the top of --text-2xl/-3xl's
+   desktop clamp range (up to 72-88px): the old 1.05-1.1 ratios were tuned
+   for a sans and read as collapsed/packed-tight on wide screens once the
+   serif landed, even though the same ratio was fine at mobile's smaller
+   clamp floor. Looser here across the board; letter-spacing pulled back
+   too since a serif needs less negative tracking than a grotesque did. */
 h1, .hero-title, .display-xl {
   font-family: var(--font-display);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   font-size: var(--text-2xl);
 }
 
 h2, .section-title {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.25;
   font-size: var(--text-lg);
 }
 
 h3, .card-title {
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.35;
   font-size: var(--text-md);
 }
 
@@ -741,8 +748,8 @@ body, p, .section-body {
   font-size: clamp(3rem, 6vw, 4.25rem);
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   margin-bottom: var(--space-5);
 }
 
@@ -1710,8 +1717,8 @@ body, p, .section-body {
   font-size: var(--text-xl);
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   margin-bottom: var(--space-6);
 }
 
@@ -3468,6 +3475,7 @@ details[open] .faq-icon { transform: rotate(45deg); }
   background: var(--ink);
   padding: var(--space-9) var(--gutter);
   overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 #cta::before {
@@ -3475,7 +3483,11 @@ details[open] .faq-icon { transform: rotate(45deg); }
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(circle at 50% 30%, rgba(232, 137, 12, 0.28) 0%, transparent 62%);
+  /* Glow centered mid-section, not at the top edge: #pricing-teaser
+     (also --ink, but flat) sits directly above this section, and a glow
+     starting right at that shared seam read as a muddy brown smear where
+     the two dark sections met, instead of two distinct "flip" moments. */
+  background: radial-gradient(circle at 50% 55%, rgba(232, 137, 12, 0.28) 0%, transparent 58%);
   animation: cta-mesh-drift 26s ease-in-out infinite alternate;
 }
 
@@ -4511,8 +4523,8 @@ textarea.lead-form-input {
   font-size: var(--text-xl);
   font-weight: 800;
   color: var(--text-primary);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   margin-bottom: var(--space-4);
 }
 
