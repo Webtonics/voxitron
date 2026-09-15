@@ -11,7 +11,7 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
   return (
     <div className="pricing-cards">
       <div className="pricing-card">
-        <span className="pricing-card-kicker">STARTER</span>
+        <span className="pricing-card-kicker">Starter</span>
         <h3 className="pricing-card-title">For one WhatsApp number, one workflow</h3>
         <span className="pricing-card-range">&#8358;350k <span className="pricing-card-range-unit">setup</span></span>
         <span className="pricing-card-range pricing-card-range-secondary">
@@ -37,7 +37,7 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
       </div>
 
       <div className="pricing-card is-featured">
-        <span className="pricing-card-kicker">GROWTH</span>
+        <span className="pricing-card-kicker">Growth</span>
         <span className="pricing-card-badge">Most businesses choose this</span>
         <h3 className="pricing-card-title">For multi-language or multi-location businesses</h3>
         <span className="pricing-card-range">&#8358;750k <span className="pricing-card-range-unit">setup</span></span>
@@ -63,7 +63,7 @@ export default function PricingCards({ compact = false }: PricingCardsProps) {
       </div>
 
       <div className="pricing-card">
-        <span className="pricing-card-kicker">ENTERPRISE</span>
+        <span className="pricing-card-kicker">Enterprise</span>
         <h3 className="pricing-card-title">For chains, franchises, and high-volume operations</h3>
         <span className="pricing-card-range">Custom quote</span>
         <p className="pricing-card-note">

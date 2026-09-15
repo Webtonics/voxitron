@@ -38,7 +38,7 @@ export default function SpeedToLeadPage() {
                 Live &amp; answering for trades businesses right now
               </span>
 
-              <span className="hero-kicker">SPEED TO LEAD AGENT</span>
+              <span className="hero-kicker">Speed to lead agent</span>
 
               <h1 id="hero-title" className="hero-title">
                 Respond

@@ -24,7 +24,7 @@ export default function AfterHoursBand({
   return (
     <div className="dashboard-band">
       <div className="dashboard-band-copy">
-        <span className="dashboard-band-eyebrow mono">The messages you would have missed</span>
+        <span className="dashboard-band-eyebrow">The messages you would have missed</span>
         <h2 className="dashboard-band-headline">
           <b>{afterHoursCount} of {totalLeads}</b> leads came in after you closed. The agent
           booked them anyway.

@@ -86,7 +86,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <span>&#169; 2026 Voxitron. All rights reserved.</span>
-        <span className="footer-bottom-replied mono">
+        <span className="footer-bottom-replied">
           Message us. Replied <Tick /> before you finish reading this.
         </span>
       </div>

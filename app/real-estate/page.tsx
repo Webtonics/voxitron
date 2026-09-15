@@ -38,7 +38,7 @@ export default function RealEstatePage() {
                 Live &amp; replying for agents right now
               </span>
 
-              <span className="hero-kicker">AI AGENTS FOR REAL ESTATE</span>
+              <span className="hero-kicker">AI agents for real estate</span>
 
               <h1 id="hero-title" className="hero-title">
                 They enquired.

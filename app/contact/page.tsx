@@ -24,7 +24,7 @@ export default function ContactPage() {
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
-            <span className="hero-kicker">LET&apos;S TALK</span>
+            <span className="hero-kicker">Let&apos;s talk</span>
             <h1 id="hero-title" className="hero-title">
               Book a
               <br />

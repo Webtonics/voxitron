@@ -46,6 +46,38 @@ const INDUSTRIES: Industry[] = [
     description: "Books tests, answers pricing questions, and follows up on results, day and night.",
     solutions: ["Test bookings", "Pricing answers", "Result follow-up"],
   },
+  {
+    name: "Restaurants",
+    href: "/contact",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    alt: "A plated dish on a restaurant table",
+    description: "Takes reservations and answers menu questions in chat, so no table booking gets missed.",
+    solutions: ["Table reservations", "Menu and pricing answers", "Event enquiries"],
+  },
+  {
+    name: "Electronics Sellers",
+    href: "/contact",
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    alt: "Shelves of electronics and gadgets in a store",
+    description: "Answers spec and price questions instantly, and takes the order while the customer is still deciding.",
+    solutions: ["Spec and price answers", "Stock checks", "Order taking"],
+  },
+  {
+    name: "Salons & Spas",
+    href: "/contact",
+    image: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    alt: "A salon styling station with mirror and chair",
+    description: "Books appointments and answers service questions, so the front desk isn't stuck on the phone all day.",
+    solutions: ["Appointment booking", "Service and pricing answers", "Reminders sent automatically"],
+  },
+  {
+    name: "Logistics",
+    href: "/contact",
+    image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?fm=jpg&q=80&w=900&auto=format&fit=crop",
+    alt: "Stacked shipping containers at a logistics yard",
+    description: "Answers delivery and pricing questions from customers, without pulling your dispatch team off the road.",
+    solutions: ["Delivery status answers", "Rate quotes", "Pickup scheduling"],
+  },
 ];
 
 export default function IndustryShowcase() {
@@ -110,7 +142,7 @@ export default function IndustryShowcase() {
               src={industry.image}
               alt={industry.alt}
               fill
-              sizes="(max-width: 760px) 45vw, 22vw"
+              sizes="(max-width: 760px) 45vw, 32vw"
               className="industry-showcase-photo"
             />
             <span className="industry-showcase-scrim" aria-hidden="true"></span>

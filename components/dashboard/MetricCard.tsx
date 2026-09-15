@@ -29,7 +29,7 @@ export default function MetricCard({
       )}
       <span className={`dashboard-metric-card-value mono${isEmpty ? " is-empty" : ""}`}>{value}</span>
       <p className="dashboard-metric-card-label">{label}</p>
-      {sub && !isEmpty && <p className="dashboard-metric-card-sub mono">{sub}</p>}
+      {sub && !isEmpty && <p className="dashboard-metric-card-sub">{sub}</p>}
     </div>
   );
 }

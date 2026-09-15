@@ -43,7 +43,7 @@ export default function DiagnosticCentrePage() {
                 Live &amp; booking tests right now
               </span>
 
-              <span className="hero-kicker">WHATSAPP AI FOR DIAGNOSTIC CENTRES</span>
+              <span className="hero-kicker">WhatsApp AI for diagnostic centres</span>
 
               <h1 id="hero-title" className="hero-title">
                 Your front desk

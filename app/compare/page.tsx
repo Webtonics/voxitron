@@ -25,7 +25,7 @@ export default function ComparePage() {
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
-            <span className="hero-kicker">HONEST COMPARISONS</span>
+            <span className="hero-kicker">Honest comparisons</span>
             <h1 id="hero-title" className="hero-title">
               Compared
               <br />

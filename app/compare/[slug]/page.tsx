@@ -46,7 +46,7 @@ export default async function ComparisonPage({
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
-            <span className="hero-kicker">VOXITRON VS {competitor.name.toUpperCase()}</span>
+            <span className="hero-kicker">Voxitron vs {competitor.name}</span>
             <h1 id="hero-title" className="hero-title">
               {competitor.heroTension[0]}
               <br />

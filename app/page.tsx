@@ -54,7 +54,7 @@ export default function Home() {
                 #1 AI for Customer Service &amp; Sales
               </span>
 
-              <span className="hero-kicker">WHATSAPP AI FOR LAGOS BUSINESSES</span>
+              <span className="hero-kicker">WhatsApp AI for Lagos businesses</span>
 
               <h1 id="hero-title" className="hero-title">
                 Never leave
@@ -76,7 +76,7 @@ export default function Home() {
                 <Link href="#services" className="btn btn-secondary">See all solutions</Link>
               </div>
 
-              <span className="form-note mono">
+              <span className="form-note">
                 Replied <Tick /> in seconds. Message us and see it happen.
               </span>
             </div>
@@ -203,7 +203,7 @@ export default function Home() {
                     <span className="r">Already booked elsewhere by 8am</span>
                   </div>
                 </div>
-                <div className="night-verdict mono">3 enquiries in &middot; 0 booked</div>
+                <div className="night-verdict">3 enquiries in &middot; 0 booked</div>
               </div>
 
               <div className="night-col is-you" role="rowgroup">
@@ -235,7 +235,7 @@ export default function Home() {
                     </span>
                   </div>
                 </div>
-                <div className="night-verdict mono">3 enquiries in &middot; 2 booked &middot; 1 handed to you</div>
+                <div className="night-verdict">3 enquiries in &middot; 2 booked &middot; 1 handed to you</div>
               </div>
             </div>
           </div>
@@ -359,7 +359,7 @@ export default function Home() {
                 <div className="mm-thread">
                   <div className="imgmsg">
                     <div className="form-card">
-                      <div className="form-top"><span>PRODUCT PHOTO</span><span aria-hidden="true">&#9993;</span></div>
+                      <div className="form-top"><span>Product photo</span><span aria-hidden="true">&#9993;</span></div>
                       <div className="form-body">
                         <div className="form-line" style={{ width: "72%" }}></div>
                         <div className="form-line q" style={{ width: "54%" }}></div>
@@ -438,7 +438,7 @@ export default function Home() {
                   Every conversation gets a real answer, not a queue. The reply lands the
                   same minute the question does, whatever time it is.
                 </p>
-                <p className="form-note mono">
+                <p className="form-note">
                   Replied <Tick /> zero gap between question and answer.
                 </p>
               </div>
@@ -453,17 +453,17 @@ export default function Home() {
             <div className="stat-item">
               <span className="stat-number mono">95%+</span>
               <p className="stat-label">of Nigerian internet users are active on WhatsApp, one of the highest rates in Africa</p>
-              <span className="stat-source mono">DataReportal</span>
+              <span className="stat-source">DataReportal</span>
             </div>
             <div className="stat-item">
               <span className="stat-number mono">20M+</span>
               <p className="stat-label">daily business message senders on WhatsApp in Nigeria, a first for the country</p>
-              <span className="stat-source mono">Meta</span>
+              <span className="stat-source">Meta</span>
             </div>
             <div className="stat-item">
               <span className="stat-number mono">67%</span>
               <p className="stat-label">of customers prefer messaging a business over calling or emailing</p>
-              <span className="stat-source mono">Meta</span>
+              <span className="stat-source">Meta</span>
             </div>
           </div>
         </Reveal>
@@ -523,7 +523,7 @@ export default function Home() {
               />
             </div>
             <div>
-              <span className="service-kicker">REAL ESTATE</span>
+              <span className="service-kicker">Real estate</span>
               <h3 id="industry-real-estate-title" className="service-title">Never lose a buyer to a slower reply.</h3>
               <ul className="service-list">
                 <li>Responds to every enquiry in under 60 seconds</li>
@@ -538,7 +538,7 @@ export default function Home() {
         <Reveal as="section" id="industry-diagnostic-centres" aria-labelledby="industry-diagnostic-centres-title" className="industry-section industry-section-alt">
           <div className="industry-inner industry-inner-reverse">
             <div>
-              <span className="service-kicker">DIAGNOSTIC CENTRES</span>
+              <span className="service-kicker">Diagnostic centres</span>
               <h3 id="industry-diagnostic-centres-title" className="service-title">Book tests before your front desk opens.</h3>
               <ul className="service-list">
                 <li>Books tests in seconds, day or night</li>
@@ -577,7 +577,7 @@ export default function Home() {
               />
             </div>
             <div>
-              <span className="service-kicker">RETAILERS</span>
+              <span className="service-kicker">Retailers</span>
               <h3 id="industry-retailers-title" className="service-title">Stop retyping the same price all day.</h3>
               <ul className="service-list">
                 <li>Checks real stock before it replies</li>
@@ -592,7 +592,7 @@ export default function Home() {
         <Reveal as="section" id="industry-ecommerce" aria-labelledby="industry-ecommerce-title" className="industry-section industry-section-alt">
           <div className="industry-inner industry-inner-reverse">
             <div>
-              <span className="service-kicker">E-COMMERCE BRANDS</span>
+              <span className="service-kicker">E-commerce brands</span>
               <h3 id="industry-ecommerce-title" className="service-title">Confirm orders. Kill WISMO tickets.</h3>
               <ul className="service-list">
                 <li>Confirms orders the moment payment lands</li>
@@ -752,7 +752,7 @@ export default function Home() {
               <Link href="/contact" className="btn btn-secondary">Book a call</Link>
             </div>
 
-            <span className="form-note mono">
+            <span className="form-note">
               No forms. Just message us, and watch it reply <Tick /> before you finish typing.
             </span>
           </div>

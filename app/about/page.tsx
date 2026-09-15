@@ -25,7 +25,7 @@ export default function AboutPage() {
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
-            <span className="hero-kicker">LAGOS-BASED</span>
+            <span className="hero-kicker">Lagos-based</span>
             <h1 id="hero-title" className="hero-title">
               Not an agency
               <br />

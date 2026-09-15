@@ -25,7 +25,7 @@ export default function PricingPage() {
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
-            <span className="hero-kicker">NO HIDDEN PLANS OR LOCKED FEATURES</span>
+            <span className="hero-kicker">No hidden plans or locked features</span>
             <h1 id="hero-title" className="hero-title">
               Simple pricing.
               <br />

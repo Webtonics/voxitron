@@ -42,7 +42,7 @@ export default function EcommercePage() {
                 Live &amp; confirming orders right now
               </span>
 
-              <span className="hero-kicker">WHATSAPP AI FOR E-COMMERCE BRANDS</span>
+              <span className="hero-kicker">WhatsApp AI for e-commerce brands</span>
 
               <h1 id="hero-title" className="hero-title">
                 They paid.

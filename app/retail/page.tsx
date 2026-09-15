@@ -42,7 +42,7 @@ export default function RetailPage() {
                 Live &amp; taking orders right now
               </span>
 
-              <span className="hero-kicker">WHATSAPP AI FOR RETAILERS</span>
+              <span className="hero-kicker">WhatsApp AI for retailers</span>
 
               <h1 id="hero-title" className="hero-title">
                 Stop retyping

@@ -10,7 +10,7 @@ export default function MessageTypeBars({ items }: { items: BarItem[] }) {
           <div className="dashboard-hbar-top">
             <span>
               {item.label}
-              {item.tag && <span className="dashboard-tag-mini mono">{item.tag}</span>}
+              {item.tag && <span className="dashboard-tag-mini">{item.tag}</span>}
             </span>
             <span className="dashboard-hbar-value mono">{item.count}</span>
           </div>

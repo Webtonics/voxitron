@@ -26,7 +26,7 @@ export default function MissedLeadCalculatorPage() {
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
           <div className="section-inner">
-            <span className="hero-kicker">FREE TOOL, NO SIGNUP REQUIRED</span>
+            <span className="hero-kicker">Free tool, no signup required</span>
             <h1 id="hero-title" className="hero-title">
               What are slow
               <br />

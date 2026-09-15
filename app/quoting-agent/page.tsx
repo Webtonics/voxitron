@@ -38,7 +38,7 @@ export default function QuotingAgentPage() {
                 Live &amp; quoting for trades businesses right now
               </span>
 
-              <span className="hero-kicker">AUTOMATED QUOTING AGENT</span>
+              <span className="hero-kicker">Automated quoting agent</span>
 
               <h1 id="hero-title" className="hero-title">
                 Quote sent

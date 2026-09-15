@@ -42,7 +42,7 @@ export default function WhatsAppAgentPage() {
                 Live &amp; replying on WhatsApp right now
               </span>
 
-              <span className="hero-kicker">WHATSAPP AI FOR NIGERIAN BUSINESSES</span>
+              <span className="hero-kicker">WhatsApp AI for Nigerian businesses</span>
 
               <h1 id="hero-title" className="hero-title">
                 Never leave
