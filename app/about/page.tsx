@@ -131,7 +131,7 @@ export default function AboutPage() {
               </li>
               <li className="offer-item">
                 <span className="offer-bullet" aria-hidden="true">&#9679;</span>
-                <span>Hide pricing behind a &quot;book a call to find out&quot; wall</span>
+                <span>Make you fill out a form to talk to a human</span>
               </li>
               <li className="offer-item">
                 <span className="offer-bullet" aria-hidden="true">&#9679;</span>
@@ -193,7 +193,7 @@ export default function AboutPage() {
               <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>Full ownership of your infrastructure, always</span></li>
               <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>Bespoke logic, never a copy-pasted template</span></li>
               <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>NDPA named explicitly, not gestured at</span></li>
-              <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>Transparent pricing, no hidden line items</span></li>
+              <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>A straight quote on WhatsApp, no hidden line items</span></li>
               <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>A local team you can actually reach</span></li>
               <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>Monthly tuning, not a one-off build</span></li>
               <li><span className="commitments-bullet" aria-hidden="true">&#9679;</span><span>Honesty about fit, even if the answer is no</span></li>

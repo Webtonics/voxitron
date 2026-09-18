@@ -27,7 +27,6 @@ export default function Footer() {
             <li><Link href="/whatsapp-agent">WhatsApp Sales</Link></li>
             <li><Link href="/speed-to-lead">Never Miss a Call</Link></li>
             <li><Link href="/quoting-agent">Instant Quotes</Link></li>
-            <li><Link href="/pricing">Pricing</Link></li>
           </ul>
         </div>
 

@@ -5,12 +5,12 @@ import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import BuiltOnStrip from "@/components/BuiltOnStrip";
 import ParticleNetwork from "@/components/ParticleNetwork";
-import PhoneMockup from "@/components/PhoneMockup";
 import DashboardMockup from "@/components/DashboardMockup";
 import Tick from "@/components/Tick";
 import RepliedThread from "@/components/RepliedThread";
 import CalculatorTool from "@/components/CalculatorTool";
 import IndustryShowcase from "@/components/IndustryShowcase";
+import IntegrationsGrid from "@/components/IntegrationsGrid";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -487,26 +487,20 @@ export default function Home() {
         </Reveal>
 
         {/* INDUSTRY SHOWCASE: quick visual browse of the real industries Voxitron
-            builds for, before the detailed dark-treatment sections below. Each card
-            links straight to that industry's real page. */}
-        <Reveal as="section" id="industry-showcase" aria-labelledby="industry-showcase-heading" className="industry-showcase">
+            builds for. Each card links straight to that industry's real page.
+            id="services" carries the cross-page anchor: every other page's
+            "See all solutions" CTA links to /#services. */}
+        <Reveal as="section" id="services" aria-labelledby="industry-showcase-heading" className="industry-showcase">
           <IndustryShowcase />
         </Reveal>
 
-        {/* INDUSTRIES: intro + four full-width sections, each on the pricing-teaser's
-            dark ink treatment, alternating --ink/--ink-2 and image side per section.
-            id="services" kept on the intro for backward-compat: every other page's
-            "See all solutions" CTA links to /#services */}
-        <Reveal as="section" id="services" aria-labelledby="industries-title" className="industries-intro">
-          <div className="section-inner-wide-header">
-            <span className="section-label">BUILT FOR YOUR INDUSTRY</span>
-            <h2 id="industries-title" className="section-title">
-              Four industries,
-              <br />
-              <span className="accent">purpose-built agents.</span>
-            </h2>
-          </div>
-        </Reveal>
+        {/* The four detailed phone-mockup industry sections (real estate,
+            diagnostic centres, retailers, e-commerce) that used to run here
+            have been removed from the page per request. IndustryShowcase
+            above still gives a visual overview and links to each industry's
+            dedicated page, and #services above still anchors the cross-page
+            "See all solutions" links. Markup kept here, commented out, in
+            case it needs to come back:
 
         <Reveal as="section" id="industry-real-estate" aria-labelledby="industry-real-estate-title" className="industry-section">
           <div className="industry-inner">
@@ -616,6 +610,8 @@ export default function Home() {
           </div>
         </Reveal>
 
+        */}
+
         {/* WHAT IS THIS: explainer */}
         <Reveal as="section" id="what-is-this" aria-labelledby="what-is-this-title">
           <div className="product-frame-inner">
@@ -651,6 +647,11 @@ export default function Home() {
               </ul>
             </div>
           </div>
+        </Reveal>
+
+        {/* INTEGRATIONS */}
+        <Reveal as="section" id="integrations" aria-labelledby="integrations-title">
+          <IntegrationsGrid />
         </Reveal>
 
         {/* FAQ */}
@@ -711,21 +712,24 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* PRICING TEASER */}
+        {/* PRICING TEASER: replaced with a direct WhatsApp chat CTA, no
+            pricing page or numbers published on the site */}
         <Reveal as="section" id="pricing-teaser" aria-labelledby="pricing-teaser-title">
           <div className="section-inner">
             <span className="section-label">PRICING</span>
             <h2 id="pricing-teaser-title" className="section-title">
-              A setup fee,
+              Message us,
               <br />
-              <span className="accent">then a simple retainer.</span>
+              <span className="accent">get a real number in minutes.</span>
             </h2>
             <div className="section-body">
-              <p>No hidden platform fees. No per-seat pricing. You know the cost upfront.</p>
-              <p>Start with a 2-week pilot. Only pay next month if it books.</p>
+              <p>No hidden platform fees. No per-seat pricing. No generic price list either.</p>
+              <p>Tell us your catalog and volume on WhatsApp, and we&apos;ll quote it straight.</p>
             </div>
             <div className="cta-group">
-              <Link href="/pricing" className="btn btn-primary">See pricing</Link>
+              <a href={WA_CTA_HREF} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                Chat on WhatsApp
+              </a>
               <Link href="/compare" className="btn btn-secondary">Compare your options</Link>
             </div>
           </div>

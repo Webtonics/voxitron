@@ -1463,6 +1463,77 @@ body, p, .section-body {
 }
 
 /* =============================================
+   INTEGRATIONS GRID
+   ============================================= */
+.integrations-grid {
+  margin-top: var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (min-width: 560px) {
+  .integrations-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 760px) {
+  .integrations-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (min-width: 1000px) {
+  .integrations-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+.integration-tile {
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.integration-tile:hover {
+  border-color: var(--accent-mid);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.integration-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mint);
+  color: var(--teal);
+  flex-shrink: 0;
+}
+
+.integration-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.integration-name {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.integration-category {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* =============================================
    PROOF STRIP
    ============================================= */
 .proof-strip {
@@ -1652,12 +1723,12 @@ body, p, .section-body {
 #what,
 #replied,
 #what-is-this,
+#integrations,
 #story,
 #beliefs,
 #wont-do,
 #how-we-work,
 #commitments,
-#pricing-cards,
 #what-determines-price,
 #buying,
 #methods,
@@ -1685,7 +1756,7 @@ body, p, .section-body {
 }
 
 /* Secondary-page hero: shorter than the marketing-page #hero (no photo, no
-   mockup), used by pricing/compare/about/contact/tools/get-started/privacy.
+   mockup), used by compare/about/contact/tools/get-started/privacy.
    Shares the same top offset math (nav height + space-9) so every page's
    first section starts at a consistent distance from the fixed nav. */
 .page-hero {
@@ -4769,166 +4840,6 @@ textarea.lead-form-input {
 }
 
 .article-sources a:hover { color: var(--accent); }
-
-/* =============================================
-   PRICING CARDS: Setup + Retainer, 2-tier
-   ============================================= */
-.pricing-cards {
-  margin-top: var(--space-7);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-5);
-  align-items: stretch;
-}
-
-@media (min-width: 760px) {
-  .pricing-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1100px) {
-  .pricing-cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.pricing-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-6);
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-}
-
-.pricing-card.is-featured {
-  border-color: var(--accent-mid);
-  box-shadow: 0 0 0 1px var(--accent-mid) inset;
-}
-
-.pricing-card-kicker {
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
-.pricing-card-badge {
-  display: inline-block;
-  width: fit-content;
-  padding: 2px var(--space-2);
-  border-radius: var(--r-md);
-  background: var(--accent-light);
-  border: 1px solid var(--accent-mid);
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  color: var(--accent);
-}
-
-.pricing-card-title {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.4;
-  min-height: 2.8em;
-}
-
-.pricing-card-range {
-  font-family: var(--font-mono);
-  font-size: var(--text-xl);
-  font-weight: 400;
-  color: var(--accent);
-}
-
-.pricing-card-range-secondary {
-  font-size: var(--text-base);
-  color: var(--text-primary);
-}
-
-.pricing-card-range-unit {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
-.pricing-card-note {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  line-height: 1.55;
-}
-
-.pricing-card-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-  flex-grow: 1;
-}
-
-.pricing-card-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.pricing-card-bullet {
-  color: var(--accent);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.pricing-card-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: var(--space-4);
-  min-height: 44px;
-  padding: 0 var(--space-5);
-  border-radius: var(--r-md);
-  border: 1px solid var(--border-mid);
-  background: transparent;
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-decoration: none;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-}
-
-.pricing-card-cta:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.pricing-card-cta-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-ink);
-}
-
-.pricing-card-cta-primary:hover {
-  opacity: 0.88;
-  color: var(--accent-ink);
-}
-
-.pricing-disclaimer {
-  margin-top: var(--space-5);
-  padding: var(--space-4);
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  background: var(--bg-secondary);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  line-height: 1.5;
-}
 
 /* Buying vs not-buying, two columns */
 .buy-columns {
