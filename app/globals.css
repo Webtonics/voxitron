@@ -2298,8 +2298,8 @@ body, p, .section-body {
 
 /* =============================================
    INDUSTRY SECTIONS: one full-width section per industry, alternating
-   --ink / --ink-2 with the pricing-teaser's grid-texture treatment, image
-   on alternating sides. Four in a row, so the alternating shade (not a
+   --ink / --ink-2 with a fine grid-texture background, image on
+   alternating sides. Four in a row, so the alternating shade (not a
    repeated identical fill) is what keeps them from reading as one slab.
    ============================================= */
 .industry-section {
@@ -3598,53 +3598,6 @@ details[open] .faq-icon { transform: rotate(45deg); }
 }
 
 /* =============================================
-   PRICING TEASER (homepage only): solid --ink band with a fine grid
-   texture, the site's one deliberate full inversion. Sits between the
-   plain FAQ section and the amber-glow #cta band below, so it reads as
-   its own bold moment rather than repeating #cta's amber treatment.
-   ============================================= */
-#pricing-teaser {
-  position: relative;
-  padding: var(--space-9) var(--gutter);
-  background-color: var(--ink);
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-#pricing-teaser .section-label {
-  color: #FFD9A3;
-  background: rgba(232, 137, 12, 0.14);
-  border-color: rgba(232, 137, 12, 0.3);
-}
-
-#pricing-teaser .section-title {
-  color: #FFFFFF;
-}
-
-#pricing-teaser .section-title .accent {
-  color: var(--amber);
-  text-decoration: underline;
-  text-decoration-color: rgba(232, 137, 12, 0.5);
-  text-underline-offset: 6px;
-}
-
-#pricing-teaser .section-body p {
-  color: var(--paper-muted);
-}
-
-#pricing-teaser .btn-secondary {
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.22);
-}
-
-#pricing-teaser .btn-secondary:hover {
-  border-color: var(--amber);
-  color: var(--amber);
-}
-
-/* =============================================
    FINAL CTA: the other "flip" moment.
    Amber across a full-bleed inverted panel reads as a warning color, in
    tension with the brand's trust-sensitive personality, so this stays on
@@ -3665,10 +3618,6 @@ details[open] .faq-icon { transform: rotate(45deg); }
   position: absolute;
   inset: 0;
   z-index: 0;
-  /* Glow centered mid-section, not at the top edge: #pricing-teaser
-     (also --ink, but flat) sits directly above this section, and a glow
-     starting right at that shared seam read as a muddy brown smear where
-     the two dark sections met, instead of two distinct "flip" moments. */
   background: radial-gradient(circle at 50% 55%, rgba(232, 137, 12, 0.28) 0%, transparent 58%);
   animation: cta-mesh-drift 26s ease-in-out infinite alternate;
 }

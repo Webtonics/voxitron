@@ -712,29 +712,6 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* PRICING TEASER: replaced with a direct WhatsApp chat CTA, no
-            pricing page or numbers published on the site */}
-        <Reveal as="section" id="pricing-teaser" aria-labelledby="pricing-teaser-title">
-          <div className="section-inner">
-            <span className="section-label">PRICING</span>
-            <h2 id="pricing-teaser-title" className="section-title">
-              Message us,
-              <br />
-              <span className="accent">get a real number in minutes.</span>
-            </h2>
-            <div className="section-body">
-              <p>No hidden platform fees. No per-seat pricing. No generic price list either.</p>
-              <p>Tell us your catalog and volume on WhatsApp, and we&apos;ll quote it straight.</p>
-            </div>
-            <div className="cta-group">
-              <a href={WA_CTA_HREF} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                Chat on WhatsApp
-              </a>
-              <Link href="/compare" className="btn btn-secondary">Compare your options</Link>
-            </div>
-          </div>
-        </Reveal>
-
         {/* FINAL CTA */}
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
