@@ -7,6 +7,7 @@ import BuiltOnStrip from "@/components/BuiltOnStrip";
 import ParticleNetwork from "@/components/ParticleNetwork";
 import DashboardMockup from "@/components/DashboardMockup";
 import Tick from "@/components/Tick";
+import WhatIcon from "@/components/WhatIcon";
 import RepliedThread from "@/components/RepliedThread";
 import CalculatorTool from "@/components/CalculatorTool";
 import IndustryShowcase from "@/components/IndustryShowcase";
@@ -241,63 +242,63 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* WHAT VOXITRON DOES: asymmetric capability grid */}
+        {/* WHAT VOXITRON DOES: uniform 6-card capability grid */}
         <Reveal as="section" id="what" aria-labelledby="what-title">
           <div className="section-inner-wide">
             <div className="section-inner-wide-header">
               <h2 id="what-title" className="section-title">
-                It does the front-desk work,
+                Every message answered,
                 <br />
-                <span className="accent">in the chat.</span>
+                <span className="accent">every time, automatically.</span>
               </h2>
               <p className="section-body">
-                Not a menu of buttons. One agent that reads what the customer actually
-                wrote and takes it all the way to a booking or a sale.
+                Runs inside your WhatsApp Business number. Replies, checks stock, and
+                takes orders while you work.
               </p>
             </div>
 
-            <div className="caps">
-              <div className="cap is-lead">
+            <div className="what-grid">
+              <div className="what-card">
+                <div className="what-card-icon"><WhatIcon icon="clock" /></div>
                 <div>
-                  <div className="cap-badge" aria-hidden="true"><Tick /></div>
-                  <h3>Books the appointment or the sale</h3>
-                  <p>
-                    Confirms a real time slot or order inside the conversation, sends the
-                    details, and logs it. No back and forth, no phone tag.
-                  </p>
-                </div>
-                <div className="cap-lead-demo">
-                  <div className="mini-msg in">Can I get this Saturday morning?</div>
-                  <div className="mini-msg out">
-                    Saturday 10:30am is open. Shall I hold it?
-                    <span className="t mono">sent</span>
-                  </div>
-                  <div className="mini-msg in">Yes please</div>
-                  <div className="mini-msg out">
-                    Booked. 10:30am Saturday.
-                    <span className="t mono"><Tick /> confirmed</span>
-                  </div>
+                  <h3>Replies in seconds, 24/7</h3>
+                  <p>Every message gets an answer, whether it&apos;s noon or 3am.</p>
                 </div>
               </div>
-              <div className="cap">
-                <div className="cap-badge" aria-hidden="true">&#8358;</div>
-                <h3>Answers prices instantly</h3>
-                <p>Quotes the right price, every time, without you retyping it.</p>
+              <div className="what-card">
+                <div className="what-card-icon"><WhatIcon icon="chat" /></div>
+                <div>
+                  <h3>Answers the questions customers actually ask</h3>
+                  <p>Price, availability, delivery, location, answered instantly.</p>
+                </div>
               </div>
-              <div className="cap">
-                <div className="cap-badge" aria-hidden="true">&#9203;</div>
-                <h3>Replies in seconds</h3>
-                <p>Noon or 3am, every message gets a real answer.</p>
+              <div className="what-card">
+                <div className="what-card-icon"><WhatIcon icon="calendar" /></div>
+                <div>
+                  <h3>Checks your real stock levels</h3>
+                  <p>Confirms what&apos;s available before promising anything.</p>
+                </div>
               </div>
-              <div className="cap">
-                <div className="cap-badge" aria-hidden="true">&#9873;</div>
-                <h3>Flags the tricky ones</h3>
-                <p>Anything sensitive comes to you with the full chat, so nothing is missed.</p>
+              <div className="what-card">
+                <div className="what-card-icon"><WhatIcon icon="envelope" /></div>
+                <div>
+                  <h3>Books appointments and reservations</h3>
+                  <p>Confirms a time slot right inside the chat.</p>
+                </div>
               </div>
-              <div className="cap">
-                <div className="cap-badge" aria-hidden="true">&#9989;</div>
-                <h3>Sounds like a person</h3>
-                <p>Trained on how your customers actually message. Never robotic.</p>
+              <div className="what-card">
+                <div className="what-card-icon"><WhatIcon icon="message" /></div>
+                <div>
+                  <h3>Takes orders and confirms sales</h3>
+                  <p>Collects the order details and confirms the total.</p>
+                </div>
+              </div>
+              <div className="what-card">
+                <div className="what-card-icon"><WhatIcon icon="document" /></div>
+                <div>
+                  <h3>Full chat log, handed to you when needed</h3>
+                  <p>Every conversation saved. Complex requests come straight to you.</p>
+                </div>
               </div>
             </div>
           </div>

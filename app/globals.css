@@ -1913,26 +1913,23 @@ body, p, .section-body {
 .night-col.is-you .night-verdict { color: var(--amber); }
 
 /* =============================================
-   CAPS: asymmetric capability grid (homepage)
+   WHAT-GRID: uniform 6-card capability grid (homepage)
    ============================================= */
-.caps {
+.what-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
   margin-top: var(--space-7);
 }
 
-@media (max-width: 900px) {
-  .caps { grid-template-columns: 1fr 1fr; }
-  .cap.is-lead { grid-column: span 2; grid-row: auto; }
+@media (max-width: 720px) {
+  .what-grid { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 600px) {
-  .caps { grid-template-columns: 1fr; }
-  .cap.is-lead { grid-column: auto; }
-}
-
-.cap {
+.what-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
   background: var(--bg-elevated);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -1940,78 +1937,20 @@ body, p, .section-body {
   box-shadow: var(--shadow-sm);
 }
 
-.cap.is-lead {
-  grid-row: span 2;
-  background: linear-gradient(180deg, #fff, #fdfbf6);
-  border-color: #eadfce;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.cap h3 { font-size: 1.12rem; margin-bottom: var(--space-2); }
-.cap.is-lead h3 { font-size: 1.6rem; }
-.cap p { color: var(--muted); font-size: var(--text-sm); }
-
-.cap-badge {
-  width: 38px;
-  height: 38px;
+.what-card-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
   border-radius: var(--r-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--mint);
-  color: var(--teal);
-  margin-bottom: var(--space-4);
-  font-family: var(--font-mono);
-  font-weight: 700;
+  background: var(--amber);
+  color: #fff;
 }
 
-.cap.is-lead .cap-badge { background: var(--amber); color: #fff; }
-.cap.is-lead .cap-badge .tick { color: #fff; }
-
-.cap-lead-demo {
-  margin-top: var(--space-5);
-  background: var(--bg-elevated);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.mini-msg {
-  max-width: 88%;
-  padding: 8px 11px;
-  border-radius: 16px;
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
-
-.mini-msg.in {
-  align-self: flex-start;
-  background: var(--bg-secondary);
-  border: 1px solid var(--line);
-  border-bottom-left-radius: 5px;
-  color: var(--text-primary);
-}
-
-.mini-msg.out {
-  align-self: flex-end;
-  background: var(--mint);
-  border: 1px solid #BFE6DA;
-  border-bottom-right-radius: 5px;
-  color: #0a3b32;
-}
-
-.mini-msg .t {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  margin-top: 4px;
-  color: #2f7a6c;
-}
+.what-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+.what-card p { color: var(--muted); font-size: var(--text-sm); }
 
 /* =============================================
    MULTIMODAL: voice note + photo capability section
