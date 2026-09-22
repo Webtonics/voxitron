@@ -163,85 +163,6 @@ export default function Home() {
 
         <BuiltOnStrip />
 
-        {/* NIGHT: merged pain + before/after comparison, dark section */}
-        <Reveal as="section" id="night" className="night" aria-labelledby="night-title">
-          <div className="section-inner-wide">
-            <div className="section-inner-wide-header">
-              <span className="section-label">WHILE YOU SLEEP</span>
-              <h2 id="night-title" className="section-title">
-                Your messages don&apos;t stop
-                <br />
-                at closing time.
-              </h2>
-              <p className="section-body">
-                The enquiries that decide your month land at 11pm and 3am. The only
-                question is whether they get answered, or the customer buys from the next
-                seller instead.
-              </p>
-            </div>
-
-            <div className="compare" role="table" aria-label="Without an agent compared to with Voxitron">
-              <div className="night-col" role="rowgroup">
-                <h3>Without an agent</h3>
-                <div className="night-row">
-                  <span className="night-time mono">23:47</span>
-                  <div className="night-body">
-                    <span className="q">&quot;Is the blue one still in stock?&quot;</span>
-                    <span className="r">Sits unread till morning</span>
-                  </div>
-                </div>
-                <div className="night-row">
-                  <span className="night-time mono">01:04</span>
-                  <div className="night-body">
-                    <span className="q">&quot;Are you open tomorrow?&quot;</span>
-                    <span className="r">Sits unread till morning</span>
-                  </div>
-                </div>
-                <div className="night-row">
-                  <span className="night-time mono">03:22</span>
-                  <div className="night-body">
-                    <span className="q">&quot;Can I book for 9am?&quot;</span>
-                    <span className="r">Already booked elsewhere by 8am</span>
-                  </div>
-                </div>
-                <div className="night-verdict">3 enquiries in &middot; 0 booked</div>
-              </div>
-
-              <div className="night-col is-you" role="rowgroup">
-                <h3>With Voxitron</h3>
-                <div className="night-row">
-                  <span className="night-time mono">23:47</span>
-                  <div className="night-body">
-                    <span className="q">&quot;Is the blue one still in stock?&quot;</span>
-                    <span className="r">
-                      Priced and confirmed <Tick /> <span className="mono">23:47</span>
-                    </span>
-                  </div>
-                </div>
-                <div className="night-row">
-                  <span className="night-time mono">01:04</span>
-                  <div className="night-body">
-                    <span className="q">&quot;Are you open tomorrow?&quot;</span>
-                    <span className="r">
-                      Booked for 9am <Tick /> <span className="mono">01:04</span>
-                    </span>
-                  </div>
-                </div>
-                <div className="night-row">
-                  <span className="night-time mono">03:22</span>
-                  <div className="night-body">
-                    <span className="q">&quot;Can I book for 9am? Also, can you do it for &#8358;5,000 less?&quot;</span>
-                    <span className="r">
-                      Flagged for you, replied <Tick /> <span className="mono">03:22</span>
-                    </span>
-                  </div>
-                </div>
-                <div className="night-verdict">3 enquiries in &middot; 2 booked &middot; 1 handed to you</div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
         {/* WHAT VOXITRON DOES: uniform 6-card capability grid */}
         <Reveal as="section" id="what" aria-labelledby="what-title">
           <div className="section-inner-wide">
@@ -444,6 +365,85 @@ export default function Home() {
                 </p>
               </div>
               <RepliedThread />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* NIGHT: merged pain + before/after comparison, dark section */}
+        <Reveal as="section" id="night" className="night" aria-labelledby="night-title">
+          <div className="section-inner-wide">
+            <div className="section-inner-wide-header">
+              <span className="section-label">WHILE YOU SLEEP</span>
+              <h2 id="night-title" className="section-title">
+                Your messages don&apos;t stop
+                <br />
+                at closing time.
+              </h2>
+              <p className="section-body">
+                The enquiries that decide your month land at 11pm and 3am. The only
+                question is whether they get answered, or the customer buys from the next
+                seller instead.
+              </p>
+            </div>
+
+            <div className="compare" role="table" aria-label="Without an agent compared to with Voxitron">
+              <div className="night-col" role="rowgroup">
+                <h3>Without an agent</h3>
+                <div className="night-row">
+                  <span className="night-time mono">23:47</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Is the blue one still in stock?&quot;</span>
+                    <span className="r">Sits unread till morning</span>
+                  </div>
+                </div>
+                <div className="night-row">
+                  <span className="night-time mono">01:04</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Are you open tomorrow?&quot;</span>
+                    <span className="r">Sits unread till morning</span>
+                  </div>
+                </div>
+                <div className="night-row">
+                  <span className="night-time mono">03:22</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Can I book for 9am?&quot;</span>
+                    <span className="r">Already booked elsewhere by 8am</span>
+                  </div>
+                </div>
+                <div className="night-verdict">3 enquiries in &middot; 0 booked</div>
+              </div>
+
+              <div className="night-col is-you" role="rowgroup">
+                <h3>With Voxitron</h3>
+                <div className="night-row">
+                  <span className="night-time mono">23:47</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Is the blue one still in stock?&quot;</span>
+                    <span className="r">
+                      Priced and confirmed <Tick /> <span className="mono">23:47</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="night-row">
+                  <span className="night-time mono">01:04</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Are you open tomorrow?&quot;</span>
+                    <span className="r">
+                      Booked for 9am <Tick /> <span className="mono">01:04</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="night-row">
+                  <span className="night-time mono">03:22</span>
+                  <div className="night-body">
+                    <span className="q">&quot;Can I book for 9am? Also, can you do it for &#8358;5,000 less?&quot;</span>
+                    <span className="r">
+                      Flagged for you, replied <Tick /> <span className="mono">03:22</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="night-verdict">3 enquiries in &middot; 2 booked &middot; 1 handed to you</div>
+              </div>
             </div>
           </div>
         </Reveal>
