@@ -1,5 +1,5 @@
 type WhatIconProps = {
-  icon: "clock" | "chat" | "calendar" | "envelope" | "message" | "document";
+  icon: "clock" | "chat" | "calendar" | "envelope" | "message" | "document" | "trend";
 };
 
 const PATHS: Record<WhatIconProps["icon"], React.ReactNode> = {
@@ -46,6 +46,12 @@ const PATHS: Record<WhatIconProps["icon"], React.ReactNode> = {
       <path d="M4 2H9.5L12.5 5V14H4V2Z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M9.5 2V5H12.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M6 8H10.5M6 10.3H10.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </>
+  ),
+  trend: (
+    <>
+      <path d="M1.8 12.5L6 7.5L9 10L14.2 3.8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10.3 3.5H14.2V7.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
     </>
   ),
 };

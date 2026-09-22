@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StepIcon from "@/components/StepIcon";
+import WhatIcon from "@/components/WhatIcon";
 import CalculatorTool from "@/components/CalculatorTool";
 import PhoneMockup from "@/components/PhoneMockup";
 
@@ -107,16 +108,19 @@ export default function DiagnosticCentrePage() {
         <Reveal className="stats-strip" role="region" aria-label="WhatsApp business statistics">
           <div className="stats-grid">
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">95%+</span>
               <p className="stat-label">of Nigerian internet users are on WhatsApp every month</p>
               <span className="stat-source">DataReportal</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">67%</span>
               <p className="stat-label">of customers prefer messaging over calling to book an appointment</p>
               <span className="stat-source">Meta Business Messaging Report</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">82%</span>
               <p className="stat-label">of customers expect a reply within 24 hours, day or night</p>
               <span className="stat-source">WhatsApp Business Platform</span>

@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StepIcon from "@/components/StepIcon";
+import WhatIcon from "@/components/WhatIcon";
 
 export const metadata: Metadata = {
   title: "Automated Quoting Agent: Professional Quotes on Autopilot | Voxitron",
@@ -139,16 +140,19 @@ export default function QuotingAgentPage() {
         <Reveal className="stats-strip" role="region" aria-label="Quoting statistics">
           <div className="stats-grid">
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">60%</span>
               <p className="stat-label">of customers accept the first professional quote they receive</p>
               <span className="stat-source">Salesforce State of Sales</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">3+ hrs</span>
               <p className="stat-label">average time small businesses take to send a quote after an enquiry</p>
               <span className="stat-source">GetApp SMB Survey</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">2 weeks</span>
               <p className="stat-label">pilot period before your first monthly invoice, only pay if it books</p>
               <span className="stat-source">Voxitron pilot offer</span>

@@ -452,17 +452,20 @@ export default function Home() {
         <Reveal className="stats-strip" role="region" aria-label="WhatsApp and Nigeria market statistics">
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-number mono">95%+</span>
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
+              <span className="stat-number">95%+</span>
               <p className="stat-label">of Nigerian internet users are active on WhatsApp, one of the highest rates in Africa</p>
               <span className="stat-source">DataReportal</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number mono">20M+</span>
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
+              <span className="stat-number">20M+</span>
               <p className="stat-label">daily business message senders on WhatsApp in Nigeria, a first for the country</p>
               <span className="stat-source">Meta</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number mono">67%</span>
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
+              <span className="stat-number">67%</span>
               <p className="stat-label">of customers prefer messaging a business over calling or emailing</p>
               <span className="stat-source">Meta</span>
             </div>

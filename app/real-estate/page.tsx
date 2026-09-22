@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StepIcon from "@/components/StepIcon";
+import WhatIcon from "@/components/WhatIcon";
 
 export const metadata: Metadata = {
   title: "AI Agents for Real Estate Agents & Brokers | Voxitron",
@@ -139,16 +140,19 @@ export default function RealEstatePage() {
         <Reveal className="stats-strip" role="region" aria-label="Real estate lead response statistics">
           <div className="stats-grid">
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">78%</span>
               <p className="stat-label">of buyers go with the first agent who responds to their enquiry</p>
               <span className="stat-source">Harvard Business Review</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">80%</span>
               <p className="stat-label">drop in lead conversion after just 5 minutes of not responding</p>
               <span className="stat-source">Lead Response Management Study</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">7+ hrs</span>
               <p className="stat-label">the average time an agency takes to respond to a new enquiry</p>
               <span className="stat-source">InsideSales.com</span>

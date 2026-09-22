@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import PhoneMockup from "@/components/PhoneMockup";
 import StepIcon from "@/components/StepIcon";
+import WhatIcon from "@/components/WhatIcon";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -106,16 +107,19 @@ export default function RetailPage() {
         <Reveal className="stats-strip" role="region" aria-label="Retail response statistics">
           <div className="stats-grid">
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">2-7%</span>
               <p className="stat-label">of annual revenue lost to inventory inaccuracies from manual stock tracking</p>
               <span className="stat-source">Bumpa Retail Report</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">59%</span>
               <p className="stat-label">of DM enquiries convert to a sale when a seller replies within 30 minutes</p>
               <span className="stat-source">Busnurd Case Study</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">20%</span>
               <p className="stat-label">average DM-to-sale conversion for sellers who reply slower than that</p>
               <span className="stat-source">Busnurd Case Study</span>

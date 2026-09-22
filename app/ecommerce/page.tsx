@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import PhoneMockup from "@/components/PhoneMockup";
 import StepIcon from "@/components/StepIcon";
+import WhatIcon from "@/components/WhatIcon";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -112,16 +113,19 @@ export default function EcommercePage() {
         <Reveal className="stats-strip" role="region" aria-label="E-commerce support statistics">
           <div className="stats-grid">
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">40-60%</span>
               <p className="stat-label">of support tickets are just &quot;where is my order,&quot; information that already exists</p>
               <span className="stat-source">WISMO Industry Benchmarks</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">70%+</span>
               <p className="stat-label">of online shopping carts get abandoned before checkout completes</p>
               <span className="stat-source">Email Vendor Selection, 2026</span>
             </div>
             <div className="stat-item">
+              <div className="stat-item-icon"><WhatIcon icon="trend" /></div>
               <span className="stat-number">20-30%</span>
               <p className="stat-label">reduction in cart abandonment reported by brands using WhatsApp AI in Nigeria</p>
               <span className="stat-source">Creative Tech Africa</span>
