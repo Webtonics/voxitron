@@ -42,7 +42,6 @@
 
   --text-primary:   var(--ink);
   --text-secondary: var(--muted);
-  --text-muted:     #7f9199;
 
   --border:     var(--line);
   --border-mid: #D9D3C6;
@@ -58,7 +57,7 @@
   /* Typography */
   --font-mono:    var(--font-space-mono), 'Courier New', monospace;
   --font-body:    var(--font-hanken), 'Helvetica Neue', sans-serif;
-  --font-display: var(--font-fraunces), Georgia, 'Times New Roman', serif;
+  --font-display: var(--font-bricolage), 'Helvetica Neue', sans-serif;
 
   /* Type Scale: Display XL / H2 / H3 / Body / Small per brand doc */
   --text-xs:   0.8125rem;
@@ -128,26 +127,24 @@ a {
 /* ── Type scale rules ───────────────────────────
    Display face carries headlines, body face stays quiet, mono does the
    instant/technical work (timestamps, stat figures, the tick). */
-/* Fraunces (the display serif) carries more visual density per line than
-   the grotesque it replaced, especially at the top of --text-2xl/-3xl's
-   desktop clamp range (up to 72-88px): the old 1.05-1.1 ratios were tuned
-   for a sans and read as collapsed/packed-tight on wide screens once the
-   serif landed, even though the same ratio was fine at mobile's smaller
-   clamp floor. Looser here across the board; letter-spacing pulled back
-   too since a serif needs less negative tracking than a grotesque did. */
+/* Brand type scale (voxitron-brand-foundation section 4): Display XL
+   clamp(2.5rem, 6vw, 4.5rem) / 1.05 / 800 / -0.02em, H2 clamp(1.75rem,
+   3.5vw, 2.75rem) / 1.1 / 700. Bricolage Grotesque is the display face. */
 h1, .hero-title, .display-xl {
   font-family: var(--font-display);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   font-size: var(--text-2xl);
+  text-wrap: balance;
 }
 
 h2, .section-title {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.1;
   font-size: var(--text-lg);
+  text-wrap: balance;
 }
 
 h3, .card-title {
@@ -227,7 +224,7 @@ body, p, .section-body {
   background: rgba(11, 31, 42, 0.88);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(251, 250, 246, 0.1);
   box-shadow: var(--shadow-md);
 }
 
@@ -241,7 +238,7 @@ body, p, .section-body {
   font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 500;
-  color: #FFFFFF;
+  color: var(--paper);
   letter-spacing: 0.14em;
   text-decoration: none;
 }
@@ -269,7 +266,7 @@ body, p, .section-body {
   transition: color 0.2s ease;
 }
 
-.nav-link:hover { color: #FFFFFF; }
+.nav-link:hover { color: var(--paper); }
 
 .nav-link.is-active {
   color: var(--accent);
@@ -300,7 +297,7 @@ body, p, .section-body {
 .nav-dropdown:hover .nav-dropdown-trigger,
 .nav-dropdown-trigger:focus-visible,
 .nav-dropdown.is-open .nav-dropdown-trigger {
-  color: #FFFFFF;
+  color: var(--paper);
 }
 
 .nav-dropdown-trigger .is-active {
@@ -383,14 +380,14 @@ body, p, .section-body {
   display: block;
   font-family: var(--font-body);
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: var(--muted);
   line-height: 1.4;
 }
 
 .nav-cta {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 var(--space-4);
   background: var(--accent);
   color: var(--accent-ink);
@@ -404,6 +401,21 @@ body, p, .section-body {
 }
 
 .nav-cta:hover { opacity: 0.88; }
+
+/* Teal outline variant, for pages where an in-page CTA is the one amber
+   action. The nav is always --ink, where teal text is only 3.3:1, so the
+   label is --mint (14.3:1) inside a teal border. */
+.nav-cta.is-outline {
+  background: transparent;
+  color: var(--mint);
+  border: 1.5px solid var(--teal);
+}
+
+.nav-cta.is-outline:hover {
+  opacity: 1;
+  background: var(--teal);
+  color: var(--paper);
+}
 
 .nav-cta-group {
   display: flex;
@@ -436,9 +448,9 @@ body, p, .section-body {
   width: 36px;
   height: 36px;
   border-radius: var(--r-md);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.06);
-  color: #FFFFFF;
+  border: 1px solid rgba(251, 250, 246, 0.16);
+  background: rgba(251, 250, 246, 0.06);
+  color: var(--paper);
   cursor: pointer;
 }
 
@@ -581,11 +593,13 @@ body, p, .section-body {
 }
 
 #hero .hero-kicker {
-  color: #FFD9A3;
+  color: var(--ink);
+  background: var(--amber-soft);
+  border-color: var(--amber-soft);
 }
 
 #hero .hero-title {
-  color: #FFFFFF;
+  color: var(--paper);
 }
 
 #hero .hero-sub {
@@ -678,7 +692,7 @@ body, p, .section-body {
   font-family: var(--font-body);
   font-size: var(--text-xs);
   font-weight: 500;
-  color: var(--accent);
+  color: var(--ink);
   margin-bottom: var(--space-5);
   padding: var(--space-1) var(--space-3);
   background: var(--accent-light);
@@ -688,17 +702,20 @@ body, p, .section-body {
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 4.25rem);
-  font-weight: 700;
+  font-size: var(--text-2xl);
+  font-weight: 800;
   color: var(--text-primary);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   margin-bottom: var(--space-5);
 }
 
+/* --amber-press, not --amber: amber text is 2.5:1 on paper. amber-press is
+   3.4:1 on paper and 4.8:1 on the --ink hero, both past the 3:1 large-text
+   floor at display size. */
 .hero-title .accent {
-  color: var(--accent);
-  font-weight: 600;
+  color: var(--amber-press);
+  font-weight: 700;
 }
 
 .hero-sub {
@@ -776,13 +793,13 @@ body, p, .section-body {
 .ui-call-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .ui-call-time {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .ui-caller {
@@ -846,7 +863,7 @@ body, p, .section-body {
 .ui-msg-label {
   font-family: var(--font-body);
   font-size: 0.6rem;
-  color: var(--text-muted);
+  color: var(--muted);
   margin-bottom: 4px;
 }
 
@@ -1231,7 +1248,7 @@ body, p, .section-body {
   display: block;
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-top: 10px;
 }
 
@@ -1473,7 +1490,7 @@ body, p, .section-body {
 
 .integration-category {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   letter-spacing: 0.02em;
 }
 
@@ -1595,7 +1612,7 @@ body, p, .section-body {
 .stat-source {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -1703,7 +1720,7 @@ body, p, .section-body {
   font-family: var(--font-body);
   font-size: var(--text-xs);
   font-weight: 500;
-  color: var(--accent);
+  color: var(--ink);
   margin-bottom: var(--space-4);
   padding: 2px var(--space-2);
   background: var(--accent-light);
@@ -1713,10 +1730,10 @@ body, p, .section-body {
 
 .section-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.3;
+  line-height: 1.1;
   letter-spacing: -0.01em;
   margin-bottom: var(--space-6);
 }
@@ -2975,7 +2992,7 @@ body, p, .section-body {
 .testimonial-role {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   display: block;
   margin-top: 2px;
 }
@@ -3019,7 +3036,7 @@ body, p, .section-body {
 .img-placeholder-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 /* =============================================
@@ -3070,7 +3087,7 @@ body, p, .section-body {
   font-family: var(--font-body);
   font-size: var(--text-xs);
   margin-bottom: var(--space-2);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .comparison-cell.is-new .comparison-cell-label {
@@ -3092,7 +3109,7 @@ body, p, .section-body {
 .comparison-row-title {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-bottom: var(--space-1);
 }
 
@@ -3107,7 +3124,7 @@ body, p, .section-body {
   .comparison-header-cell {
     font-family: var(--font-body);
     font-size: var(--text-xs);
-    color: var(--text-muted);
+    color: var(--muted);
     padding: 0 var(--space-5);
   }
 
@@ -3181,12 +3198,12 @@ body, p, .section-body {
 .dashboard-mockup-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-mockup-time {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-mockup-status-dot {
@@ -3260,7 +3277,7 @@ body, p, .section-body {
 
 .dashboard-mockup-step-time {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   flex-shrink: 0;
 }
 
@@ -3465,7 +3482,7 @@ details[open] .faq-icon { transform: rotate(45deg); }
   background: var(--ink);
   padding: var(--space-9) var(--gutter);
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(251, 250, 246, 0.08);
 }
 
 #cta::before {
@@ -3533,6 +3550,18 @@ details[open] .faq-icon { transform: rotate(45deg); }
 #cta .btn-secondary:hover {
   border-color: var(--paper);
   background: rgba(251, 250, 246, 0.08);
+  color: var(--paper);
+}
+
+/* Teal outline on --ink: teal text is 3.3:1 here, so the label goes --mint
+   and the teal stays on the border (3.3:1, past the 3:1 non-text floor). */
+#cta .btn-outline {
+  color: var(--mint);
+  border-color: var(--teal);
+}
+
+#cta .btn-outline:hover {
+  background: var(--teal);
   color: var(--paper);
 }
 
@@ -3744,13 +3773,14 @@ details[open] .faq-icon { transform: rotate(45deg); }
 
 .footer-credit a:hover { color: var(--paper); }
 
+/* Sentence case in --paper: the brand caps ALL-CAPS labels at one or two per
+   page and keeps amber off text, and these four sat on every page. */
 .footer-col-title {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--amber);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--paper);
+  letter-spacing: 0.02em;
 }
 
 .footer-link-list {
@@ -3778,18 +3808,18 @@ details[open] .faq-icon { transform: rotate(45deg); }
   margin-top: 2px;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--r-sm);
-  background: var(--amber);
-  color: var(--accent-ink) !important;
+  background: transparent;
+  border: 1.5px solid var(--teal);
+  color: var(--mint) !important;
   font-weight: 600;
-  box-shadow: 0 4px 16px rgba(232, 137, 12, 0.3);
-  transition: background 0.2s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
+/* Teal outline, not an amber fill: the footer sits right under every page's
+   #cta band, and two amber buttons in one viewport breaks the brand rule. */
 .footer-link-list .footer-wa-link:hover {
-  background: var(--amber-press);
-  color: var(--accent-ink) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(232, 137, 12, 0.4);
+  background: var(--teal);
+  color: var(--paper) !important;
 }
 
 .footer-bottom {
@@ -3845,10 +3875,18 @@ details[open] .faq-icon { transform: rotate(45deg); }
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  color: var(--ink);
+  box-shadow: 0 6px 20px rgba(11, 31, 42, 0.4), 0 0 0 1px rgba(251, 250, 246, 0.06);
   z-index: 200;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Hidden while a page's own amber WhatsApp CTA is on screen (see WaFloat). */
+.wa-float.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .wa-float-icon {
@@ -3866,7 +3904,7 @@ details[open] .faq-icon { transform: rotate(45deg); }
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -3878,7 +3916,7 @@ details[open] .faq-icon { transform: rotate(45deg); }
 
 .wa-float:hover {
   transform: scale(1.03);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--accent-glow);
+  box-shadow: 0 8px 26px rgba(11, 31, 42, 0.5), 0 0 0 4px var(--accent-glow);
 }
 
 .wa-float:focus-visible {
@@ -3947,7 +3985,7 @@ details[open] .faq-icon { transform: rotate(45deg); }
 .lead-form-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .lead-form-input {
@@ -3969,7 +4007,7 @@ details[open] .faq-icon { transform: rotate(45deg); }
 }
 
 .lead-form-input::placeholder {
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 /* Native file inputs ignore most box styling on the input element itself
@@ -4037,7 +4075,7 @@ input[type="file"].lead-form-input:hover::-webkit-file-upload-button {
 
 .dashboard-select-btn svg {
   flex-shrink: 0;
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-select-btn:hover {
@@ -4134,7 +4172,7 @@ input[type="file"].lead-form-input:hover::-webkit-file-upload-button {
   height: 36px;
   border-radius: var(--r-sm);
   background: var(--paper-2);
-  color: var(--text-muted);
+  color: var(--muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4166,7 +4204,7 @@ input[type="file"].lead-form-input:hover::-webkit-file-upload-button {
 .dashboard-source-card-hint {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   line-height: 1.4;
 }
 
@@ -4245,7 +4283,7 @@ textarea.lead-form-input {
 .lead-form-hint {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-top: var(--space-1);
 }
 
@@ -4280,7 +4318,7 @@ textarea.lead-form-input {
 .upload-progress-percent {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .upload-progress-track {
@@ -4481,7 +4519,7 @@ textarea.lead-form-input {
   margin-top: var(--space-3);
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   line-height: 1.5;
 }
 
@@ -4559,7 +4597,7 @@ textarea.lead-form-input {
 .blog-card-meta {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .blog-card-title {
@@ -4593,7 +4631,7 @@ textarea.lead-form-input {
 .article-meta {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-bottom: var(--space-4);
   display: flex;
   gap: var(--space-3);
@@ -4643,7 +4681,7 @@ textarea.lead-form-input {
   padding: 0 var(--gutter);
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .article-body {
@@ -4742,7 +4780,7 @@ textarea.lead-form-input {
 .article-stat-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   line-height: 1.4;
 }
 
@@ -4756,7 +4794,7 @@ textarea.lead-form-input {
 .article-sources-title {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-bottom: var(--space-3);
 }
 
@@ -4827,7 +4865,7 @@ textarea.lead-form-input {
   line-height: 1.5;
 }
 
-.buy-column.is-not .buy-column-bullet { color: var(--text-muted); }
+.buy-column.is-not .buy-column-bullet { color: var(--muted); }
 .buy-column-bullet { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
 
 /* =============================================
@@ -4910,7 +4948,7 @@ textarea.lead-form-input {
 .compare-table th {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   font-weight: 500;
 }
 
@@ -4932,7 +4970,7 @@ textarea.lead-form-input {
   margin-top: var(--space-4);
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   line-height: 1.5;
 }
 
@@ -5042,7 +5080,7 @@ textarea.lead-form-input {
   margin-top: var(--space-1);
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .calculator-results {
@@ -5052,6 +5090,18 @@ textarea.lead-form-input {
   justify-content: center;
 }
 
+.calculator-example-note {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+.calculator-figures {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
 .calculator-result {
   padding: var(--space-5);
   border-radius: var(--r-md);
@@ -5059,9 +5109,9 @@ textarea.lead-form-input {
   border: 1px solid var(--border);
 }
 
+/* Amber lives on the border, not the number: amber text is 2.5:1 on paper. */
 .calculator-result.is-primary {
-  border-color: var(--accent-mid);
-  box-shadow: 0 0 0 1px var(--accent-mid) inset;
+  border-left: 4px solid var(--amber);
 }
 
 .calculator-result-empty {
@@ -5074,37 +5124,119 @@ textarea.lead-form-input {
   font-size: var(--text-sm);
 }
 
+.calculator-result-fast-text {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
 .calculator-result-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-bottom: var(--space-2);
 }
 
 .calculator-result-value {
   font-family: var(--font-mono);
   font-size: var(--text-xl);
-  font-weight: 400;
-  color: var(--accent);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
+/* The "Replied." signature: the visitor's reply time against ours. */
+.calculator-signature {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.calculator-signature-sep {
+  margin: 0 var(--space-3);
+  color: var(--muted);
+}
+
+.calculator-signature-tick.is-done {
+  display: inline-block;
+  animation: tick-pop 0.45s ease-out;
+}
+
+@keyframes tick-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calculator-signature-tick,
+  .calculator-signature-tick.is-done {
+    transition: none;
+    animation: none;
+  }
+}
+
+.calculator-assumptions,
 .calculator-formula {
-  margin-top: var(--space-6);
-  padding: var(--space-4);
   border-radius: var(--r-md);
   background: var(--bg-secondary);
   border: 1px solid var(--border);
+}
+
+.calculator-assumptions summary,
+.calculator-formula summary {
+  cursor: pointer;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.calculator-assumptions summary:focus-visible,
+.calculator-formula summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-md);
+}
+
+.calculator-assumptions-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.calculator-formula {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   line-height: 1.5;
+}
+
+.calculator-formula > p {
+  font-size: var(--text-xs);
+  padding: 0 var(--space-4);
+}
+
+.calculator-formula > p:last-child {
+  padding-bottom: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.calculator-formula-math {
+  font-family: var(--font-mono);
+  color: var(--ink);
 }
 
 .calculator-cta-group {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin-top: var(--space-6);
 }
 
 /* =============================================
@@ -5547,7 +5679,7 @@ textarea.lead-form-input {
   display: inline-block;
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--muted);
   padding: var(--space-2) var(--space-4);
   border-radius: 999px;
   text-decoration: none;
@@ -5619,7 +5751,7 @@ textarea.lead-form-input {
 
 .dashboard-metric-card-delta.is-flat {
   background: var(--paper-2);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-metric-card-value {
@@ -5634,7 +5766,7 @@ textarea.lead-form-input {
 .dashboard-metric-card-value.is-empty {
   font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-metric-card-label {
@@ -5696,7 +5828,7 @@ textarea.lead-form-input {
 .dashboard-card-header-meta {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   text-decoration: none;
 }
 
@@ -5734,7 +5866,7 @@ a.dashboard-card-header-meta:hover {
   justify-content: space-between;
   margin-top: var(--space-2);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-donut-wrap {
@@ -5769,7 +5901,7 @@ a.dashboard-card-header-meta:hover {
 
 .dashboard-donut-mid-label {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-top: 2px;
 }
 
@@ -5897,7 +6029,7 @@ a.dashboard-card-header-meta:hover {
 }
 
 .dashboard-hbar-value {
-  color: var(--text-muted);
+  color: var(--muted);
   font-weight: 700;
 }
 
@@ -5944,7 +6076,7 @@ a.dashboard-card-header-meta:hover {
   text-align: left;
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--muted);
   padding: 0 var(--space-4) var(--space-3);
   white-space: nowrap;
 }
@@ -5982,7 +6114,7 @@ a.dashboard-card-header-meta:hover {
 .dashboard-avatar-4 { background: var(--ink-2); }
 
 .dashboard-table-time {
-  color: var(--text-muted);
+  color: var(--muted);
   white-space: nowrap;
 }
 
@@ -5992,7 +6124,7 @@ a.dashboard-card-header-meta:hover {
   border: 1px dashed var(--border-mid);
   border-radius: var(--r-lg);
   background: var(--bg-elevated);
-  color: var(--text-muted);
+  color: var(--muted);
   font-family: var(--font-body);
   font-size: var(--text-sm);
 }
@@ -6046,7 +6178,7 @@ a.dashboard-card-header-meta:hover {
 .dashboard-settings-section-note {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-settings-readonly-value {
@@ -6085,7 +6217,7 @@ a.dashboard-card-header-meta:hover {
 
 .dashboard-settings-field-hint {
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--muted);
   font-size: var(--text-xs);
   margin-left: var(--space-2);
 }
@@ -6110,7 +6242,7 @@ a.dashboard-card-header-meta:hover {
 }
 
 .dashboard-settings-contact-note {
-  color: var(--text-muted);
+  color: var(--muted);
   font-size: var(--text-sm);
   margin-top: var(--space-3);
 }
@@ -6187,7 +6319,7 @@ a.dashboard-card-header-meta:hover {
 .dashboard-segment-tab-count {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: var(--muted);
   background: var(--bg-primary);
   border-radius: 999px;
   padding: 1px 8px;
@@ -6222,7 +6354,7 @@ a.dashboard-card-header-meta:hover {
   transform: translateY(-50%);
   width: 15px;
   height: 15px;
-  color: var(--text-muted);
+  color: var(--muted);
   pointer-events: none;
 }
 
@@ -6275,7 +6407,7 @@ a.dashboard-card-header-meta:hover {
   padding: var(--space-3) var(--space-5) var(--space-1);
   font-family: var(--font-body);
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: var(--muted);
   background: var(--bg-elevated);
 }
 
@@ -6341,7 +6473,7 @@ a.dashboard-card-header-meta:hover {
 
 .dashboard-inbox-calm-stat-label {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   margin-top: var(--space-1);
 }
 
@@ -6540,7 +6672,7 @@ a.dashboard-card-header-meta:hover {
 .dashboard-conversation-row-time {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -6647,7 +6779,7 @@ a.dashboard-card-header-meta:hover {
 .dashboard-lead-row-agent {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-kb-status {
@@ -6660,7 +6792,7 @@ a.dashboard-card-header-meta:hover {
 }
 
 .dashboard-kb-status-processing {
-  color: var(--text-muted);
+  color: var(--muted);
   background: var(--bg-primary);
   border: 1px solid var(--border);
 }
@@ -6722,7 +6854,7 @@ a.dashboard-card-header-meta:hover {
   height: 36px;
   border-radius: var(--r-sm);
   background: var(--paper-2);
-  color: var(--text-muted);
+  color: var(--muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6748,7 +6880,7 @@ a.dashboard-card-header-meta:hover {
 
 .dashboard-doc-row-meta {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-doc-row-remove {
@@ -6759,7 +6891,7 @@ a.dashboard-card-header-meta:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--muted);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
@@ -6917,7 +7049,7 @@ a.dashboard-card-header-meta:hover {
   gap: var(--space-3);
   font-family: var(--font-body);
   font-size: var(--text-sm);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .dashboard-empty-checklist-item.is-done {

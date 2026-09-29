@@ -60,7 +60,7 @@ const INDUSTRIES = [
     href: "/diagnostic-centre",
     key: "diagnostic-centre",
     title: "Diagnostic Centres",
-    description: "Books tests and follows up on results, inside WhatsApp.",
+    description: "Books tests and answers enquiries, inside WhatsApp.",
     icon: (
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6.5 2H9.5V5.2L12.5 10.2C13 11.05 12.38 12 11.4 12H4.6C3.62 12 3 11.05 3.5 10.2L6.5 5.2V2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
@@ -104,6 +104,9 @@ type NavProps = {
   ctaHref?: string;
   ctaLabel?: string;
   ctaExternal?: boolean;
+  /** "outline" renders the main nav CTA as a teal outline, for pages whose
+      in-page CTA is the one amber action per viewport. */
+  ctaVariant?: "primary" | "outline";
   /** Hide the secondary "Portal" nav CTA. */
   showSecondaryCta?: boolean;
 };
@@ -116,6 +119,7 @@ export default function Nav({
   ctaHref = WA_CTA_HREF,
   ctaLabel = "Chat on WhatsApp",
   ctaExternal = true,
+  ctaVariant = "primary",
   showSecondaryCta = true,
 }: NavProps) {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
@@ -137,6 +141,8 @@ export default function Nav({
       closeTimer.current = null;
     }
   }
+
+  const ctaClassName = `nav-cta${ctaVariant === "outline" ? " is-outline" : ""}`;
 
   const isSolutionsActive = SOLUTIONS.some((item) => item.key === activePage);
   const isIndustriesActive = INDUSTRIES.some((item) => item.key === activePage);
@@ -238,14 +244,14 @@ export default function Nav({
         {ctaExternal ? (
           <a
             href={ctaHref}
-            className="nav-cta"
+            className={ctaClassName}
             target="_blank"
             rel="noopener noreferrer"
           >
             {ctaLabel}
           </a>
         ) : (
-          <Link href={ctaHref} className="nav-cta">
+          <Link href={ctaHref} className={ctaClassName}>
             {ctaLabel}
           </Link>
         )}

@@ -215,7 +215,7 @@ export default function AboutPage() {
             </p>
 
             <div className="cta-group">
-              <Link href="/contact" className="btn btn-primary">Book a discovery call</Link>
+              <Link href="/contact" className="btn btn-primary">Book a call</Link>
               <a href={WA_CTA_HREF} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                 Chat on WhatsApp
               </a>

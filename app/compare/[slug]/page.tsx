@@ -60,7 +60,7 @@ export default async function ComparisonPage({
             </h1>
             <p className="hero-sub">{competitor.intro}</p>
             <div className="cta-group">
-              <Link href="/contact" className="btn btn-primary">Book a discovery call</Link>
+              <Link href="/contact" className="btn btn-primary">Book a call</Link>
               <a href={waHref} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                 Chat on WhatsApp
               </a>
@@ -98,7 +98,7 @@ export default async function ComparisonPage({
                 <ul className="assessment-column-list">
                   {competitor.fallsShort.map((item) => (
                     <li key={item}>
-                      <span className="assessment-column-bullet" style={{ color: "var(--text-muted)" }} aria-hidden="true">&#9679;</span>
+                      <span className="assessment-column-bullet" style={{ color: "var(--muted)" }} aria-hidden="true">&#9679;</span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -239,7 +239,7 @@ export default async function ComparisonPage({
             </p>
 
             <div className="cta-group">
-              <Link href="/contact" className="btn btn-primary">Book a discovery call</Link>
+              <Link href="/contact" className="btn btn-primary">Book a call</Link>
               <a href={waHref} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                 Chat on WhatsApp
               </a>

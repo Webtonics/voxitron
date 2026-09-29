@@ -91,7 +91,7 @@ export default function LeadForm({
           {variant === "minimal"
             ? "We'll message you on WhatsApp shortly."
             : variant === "discovery-call"
-              ? "We reply on WhatsApp first, usually within a few hours."
+              ? "Our agent replies on WhatsApp in seconds. A person follows up the same day."
               : "Check your email, we usually reply within one business day."}
         </p>
       </div>

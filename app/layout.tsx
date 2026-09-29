@@ -1,18 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Hanken_Grotesk, Space_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import WaFloat from "@/components/WaFloat";
 import "./globals.css";
 
-// Editorial display face: replaces Bricolage Grotesque per
-// voxitron-maturity-revamp.md section 2 ("the strongest single signal away
-// from AI template"). Headings/section titles reference var(--font-display)
-// throughout globals.css, so this is the one place that lever gets pulled.
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+// Display face per voxitron-brand-foundation section 4. Headings/section
+// titles reference var(--font-display) throughout globals.css, so this is the
+// one place that lever gets pulled.
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  style: ["normal", "italic"],
+  weight: ["600", "700", "800"],
 });
 
 const hanken = Hanken_Grotesk({
@@ -46,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${hanken.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${hanken.variable} ${spaceMono.variable}`}>
       <body>
         {children}
         <WaFloat />
