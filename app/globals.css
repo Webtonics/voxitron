@@ -3481,6 +3481,36 @@ body, p, .section-body {
   border-bottom: 1px solid var(--border);
 }
 
+/* Desktop: asymmetric 40/60 split instead of a 640px column with an empty
+   right half. Label and title hold the left column on the spine; the
+   questions fill the right. Mobile keeps the stacked layout. */
+@media (min-width: 960px) {
+  #faq .section-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--space-9);
+    align-items: start;
+  }
+
+  #faq .section-label {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  #faq .section-title {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  #faq .faq-list {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    max-width: none;
+    margin-top: 0;
+  }
+}
+
 details.faq-item {
   border-top: 1px solid var(--border);
 }
