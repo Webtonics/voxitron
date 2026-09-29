@@ -46,16 +46,8 @@ export default function EcommercePage() {
               <span className="hero-kicker">WhatsApp AI for e-commerce brands</span>
 
               <h1 id="hero-title" className="hero-title">
-                They paid.
-                <br />
-                Then they
-                <br />
-                <span className="accent">
-                  stopped
-                  <br />
-                  trusting
-                  <br />
-                  you.
+                They paid. Then they <span className="accent">
+                  stopped trusting you.
                 </span>
               </h1>
 
@@ -139,9 +131,7 @@ export default function EcommercePage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                They paid you.
-                <br />
-                <span className="accent">Then silence.</span>
+                They paid you. <span className="accent">Then silence.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -169,9 +159,7 @@ export default function EcommercePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">BEFORE AND AFTER</span>
               <h2 id="comparison-title" className="section-title">
-                What changes when
-                <br />
-                <span className="accent">WhatsApp runs itself.</span>
+                What changes when <span className="accent">WhatsApp runs itself.</span>
               </h2>
             </div>
 
@@ -251,9 +239,7 @@ export default function EcommercePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                Every message answered,
-                <br />
-                <span className="accent">every time, automatically.</span>
+                Every message answered, <span className="accent">every time, automatically.</span>
               </h2>
               <p className="section-body">
                 Runs inside your WhatsApp Business number. Confirms, tracks, and recovers
@@ -362,9 +348,7 @@ export default function EcommercePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
-                <br />
-                <span className="accent">Answer every message automatically.</span>
+                Set up once. <span className="accent">Answer every message automatically.</span>
               </h2>
             </div>
 
@@ -402,9 +386,7 @@ export default function EcommercePage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions from real
-              <br />
-              e-commerce brands.
+              Questions from real <span className="nowrap">e-commerce</span> brands.
             </h2>
 
             <div className="faq-list" role="list">
@@ -458,9 +440,7 @@ export default function EcommercePage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing orders
-              <br />
-              to silence and doubt.
+              Stop losing orders to silence and doubt.
             </h2>
 
             <p className="cta-sub">

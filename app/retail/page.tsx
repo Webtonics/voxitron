@@ -46,11 +46,7 @@ export default function RetailPage() {
               <span className="hero-kicker">WhatsApp AI for retailers</span>
 
               <h1 id="hero-title" className="hero-title">
-                Stop retyping
-                <br />
-                the same
-                <br />
-                <span className="accent">price all day.</span>
+                Stop retyping the same <span className="accent">price all day.</span>
               </h1>
 
               <p className="hero-sub">
@@ -133,9 +129,7 @@ export default function RetailPage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                &quot;Is this available?&quot;
-                <br />
-                <span className="accent">You type it out again.</span>
+                &quot;Is this available?&quot; <span className="accent">You type it out again.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -163,9 +157,7 @@ export default function RetailPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">BEFORE AND AFTER</span>
               <h2 id="comparison-title" className="section-title">
-                What changes when
-                <br />
-                <span className="accent">WhatsApp runs itself.</span>
+                What changes when <span className="accent">WhatsApp runs itself.</span>
               </h2>
             </div>
 
@@ -245,9 +237,7 @@ export default function RetailPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                Every message answered,
-                <br />
-                <span className="accent">every time, automatically.</span>
+                Every message answered, <span className="accent">every time, automatically.</span>
               </h2>
               <p className="section-body">
                 Runs inside your WhatsApp Business number. Answers, quotes, and takes
@@ -356,9 +346,7 @@ export default function RetailPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
-                <br />
-                <span className="accent">Answer every message automatically.</span>
+                Set up once. <span className="accent">Answer every message automatically.</span>
               </h2>
             </div>
 
@@ -396,9 +384,7 @@ export default function RetailPage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions from real
-              <br />
-              retailers and shop owners.
+              Questions from real retailers and shop owners.
             </h2>
 
             <div className="faq-list" role="list">
@@ -453,9 +439,7 @@ export default function RetailPage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing sales
-              <br />
-              to a slow reply.
+              Stop losing sales to a slow reply.
             </h2>
 
             <p className="cta-sub">

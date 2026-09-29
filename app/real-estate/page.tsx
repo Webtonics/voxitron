@@ -42,11 +42,7 @@ export default function RealEstatePage() {
               <span className="hero-kicker">AI agents for real estate</span>
 
               <h1 id="hero-title" className="hero-title">
-                They enquired.
-                <br />
-                No reply.
-                <br />
-                <span className="accent">Gone cold.</span>
+                They enquired. No reply. <span className="accent">Gone cold.</span>
               </h1>
 
               <p className="hero-sub">
@@ -166,9 +162,7 @@ export default function RealEstatePage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                You were mid-viewing.
-                <br />
-                <span className="accent">They called the next listing.</span>
+                You were mid-viewing. <span className="accent">They called the next listing.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -195,9 +189,7 @@ export default function RealEstatePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                From enquiry to
-                <br />
-                <span className="accent">booked viewing, automatically.</span>
+                From enquiry to <span className="accent">booked viewing, automatically.</span>
               </h2>
               <p className="section-body">
                 Runs inside your WhatsApp Business number. Replies, qualifies, and books
@@ -306,9 +298,7 @@ export default function RealEstatePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set it up once.
-                <br />
-                <span className="accent">Never miss a buyer again.</span>
+                Set it up once. <span className="accent">Never miss a buyer again.</span>
               </h2>
             </div>
 
@@ -346,9 +336,7 @@ export default function RealEstatePage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions from real
-              <br />
-              estate agents and brokers.
+              Questions from real estate agents and brokers.
             </h2>
 
             <div className="faq-list" role="list">
@@ -402,9 +390,7 @@ export default function RealEstatePage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing buyers
-              <br />
-              to a slower reply.
+              Stop losing buyers to a slower reply.
             </h2>
 
             <p className="cta-sub">

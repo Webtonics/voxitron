@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import CalculatorTool from "@/components/CalculatorTool";
+import CalculatorPreview from "@/components/CalculatorPreview";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%20just%20used%20the%20missed%20lead%20calculator";
@@ -26,15 +27,20 @@ export default function MissedLeadCalculatorPage() {
 
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
-          <div className="section-inner">
-            <span className="hero-kicker">Free tool, no signup required</span>
-            <h1 id="hero-title" className="hero-title">
-              What are slow <span className="accent">replies costing you?</span>
-            </h1>
-            <p className="hero-sub">
-              Fill in four numbers about your business. See an honest estimate, with the
-              math shown, not hidden.
-            </p>
+          <div className="hero-inner">
+            <div className="hero-content">
+              <span className="hero-kicker">Free tool, no signup required</span>
+              <h1 id="hero-title" className="hero-title">
+                What are slow <span className="accent">replies costing you?</span>
+              </h1>
+              <p className="hero-sub">
+                Fill in four numbers about your business. See an honest estimate, with the
+                math shown, not hidden.
+              </p>
+            </div>
+            <div className="hero-aside">
+              <CalculatorPreview />
+            </div>
           </div>
         </section>
 

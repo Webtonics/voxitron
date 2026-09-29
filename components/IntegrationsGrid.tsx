@@ -28,9 +28,7 @@ export default function IntegrationsGrid() {
       <div className="section-inner-wide-header">
         <span className="section-label">INTEGRATIONS</span>
         <h2 id="integrations-title" className="section-title">
-          Connects to the tools
-          <br />
-          <span className="accent">you already run the business on.</span>
+          Connects to the tools <span className="accent">you already run the business on.</span>
         </h2>
         <p className="section-body">
           Orders, stock, and payments stay in sync with your ERP, CRM, and payment

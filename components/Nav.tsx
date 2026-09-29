@@ -155,123 +155,125 @@ export default function Nav({
 
   return (
     <nav className="site-nav" aria-label="Site navigation">
-      <Link href="/" className="nav-brand" aria-label="Voxitron home" onClick={closeMobile}>
-        VOXITRON
-      </Link>
-      <div className="nav-links">
-        <div
-          className={`nav-dropdown${solutionsOpen ? " is-open" : ""}`}
-          onMouseEnter={cancelScheduledClose}
-          onMouseLeave={() => scheduleClose(() => setSolutionsOpen(false))}
-        >
-          <button
-            type="button"
-            className="nav-dropdown-trigger"
-            aria-expanded={solutionsOpen}
-            aria-haspopup="true"
-            onClick={() => setSolutionsOpen((v) => !v)}
-            onMouseEnter={() => setSolutionsOpen(true)}
+      <div className="site-nav-inner">
+        <Link href="/" className="nav-brand" aria-label="Voxitron home" onClick={closeMobile}>
+          VOXITRON
+        </Link>
+        <div className="nav-links">
+          <div
+            className={`nav-dropdown${solutionsOpen ? " is-open" : ""}`}
+            onMouseEnter={cancelScheduledClose}
+            onMouseLeave={() => scheduleClose(() => setSolutionsOpen(false))}
           >
-            <span className={isSolutionsActive ? "is-active" : undefined}>Solutions</span>
-            <svg className="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <div className="nav-dropdown-panel" role="menu">
-            {SOLUTIONS.map((item) => (
-              <Link
-                key={item.key}
-                href={item.href}
-                className={`nav-dropdown-item${activePage === item.key ? " is-active" : ""}`}
-                role="menuitem"
-                onClick={() => setSolutionsOpen(false)}
-              >
-                <span className="nav-dropdown-icon" aria-hidden="true">{item.icon}</span>
-                <span>
-                  <span className="nav-dropdown-item-title">{item.title}</span>
-                  <span className="nav-dropdown-item-desc">{item.description}</span>
-                </span>
-              </Link>
-            ))}
+            <button
+              type="button"
+              className="nav-dropdown-trigger"
+              aria-expanded={solutionsOpen}
+              aria-haspopup="true"
+              onClick={() => setSolutionsOpen((v) => !v)}
+              onMouseEnter={() => setSolutionsOpen(true)}
+            >
+              <span className={isSolutionsActive ? "is-active" : undefined}>Solutions</span>
+              <svg className="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <div className="nav-dropdown-panel" role="menu">
+              {SOLUTIONS.map((item) => (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  className={`nav-dropdown-item${activePage === item.key ? " is-active" : ""}`}
+                  role="menuitem"
+                  onClick={() => setSolutionsOpen(false)}
+                >
+                  <span className="nav-dropdown-icon" aria-hidden="true">{item.icon}</span>
+                  <span>
+                    <span className="nav-dropdown-item-title">{item.title}</span>
+                    <span className="nav-dropdown-item-desc">{item.description}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div
-          className={`nav-dropdown${industriesOpen ? " is-open" : ""}`}
-          onMouseEnter={cancelScheduledClose}
-          onMouseLeave={() => scheduleClose(() => setIndustriesOpen(false))}
-        >
-          <button
-            type="button"
-            className="nav-dropdown-trigger"
-            aria-expanded={industriesOpen}
-            aria-haspopup="true"
-            onClick={() => setIndustriesOpen((v) => !v)}
-            onMouseEnter={() => setIndustriesOpen(true)}
+          <div
+            className={`nav-dropdown${industriesOpen ? " is-open" : ""}`}
+            onMouseEnter={cancelScheduledClose}
+            onMouseLeave={() => scheduleClose(() => setIndustriesOpen(false))}
           >
-            <span className={isIndustriesActive ? "is-active" : undefined}>Industries</span>
-            <svg className="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <div className="nav-dropdown-panel" role="menu">
-            {INDUSTRIES.map((item) => (
-              <Link
-                key={item.key}
-                href={item.href}
-                className={`nav-dropdown-item${activePage === item.key ? " is-active" : ""}`}
-                role="menuitem"
-                onClick={() => setIndustriesOpen(false)}
-              >
-                <span className="nav-dropdown-icon" aria-hidden="true">{item.icon}</span>
-                <span>
-                  <span className="nav-dropdown-item-title">{item.title}</span>
-                  <span className="nav-dropdown-item-desc">{item.description}</span>
-                </span>
-              </Link>
-            ))}
+            <button
+              type="button"
+              className="nav-dropdown-trigger"
+              aria-expanded={industriesOpen}
+              aria-haspopup="true"
+              onClick={() => setIndustriesOpen((v) => !v)}
+              onMouseEnter={() => setIndustriesOpen(true)}
+            >
+              <span className={isIndustriesActive ? "is-active" : undefined}>Industries</span>
+              <svg className="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <div className="nav-dropdown-panel" role="menu">
+              {INDUSTRIES.map((item) => (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  className={`nav-dropdown-item${activePage === item.key ? " is-active" : ""}`}
+                  role="menuitem"
+                  onClick={() => setIndustriesOpen(false)}
+                >
+                  <span className="nav-dropdown-icon" aria-hidden="true">{item.icon}</span>
+                  <span>
+                    <span className="nav-dropdown-item-title">{item.title}</span>
+                    <span className="nav-dropdown-item-desc">{item.description}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <Link href="/blog" className="nav-link">Blog</Link>
-      </div>
-      <div className="nav-cta-group">
-        {showSecondaryCta && (
-          <Link href="/dashboard" className="nav-cta nav-cta-secondary">
-            Portal
-          </Link>
-        )}
-        {ctaExternal ? (
-          <a
-            href={ctaHref}
-            className={ctaClassName}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {ctaLabel}
-          </a>
-        ) : (
-          <Link href={ctaHref} className={ctaClassName}>
-            {ctaLabel}
-          </Link>
-        )}
-        <button
-          type="button"
-          className="nav-mobile-toggle"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((v) => !v)}
-        >
-          {mobileOpen ? (
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M3 5H15M3 9H15M3 13H15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
+          <Link href="/blog" className="nav-link">Blog</Link>
+        </div>
+        <div className="nav-cta-group">
+          {showSecondaryCta && (
+            <Link href="/dashboard" className="nav-cta nav-cta-secondary">
+              Portal
+            </Link>
           )}
-        </button>
+          {ctaExternal ? (
+            <a
+              href={ctaHref}
+              className={ctaClassName}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {ctaLabel}
+            </a>
+          ) : (
+            <Link href={ctaHref} className={ctaClassName}>
+              {ctaLabel}
+            </Link>
+          )}
+          <button
+            type="button"
+            className="nav-mobile-toggle"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            {mobileOpen ? (
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 5H15M3 9H15M3 13H15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (

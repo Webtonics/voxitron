@@ -24,17 +24,19 @@ export default function ComparePage() {
 
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
-          <div className="section-inner">
-            <span className="hero-kicker">Honest comparisons</span>
-            <h1 id="hero-title" className="hero-title">
-              Compared
-              <br />
-              <span className="accent">honestly.</span>
-            </h1>
-            <p className="hero-sub">
-              Four common alternatives, compared honestly. No strawmen, just what each one
-              is actually good at and where it falls short.
-            </p>
+          <div className="hero-inner">
+            <div className="hero-content">
+              <span className="hero-kicker">Honest comparisons</span>
+              <h1 id="hero-title" className="hero-title">
+                Compared <span className="accent">honestly.</span>
+              </h1>
+              <p className="hero-sub">
+                Four common alternatives, compared honestly. No strawmen, just what each one
+                is actually good at and where it falls short.
+              </p>
+            </div>
+            {/* TODO(Josh): real product capture */}
+            <div className="hero-aside" />
           </div>
         </section>
 
@@ -44,9 +46,7 @@ export default function ComparePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">PICK YOUR COMPARISON</span>
               <h2 id="compare-cards-title" className="section-title">
-                Four alternatives,
-                <br />
-                <span className="accent">one honest look at each.</span>
+                Four alternatives, <span className="accent">one honest look at each.</span>
               </h2>
             </div>
 
@@ -73,9 +73,7 @@ export default function ComparePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">AT A GLANCE</span>
               <h2 id="at-a-glance-title" className="section-title">
-                Every option,
-                <br />
-                <span className="accent">side by side.</span>
+                Every option, <span className="accent">side by side.</span>
               </h2>
             </div>
 
@@ -116,9 +114,7 @@ export default function ComparePage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Want to see what
-              <br />
-              ownership looks like for your business?
+              Want to see what ownership looks like for your business?
             </h2>
 
             <p className="cta-sub">

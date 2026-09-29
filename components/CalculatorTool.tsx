@@ -4,42 +4,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import Link from "next/link";
 import Tick from "@/components/Tick";
-
-// lossRate: share of what the business currently closes that we estimate is
-// lost at this reply speed. A default only: the full calculator lets the
-// visitor override it under "Adjust assumptions".
-const RESPONSE_BRACKETS = [
-  { value: "under-1m", label: "Under 1 minute", lossRate: 0 },
-  { value: "1-15m", label: "1 to 15 minutes", lossRate: 0.15 },
-  { value: "15-60m", label: "15 to 60 minutes", lossRate: 0.3 },
-  { value: "1-4h", label: "1 to 4 hours", lossRate: 0.45 },
-  { value: "4h-same-day", label: "4+ hours, same day", lossRate: 0.55 },
-  // TODO(Josh): confirm 0.65 default
-  { value: "next-day", label: "Next day or later", lossRate: 0.65 },
-] as const;
-
-type BracketValue = (typeof RESPONSE_BRACKETS)[number]["value"];
-
-// Example values so a result renders on first load. Marked as examples in the
-// UI until the visitor edits any field.
-const EXAMPLE = {
-  inquiries: 200,
-  bracket: "1-4h" as BracketValue,
-  dealValue: "15000",
-  closeRate: 20,
-  recoverablePct: 70,
-};
+import {
+  RESPONSE_BRACKETS,
+  EXAMPLE,
+  bracketDefaultPct,
+  estimate,
+  formatNaira,
+  type BracketValue,
+} from "@/lib/missedLeadCalc";
 
 const WA_NUMBER = "2348120907050";
-
-function bracketDefaultPct(value: BracketValue): number {
-  const bracket = RESPONSE_BRACKETS.find((b) => b.value === value);
-  return Math.round((bracket?.lossRate ?? 0) * 100);
-}
-
-function formatNaira(value: number): string {
-  return `₦${Math.round(value).toLocaleString("en-NG")}`;
-}
 
 function formatThousands(digits: string): string {
   return digits === "" ? "" : Number(digits).toLocaleString("en-NG");
@@ -80,12 +54,13 @@ export default function CalculatorTool({ compact = false }: CalculatorToolProps)
 
   const { closedRevenue, lostRevenue, recoverableRevenue } = useMemo(() => {
     if (!hasAllInputs) return { closedRevenue: 0, lostRevenue: 0, recoverableRevenue: 0 };
-    // Conservative: the loss rate is applied to revenue already closed, not
-    // to every inquiry.
-    const closed = monthlyInquiries * (closeRate / 100) * dealValueNumber;
-    const lost = closed * (lossPct / 100);
-    const recoverable = lost * (recoverablePct / 100);
-    return { closedRevenue: closed, lostRevenue: lost, recoverableRevenue: recoverable };
+    return estimate({
+      inquiries: monthlyInquiries,
+      closeRatePct: closeRate,
+      dealValue: dealValueNumber,
+      lossPct,
+      recoverablePct,
+    });
   }, [hasAllInputs, monthlyInquiries, closeRate, dealValueNumber, lossPct, recoverablePct]);
 
   // "How this is calculated" is open by default on desktop only. Rendered open

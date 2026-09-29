@@ -48,14 +48,8 @@ export default async function ComparisonPage({
           <div className="section-inner">
             <span className="hero-kicker">Voxitron vs {competitor.name}</span>
             <h1 id="hero-title" className="hero-title">
-              {competitor.heroTension[0]}
-              <br />
-              {competitor.heroTension[1]}
-              <br />
-              <span className="accent">
-                {competitor.heroTension[2]}
-                <br />
-                {competitor.heroTension[3]}
+              {competitor.heroTension[0]} {competitor.heroTension[1]} <span className="accent">
+                {competitor.heroTension[2]} {competitor.heroTension[3]}
               </span>
             </h1>
             <p className="hero-sub">{competitor.intro}</p>
@@ -74,9 +68,7 @@ export default async function ComparisonPage({
             <div className="section-inner-wide-header">
               <span className="section-label">AN HONEST LOOK</span>
               <h2 id="assessment-title" className="section-title">
-                Where {competitor.shortName}
-                <br />
-                <span className="accent">helps, and where it doesn&apos;t.</span>
+                Where {competitor.shortName} <span className="accent">helps, and where it doesn&apos;t.</span>
               </h2>
             </div>
 
@@ -113,9 +105,7 @@ export default async function ComparisonPage({
           <div className="section-inner">
             <span className="section-label">WHY CHOOSE VOXITRON INSTEAD</span>
             <h2 id="why-voxitron-title" className="section-title">
-              Built for your
-              <br />
-              <span className="accent">business, owned by you.</span>
+              Built for your <span className="accent">business, owned by you.</span>
             </h2>
 
             <ul className="offer-list" aria-label="Reasons to choose Voxitron">
@@ -145,9 +135,7 @@ export default async function ComparisonPage({
             <div className="section-inner-wide-header">
               <span className="section-label">FEATURE BY FEATURE</span>
               <h2 id="table-title" className="section-title">
-                Voxitron vs
-                <br />
-                <span className="accent">{competitor.shortName}.</span>
+                Voxitron vs <span className="accent">{competitor.shortName}.</span>
               </h2>
             </div>
 
@@ -229,9 +217,7 @@ export default async function ComparisonPage({
         <Reveal as="section" id="cta" aria-labelledby="cta-title-final">
           <div className="section-inner">
             <h2 id="cta-title-final" className="section-title">
-              Ready to compare this
-              <br />
-              with your actual workflow?
+              Ready to compare this with your actual workflow?
             </h2>
 
             <p className="cta-sub">

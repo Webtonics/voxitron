@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:alignment": "tsx scripts/check-alignment.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -23,6 +24,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
+    "playwright-core": "^1.63.0",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

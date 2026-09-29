@@ -47,11 +47,7 @@ export default function DiagnosticCentrePage() {
               <span className="hero-kicker">WhatsApp AI for diagnostic centres</span>
 
               <h1 id="hero-title" className="hero-title">
-                Your front desk
-                <br />
-                never
-                <br />
-                <span className="accent">closes.</span>
+                Your front desk never <span className="accent">closes.</span>
               </h1>
 
               <p className="hero-sub">
@@ -134,9 +130,7 @@ export default function DiagnosticCentrePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">CALCULATE</span>
               <h2 id="calculator-teaser-title" className="section-title">
-                What would slow
-                <br />
-                <span className="accent">replies cost you?</span>
+                What would slow <span className="accent">replies cost you?</span>
               </h2>
             </div>
             <CalculatorTool compact />
@@ -152,9 +146,7 @@ export default function DiagnosticCentrePage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                A patient asked about a test.
-                <br />
-                <span className="accent">Your front desk was closed.</span>
+                A patient asked about a test. <span className="accent">Your front desk was closed.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -182,9 +174,7 @@ export default function DiagnosticCentrePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">BEFORE AND AFTER</span>
               <h2 id="comparison-title" className="section-title">
-                What changes when
-                <br />
-                <span className="accent">WhatsApp runs itself.</span>
+                What changes when <span className="accent">WhatsApp runs itself.</span>
               </h2>
             </div>
 
@@ -264,9 +254,7 @@ export default function DiagnosticCentrePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                Every message answered,
-                <br />
-                <span className="accent">every time, automatically.</span>
+                Every message answered, <span className="accent">every time, automatically.</span>
               </h2>
               <p className="section-body">
                 Runs inside your WhatsApp Business number. Books tests, answers questions,
@@ -375,9 +363,7 @@ export default function DiagnosticCentrePage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
-                <br />
-                <span className="accent">Answer every message automatically.</span>
+                Set up once. <span className="accent">Answer every message automatically.</span>
               </h2>
             </div>
 
@@ -415,9 +401,7 @@ export default function DiagnosticCentrePage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions about the
-              <br />
-              WhatsApp Agent for labs.
+              Questions about the WhatsApp Agent for labs.
             </h2>
 
             <div className="faq-list" role="list">
@@ -472,9 +456,7 @@ export default function DiagnosticCentrePage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing patients
-              <br />
-              to a slow reply.
+              Stop losing patients to a slow reply.
             </h2>
 
             <p className="cta-sub">

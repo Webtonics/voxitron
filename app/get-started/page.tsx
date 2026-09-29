@@ -30,29 +30,33 @@ export default async function GetStartedPage({
       <Nav />
       <main>
         <section id="get-started" aria-labelledby="get-started-title" className="page-hero">
-          <div className="section-inner">
-            <span className="section-label">GET STARTED</span>
-            <h1 id="get-started-title" className="section-title">
-              Message us and watch it reply.
-            </h1>
-            <div className="section-body" style={{ marginBottom: "var(--space-6)" }}>
-              <p>
-                Try it 2 weeks. Only pay next month if it books. We build and connect it
-                for you, live on your existing number in about a week.
+          <div className="hero-inner">
+            <div className="hero-content">
+              <span className="section-label">GET STARTED</span>
+              <h1 id="get-started-title" className="section-title">
+                Message us and watch it reply.
+              </h1>
+              <div className="section-body" style={{ marginBottom: "var(--space-6)" }}>
+                <p>
+                  Try it 2 weeks. Only pay next month if it books. We build and connect it
+                  for you, live on your existing number in about a week.
+                </p>
+              </div>
+
+              <div className="cta-group">
+                <a href={WA_CTA_HREF} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                  Chat on WhatsApp
+                </a>
+              </div>
+
+              <p className="form-note" style={{ marginTop: "var(--space-6)" }}>
+                Prefer we message you first? Leave your name and WhatsApp number below.
               </p>
+
+              <LeadForm variant="minimal" defaultAgent={defaultAgent} submitLabel="Message me instead" />
             </div>
-
-            <div className="cta-group">
-              <a href={WA_CTA_HREF} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                Chat on WhatsApp
-              </a>
-            </div>
-
-            <p className="form-note" style={{ marginTop: "var(--space-6)" }}>
-              Prefer we message you first? Leave your name and WhatsApp number below.
-            </p>
-
-            <LeadForm variant="minimal" defaultAgent={defaultAgent} submitLabel="Message me instead" />
+            {/* TODO(Josh): real product capture */}
+            <div className="hero-aside" />
           </div>
         </section>
 
@@ -62,9 +66,7 @@ export default async function GetStartedPage({
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT HAPPENS NEXT</span>
               <h2 id="process-title" className="section-title">
-                From this message
-                <br />
-                <span className="accent">to a live agent.</span>
+                From this message <span className="accent">to a live agent.</span>
               </h2>
             </div>
 

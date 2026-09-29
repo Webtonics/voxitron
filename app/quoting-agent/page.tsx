@@ -42,11 +42,7 @@ export default function QuotingAgentPage() {
               <span className="hero-kicker">Automated quoting agent</span>
 
               <h1 id="hero-title" className="hero-title">
-                Quote sent
-                <br />
-                while you&apos;re
-                <br />
-                <span className="accent">on the job.</span>
+                Quote sent while you&apos;re <span className="accent">on the job.</span>
               </h1>
 
               <p className="hero-sub">
@@ -166,9 +162,7 @@ export default function QuotingAgentPage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                Every delayed quote is money
-                <br />
-                <span className="accent">someone else is making.</span>
+                Every delayed quote is money <span className="accent">someone else is making.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -195,9 +189,7 @@ export default function QuotingAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                From enquiry to professional
-                <br />
-                <span className="accent">quote, without you.</span>
+                From enquiry to professional <span className="accent">quote, without you.</span>
               </h2>
               <p className="section-body">
                 Collects the details, builds the quote, delivers it, on the job or asleep.
@@ -305,9 +297,7 @@ export default function QuotingAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
-                <br />
-                <span className="accent">Quote every job automatically.</span>
+                Set up once. <span className="accent">Quote every job automatically.</span>
               </h2>
             </div>
 
@@ -346,9 +336,7 @@ export default function QuotingAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">CLIENT RESULTS</span>
               <h2 id="testimonials-title" className="section-title">
-                What changed when quoting
-                <br />
-                <span className="accent">stopped being a bottleneck.</span>
+                What changed when quoting <span className="accent">stopped being a bottleneck.</span>
               </h2>
             </div>
 
@@ -403,9 +391,7 @@ export default function QuotingAgentPage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions about the
-              <br />
-              Quoting Agent.
+              Questions about the Quoting Agent.
             </h2>
 
             <div className="faq-list" role="list">
@@ -461,9 +447,7 @@ export default function QuotingAgentPage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing jobs
-              <br />
-              to a faster quote.
+              Stop losing jobs to a faster quote.
             </h2>
 
             <p className="cta-sub">

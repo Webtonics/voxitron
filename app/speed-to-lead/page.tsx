@@ -42,11 +42,7 @@ export default function SpeedToLeadPage() {
               <span className="hero-kicker">Speed to lead agent</span>
 
               <h1 id="hero-title" className="hero-title">
-                Respond
-                <br />
-                first.
-                <br />
-                <span className="accent">Win the job.</span>
+                Respond first. <span className="accent">Win the job.</span>
               </h1>
 
               <p className="hero-sub">
@@ -164,9 +160,7 @@ export default function SpeedToLeadPage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                You missed the call.
-                <br />
-                <span className="accent">You probably missed the job.</span>
+                You missed the call. <span className="accent">You probably missed the job.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -193,9 +187,7 @@ export default function SpeedToLeadPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                From missed call to
-                <br />
-                <span className="accent">live conversation, in seconds.</span>
+                From missed call to <span className="accent">live conversation, in seconds.</span>
               </h2>
               <p className="section-body">
                 Runs silently in the background. When a call goes unanswered, it acts
@@ -304,9 +296,7 @@ export default function SpeedToLeadPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
-                <br />
-                <span className="accent">Never miss a lead again.</span>
+                Set up once. <span className="accent">Never miss a lead again.</span>
               </h2>
             </div>
 
@@ -345,9 +335,7 @@ export default function SpeedToLeadPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">CLIENT RESULTS</span>
               <h2 id="testimonials-title" className="section-title">
-                What changed for businesses
-                <br />
-                <span className="accent">that stopped missing leads.</span>
+                What changed for businesses <span className="accent">that stopped missing leads.</span>
               </h2>
             </div>
 
@@ -402,9 +390,7 @@ export default function SpeedToLeadPage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions about the
-              <br />
-              Speed to Lead Agent.
+              Questions about the Speed to Lead Agent.
             </h2>
 
             <div className="faq-list" role="list">
@@ -459,9 +445,7 @@ export default function SpeedToLeadPage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop letting leads go
-              <br />
-              to the competition.
+              Stop letting leads go to the competition.
             </h2>
 
             <p className="cta-sub">

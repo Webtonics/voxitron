@@ -92,9 +92,7 @@ export default function IndustryShowcase() {
       <div className="industry-showcase-header">
         <div>
           <h2 id="industry-showcase-heading" className="industry-showcase-title">
-            One agent, tuned to
-            <br />
-            <span className="accent">how your industry works.</span>
+            One agent, tuned to <span className="accent">how your industry works.</span>
           </h2>
           <p className="industry-showcase-sub">
             Every industry has its own conversation patterns. Voxitron is already trained

@@ -23,17 +23,19 @@ export default function ContactPage() {
 
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
-          <div className="section-inner">
-            <span className="hero-kicker">Let&apos;s talk</span>
-            <h1 id="hero-title" className="hero-title">
-              Book a
-              <br />
-              <span className="accent">discovery call.</span>
-            </h1>
-            <p className="hero-sub">
-              Tell us about your business. We reply on WhatsApp first, usually within a
-              few hours.
-            </p>
+          <div className="hero-inner">
+            <div className="hero-content">
+              <span className="hero-kicker">Let&apos;s talk</span>
+              <h1 id="hero-title" className="hero-title">
+                Book a <span className="accent">discovery call.</span>
+              </h1>
+              <p className="hero-sub">
+                Tell us about your business. We reply on WhatsApp first, usually within a
+                few hours.
+              </p>
+            </div>
+            {/* TODO(Josh): real product capture */}
+            <div className="hero-aside" />
           </div>
         </section>
 
@@ -42,9 +44,7 @@ export default function ContactPage() {
           <div className="section-inner">
             <span className="section-label">TWO WAYS TO REACH US</span>
             <h2 id="methods-title" className="section-title">
-              Pick whichever
-              <br />
-              <span className="accent">is faster for you.</span>
+              Pick whichever <span className="accent">is faster for you.</span>
             </h2>
 
             <div className="contact-methods">
@@ -71,9 +71,7 @@ export default function ContactPage() {
           <div className="section-inner">
             <span className="section-label">OR TELL US ABOUT YOUR BUSINESS</span>
             <h2 id="get-started-title" className="section-title">
-              Start with
-              <br />
-              a few details.
+              Start with a few details.
             </h2>
 
             <LeadForm variant="discovery-call" defaultAgent="general" submitLabel="Book my call" />
@@ -86,9 +84,7 @@ export default function ContactPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT HAPPENS NEXT</span>
               <h2 id="process-title" className="section-title">
-                What happens
-                <br />
-                <span className="accent">after you reach out.</span>
+                What happens <span className="accent">after you reach out.</span>
               </h2>
             </div>
 
@@ -129,9 +125,7 @@ export default function ContactPage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Or just
-              <br />
-              message us now.
+              Or just message us now.
             </h2>
 
             <div className="cta-group">

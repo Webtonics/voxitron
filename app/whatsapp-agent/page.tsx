@@ -46,11 +46,7 @@ export default function WhatsAppAgentPage() {
               <span className="hero-kicker">WhatsApp AI for Nigerian businesses</span>
 
               <h1 id="hero-title" className="hero-title">
-                Never leave
-                <br />
-                a customer
-                <br />
-                <span className="accent">on read.</span>
+                Never leave a customer <span className="accent">on read.</span>
               </h1>
 
               <p className="hero-sub">
@@ -171,9 +167,7 @@ export default function WhatsAppAgentPage() {
             <div className="pain-split-text">
               <span className="section-label">THE PROBLEM</span>
               <h2 id="pain-title" className="section-title">
-                You were busy.
-                <br />
-                <span className="accent">They messaged someone else.</span>
+                You were busy. <span className="accent">They messaged someone else.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -200,9 +194,7 @@ export default function WhatsAppAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">BEFORE AND AFTER</span>
               <h2 id="comparison-title" className="section-title">
-                What changes when
-                <br />
-                <span className="accent">WhatsApp runs itself.</span>
+                What changes when <span className="accent">WhatsApp runs itself.</span>
               </h2>
             </div>
 
@@ -282,9 +274,7 @@ export default function WhatsAppAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT IT DOES</span>
               <h2 id="features-title" className="section-title">
-                Every message answered,
-                <br />
-                <span className="accent">every time, automatically.</span>
+                Every message answered, <span className="accent">every time, automatically.</span>
               </h2>
               <p className="section-body">
                 Runs inside your WhatsApp Business number. Replies, checks stock, and takes
@@ -397,9 +387,7 @@ export default function WhatsAppAgentPage() {
             <div>
               <span className="section-label">SEE IT WORKING</span>
               <h2 id="product-frame-title" className="section-title">
-                Every conversation,
-                <br />
-                <span className="accent">in one place.</span>
+                Every conversation, <span className="accent">in one place.</span>
               </h2>
               <p className="section-body">
                 Watch replies go out in real time. Nothing gets buried in your phone&apos;s
@@ -430,9 +418,7 @@ export default function WhatsAppAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW IT WORKS</span>
               <h2 id="how-title" className="section-title">
-                Set up once.
-                <br />
-                <span className="accent">Answer every message automatically.</span>
+                Set up once. <span className="accent">Answer every message automatically.</span>
               </h2>
             </div>
 
@@ -471,9 +457,7 @@ export default function WhatsAppAgentPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">CLIENT RESULTS</span>
               <h2 id="testimonials-title" className="section-title">
-                What changed for Nigerian
-                <br />
-                <span className="accent">businesses on WhatsApp.</span>
+                What changed for Nigerian <span className="accent">businesses on WhatsApp.</span>
               </h2>
             </div>
 
@@ -528,9 +512,7 @@ export default function WhatsAppAgentPage() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions about the
-              <br />
-              WhatsApp Business Agent.
+              Questions about the WhatsApp Business Agent.
             </h2>
 
             <div className="faq-list" role="list">
@@ -585,9 +567,7 @@ export default function WhatsAppAgentPage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing orders
-              <br />
-              to a slow reply.
+              Stop losing orders to a slow reply.
             </h2>
 
             <p className="cta-sub">

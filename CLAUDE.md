@@ -177,20 +177,29 @@ and `--font-mono` wrap. Heading hierarchy per page: `.hero-title` for the one re
 headings, and no subsection should out-rank the hero.
 
 ### Spacing
-Token scale: `--space-1` (4px) through `--space-10` (128px), plus `--container` (640px,
-the standard reading-column max-width), `--container-full` (1100px, wide grid/table
-sections), and `--gutter` (`clamp(20px, 5vw, 56px)`, the horizontal page margin used on
-every section wrapper). Always use the tokens, never a hardcoded pixel value for
-margin/padding/gap in global styles.
+Token scale: `--space-1` (4px) through `--space-10` (128px), plus `--container-full`
+(1200px, the one layout container), `--measure-text` (640px, reading column),
+`--measure-heading` (22ch), `--measure-body` (65ch), and `--gutter` (`clamp(20px, 5vw,
+56px)`, the horizontal page margin used on every section wrapper). Always use the tokens,
+never a hardcoded pixel value for margin/padding/gap in global styles.
+
+**One left spine.** Every section wrapper (`.section-inner`, `.section-inner-wide`,
+`.hero-inner`, etc.), the nav (`.site-nav-inner`) and the footer use `--container-full`
+with `margin-inline: auto`, so the logo, every heading and every grid start at the same
+x-coordinate on every page. Narrower blocks inside a section (headers, forms, FAQ, lists,
+body copy) cap their width with a measure token but stay left-aligned (`margin-inline: 0`),
+never re-centered. The final `#cta` band is the only centered page section.
+`npm run check:alignment` (Playwright, `scripts/check-alignment.ts`) measures this across
+14 pages at 1366/1440/1920/390; run it after any layout change.
 
 **Standard section pattern.** Most sections follow: a wrapper (`<section id="...">` or a
 `<Reveal as="section">`) with `padding: var(--space-9) var(--gutter)`, containing either
-`.section-inner` (640px, centered, single-column content) or `.section-inner-wide` (1100px,
-centered, for grids/tables). A wide section that still wants a narrow, centered
-label/title/intro above its grid nests a `.section-inner-wide-header` (640px, centered)
-inside the `.section-inner-wide` wrapper, rather than stretching the header across the
-full 1100px. Grids collapse to `grid-template-columns: 1fr` below their breakpoint
-(mobile-first CSS throughout: base rules are mobile, `@media (min-width: ...)` scales up).
+`.section-inner` (single-column content) or `.section-inner-wide` (grids/tables), both
+1200px on the spine. A wide section's label/title/intro sits in a
+`.section-inner-wide-header` (640px, left-aligned) above its grid. Headings never contain
+`<br>`: let them wrap (`text-wrap: balance` plus `--measure-heading`). Grids collapse to
+`grid-template-columns: 1fr` below their breakpoint (mobile-first CSS throughout: base
+rules are mobile, `@media (min-width: ...)` scales up).
 
 **Fixed-nav clearance.** `.site-nav` is `height: 56px`, fixed to the top. Every page's
 first section clears it with `padding-top: calc(56px + var(--space-9))` (the full

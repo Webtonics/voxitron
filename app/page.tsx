@@ -58,11 +58,7 @@ export default function Home() {
               <span className="hero-kicker">WhatsApp AI for Lagos businesses</span>
 
               <h1 id="hero-title" className="hero-title">
-                Never leave
-                <br />
-                a customer
-                <br />
-                <span className="accent">on read.</span>
+                Never leave a customer <span className="accent">on read.</span>
               </h1>
 
               <p className="hero-sub">
@@ -168,9 +164,7 @@ export default function Home() {
           <div className="section-inner-wide">
             <div className="section-inner-wide-header">
               <h2 id="what-title" className="section-title">
-                Every message answered,
-                <br />
-                <span className="accent">every time, automatically.</span>
+                Every message answered, <span className="accent">every time, automatically.</span>
               </h2>
               <p className="section-body">
                 Runs inside your WhatsApp Business number. Replies, checks stock, and
@@ -230,9 +224,7 @@ export default function Home() {
           <div className="section-inner-wide">
             <div className="section-inner-wide-header">
               <h2 id="mm-title" className="section-title">
-                Most customers don&apos;t type.
-                <br />
-                <span className="accent">They talk, or they snap a photo.</span>
+                Most customers don&apos;t type. <span className="accent">They talk, or they snap a photo.</span>
               </h2>
               <p className="section-body">
                 Voxitron listens to voice notes and reads photos, then does the same job it
@@ -314,9 +306,7 @@ export default function Home() {
           <div className="section-inner-wide">
             <div className="section-inner-wide-header">
               <h2 id="how-title" className="section-title">
-                Live on your existing number
-                <br />
-                <span className="accent">in 4 days.</span>
+                Live on your existing number <span className="accent">in 4 days.</span>
               </h2>
             </div>
 
@@ -352,9 +342,7 @@ export default function Home() {
             <div className="two-col-split">
               <div>
                 <h2 id="replied-title" className="section-title">
-                  Watch it happen
-                  <br />
-                  <span className="accent">before you finish reading this.</span>
+                  Watch it happen <span className="accent">before you finish reading this.</span>
                 </h2>
                 <p className="section-body">
                   Every conversation gets a real answer, not a queue. The reply lands the
@@ -375,9 +363,7 @@ export default function Home() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHILE YOU SLEEP</span>
               <h2 id="night-title" className="section-title">
-                Your messages don&apos;t stop
-                <br />
-                at closing time.
+                Your messages don&apos;t stop at closing time.
               </h2>
               <p className="section-body">
                 The enquiries that decide your month land at 11pm and 3am. The only
@@ -478,9 +464,7 @@ export default function Home() {
             <div className="section-inner-wide-header">
               <span className="section-label">CALCULATE</span>
               <h2 id="calculator-teaser-title" className="section-title">
-                What would slow
-                <br />
-                <span className="accent">replies cost you?</span>
+                What would slow <span className="accent">replies cost you?</span>
               </h2>
             </div>
             <CalculatorTool compact />
@@ -626,9 +610,7 @@ export default function Home() {
             <div>
               <span className="section-label">WHAT IS VOXITRON</span>
               <h2 id="what-is-this-title" className="section-title">
-                A WhatsApp agent,
-                <br />
-                <span className="accent">not a chatbot plugin.</span>
+                A WhatsApp agent, <span className="accent">not a chatbot plugin.</span>
               </h2>
               <p className="section-body">
                 Voxitron is an AI agent built for your business, not a rented seat on
@@ -663,9 +645,7 @@ export default function Home() {
           <div className="section-inner">
             <span className="section-label">FAQ</span>
             <h2 id="faq-title" className="section-title">
-              Questions people ask
-              <br />
-              before they sign up.
+              Questions people ask before they sign up.
             </h2>
 
             <div className="faq-list" role="list">
@@ -720,9 +700,7 @@ export default function Home() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Stop losing customers
-              <br />
-              to a slow reply.
+              Stop losing customers to a slow reply.
             </h2>
 
             <p className="cta-sub">

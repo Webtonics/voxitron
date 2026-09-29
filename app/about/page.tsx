@@ -24,17 +24,19 @@ export default function AboutPage() {
 
       <main>
         <section id="hero" aria-labelledby="hero-title" className="page-hero">
-          <div className="section-inner">
-            <span className="hero-kicker">Lagos-based</span>
-            <h1 id="hero-title" className="hero-title">
-              Not an agency
-              <br />
-              <span className="accent">with a Lagos page.</span>
-            </h1>
-            <p className="hero-sub">
-              Voxitron is built and run in Lagos, by a founder who saw slow WhatsApp
-              replies costing businesses real money every day.
-            </p>
+          <div className="hero-inner">
+            <div className="hero-content">
+              <span className="hero-kicker">Lagos-based</span>
+              <h1 id="hero-title" className="hero-title">
+                Not an agency <span className="accent">with a Lagos page.</span>
+              </h1>
+              <p className="hero-sub">
+                Voxitron is built and run in Lagos, by a founder who saw slow WhatsApp
+                replies costing businesses real money every day.
+              </p>
+            </div>
+            {/* TODO(Josh): real product capture */}
+            <div className="hero-aside" />
           </div>
         </section>
 
@@ -44,9 +46,7 @@ export default function AboutPage() {
             <div className="pain-split-text">
               <span className="section-label">WHY DATA ISOLATION BEATS RENTED SAAS</span>
               <h2 id="story-title" className="section-title">
-                Founded by
-                <br />
-                <span className="accent">Emmanuel Ezema.</span>
+                Founded by <span className="accent">Emmanuel Ezema.</span>
               </h2>
               <div className="section-body">
                 <p>
@@ -74,9 +74,7 @@ export default function AboutPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">WHAT WE BELIEVE</span>
               <h2 id="beliefs-title" className="section-title">
-                Three things we
-                <br />
-                <span className="accent">won&apos;t compromise on.</span>
+                Three things we <span className="accent">won&apos;t compromise on.</span>
               </h2>
             </div>
 
@@ -111,9 +109,7 @@ export default function AboutPage() {
           <div className="section-inner">
             <span className="section-label">WHAT WE WON&apos;T DO</span>
             <h2 id="wont-do-title" className="section-title">
-              Some lines
-              <br />
-              <span className="accent">we don&apos;t cross.</span>
+              Some lines <span className="accent">we don&apos;t cross.</span>
             </h2>
 
             <ul className="offer-list" aria-label="What Voxitron won't do">
@@ -151,9 +147,7 @@ export default function AboutPage() {
             <div className="section-inner-wide-header">
               <span className="section-label">HOW WE WORK WITH YOU</span>
               <h2 id="how-we-work-title" className="section-title">
-                No black box.
-                <br />
-                <span className="accent">You see everything.</span>
+                No black box. <span className="accent">You see everything.</span>
               </h2>
             </div>
 
@@ -183,9 +177,7 @@ export default function AboutPage() {
           <div className="section-inner">
             <span className="section-label">OUR COMMITMENTS TO YOU</span>
             <h2 id="commitments-title" className="section-title">
-              What you can
-              <br />
-              <span className="accent">hold us to.</span>
+              What you can <span className="accent">hold us to.</span>
             </h2>
 
             <ul className="commitments-list">
@@ -205,9 +197,7 @@ export default function AboutPage() {
         <Reveal as="section" id="cta" aria-labelledby="cta-title">
           <div className="section-inner">
             <h2 id="cta-title" className="section-title">
-              Want to meet
-              <br />
-              the team?
+              Want to meet the team?
             </h2>
 
             <p className="cta-sub">
