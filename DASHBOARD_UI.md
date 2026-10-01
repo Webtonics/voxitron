@@ -35,6 +35,7 @@ member on a client account for support purposes), see "Multi-customer switching"
 /dashboard                      Overview: stats strip + conversation list
 /dashboard/conversations/[id]   Single conversation thread
 /dashboard/leads                Leads list (only shown if the logged-in customer is Voxitron itself)
+/dashboard/whatsapp-button      WhatsApp button for the customer's website (built, see "WhatsApp button" below)
 /dashboard/embed                Embeddable website widget setup: register domains, copy snippet
 /widget                         The embeddable widget itself (public, unauthenticated, iframed on customer sites)
 /api/widget/chat                Public API the embedded widget calls (see "Embeddable website widget" below)
@@ -235,6 +236,40 @@ own embed:
 - Same core mechanic as Area50's: IIFE, reads the global variable, guards against
   double-init, injects a fixed-position iframe at `/widget?customer_id=<id>`, listens for
   a resize `postMessage`.
+
+---
+
+## WhatsApp button (`/dashboard/whatsapp-button`, built 2026-10-01)
+
+A lighter, separate feature from the web chat widget above, and the one actually built.
+The customer pastes one `<script>` tag on their site. It shows a floating WhatsApp
+button that opens WhatsApp with a greeting prefilled, to their Voxitron-connected
+number, so their existing agent replies. It needs no new AI backend and no n8n changes.
+`/dashboard/embed` stays reserved for the widget.
+
+- **Schema:** `supabase/migrations/025_whatsapp_button.sql`. `whatsapp_buttons` holds
+  one row per customer for v1. Its `id` is the public id in the snippet, never
+  `customer_id`. `whatsapp_button_clicks` stores no raw IP: `visitor_hash` is a daily
+  HMAC used only for rate limiting, and `page_path` has its query string stripped.
+- **Dashboard:** a sidebar item, "WhatsApp button". The page has a setup form (number,
+  greeting, label, position, WhatsApp green or brand hex, on/off) with a live preview.
+  After the first save it shows the install snippet and click stats (7 and 30 day
+  totals, daily chart, top pages). Saves go through `app/api/dashboard/whatsapp-button`,
+  which only accepts those fields.
+- **Number rule:** only active numbers whose `display_number` is in international format
+  are offered (`toWaDigits` in `lib/whatsappButton.ts`). A local-format number
+  ("0812...") would send visitors to the wrong chat, so it's rejected, not guessed at.
+  If no number qualifies, the page shows an honest empty state.
+- **Public routes:** `GET /api/whatsapp-button/[id]/config` is edge-cached for 60s, so
+  dashboard changes reach sites within a minute. It returns 404 when the button is off
+  or the number is unusable, and the script then renders nothing.
+  `POST /api/whatsapp-button/[id]/click` counts at most 3 clicks per visitor per minute.
+  Both allow any origin, since the number is already public on the customer's site.
+- **Script:** `public/wa-button.js`. It renders in a Shadow DOM (host CSS can't break it),
+  guards against a double paste, uses a real `<a>` link (works even if click tracking
+  fails) and fails silently. The proxy matcher skips `.js`, so it costs no auth check.
+- **Not in v1:** linking a click to the Inbox conversation it started. That would need
+  n8n to recognise the greeting, a separate backend change.
 
 ---
 

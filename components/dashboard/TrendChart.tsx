@@ -22,11 +22,19 @@ function buildPath(points: TrendPoint[]) {
   return { line, area, last: coords[coords.length - 1] };
 }
 
-export default function TrendChart({ points }: { points: TrendPoint[] }) {
+export default function TrendChart({
+  points,
+  emptyMessage = "Not enough conversations yet to chart a trend.",
+  subject = "Conversation volume",
+}: {
+  points: TrendPoint[];
+  emptyMessage?: string;
+  subject?: string;
+}) {
   if (points.length === 0 || points.every((p) => p.count === 0)) {
     return (
       <div className="dashboard-empty-state" style={{ textAlign: "left" }}>
-        <p>Not enough conversations yet to chart a trend.</p>
+        <p>{emptyMessage}</p>
       </div>
     );
   }
@@ -41,7 +49,7 @@ export default function TrendChart({ points }: { points: TrendPoint[] }) {
         height={HEIGHT}
         preserveAspectRatio="none"
         role="img"
-        aria-label={`Conversation volume trend, ${points[0].label} to ${points[points.length - 1].label}`}
+        aria-label={`${subject} trend, ${points[0].label} to ${points[points.length - 1].label}`}
       >
         <defs>
           <linearGradient id="trend-fill" x1="0" x2="0" y1="0" y2="1">

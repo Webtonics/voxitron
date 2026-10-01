@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: "overview" as const },
   { href: "/dashboard/inbox", label: "Inbox", icon: "inbox" as const },
   { href: "/dashboard/knowledge-base", label: "Knowledge base", icon: "kb" as const },
+  { href: "/dashboard/whatsapp-button", label: "WhatsApp button", icon: "button" as const },
   { href: "/dashboard/settings", label: "Settings", icon: "settings" as const },
 ];
 
@@ -20,7 +21,7 @@ const TEAM_NAV_ITEMS = [
   { href: "/dashboard/onboarding", label: "Onboarding", icon: "onboarding" as const },
 ];
 
-function NavIcon({ name }: { name: "overview" | "inbox" | "leads" | "kb" | "onboarding" | "settings" }) {
+function NavIcon({ name }: { name: "overview" | "inbox" | "leads" | "kb" | "button" | "onboarding" | "settings" }) {
   const paths: Record<typeof name, React.ReactNode> = {
     overview: (
       <path
@@ -54,6 +55,15 @@ function NavIcon({ name }: { name: "overview" | "inbox" | "leads" | "kb" | "onbo
         stroke="currentColor"
         strokeWidth="1.3"
         strokeLinecap="round"
+      />
+    ),
+    button: (
+      <path
+        d="M17 9.5C17 13.09 13.87 16 10 16C9.03 16 8.1 15.82 7.26 15.48L3.5 16.5L4.6 13.3C3.6 12.24 3 10.93 3 9.5C3 5.91 6.13 3 10 3C13.87 3 17 5.91 17 9.5Z M7 9.5H7.01M10 9.5H10.01M13 9.5H13.01"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     ),
     onboarding: (
