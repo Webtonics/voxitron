@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import WaFloat from "@/components/WaFloat";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = "G-4MHZ2D7DDF";
 
 // Display face per voxitron-brand-foundation section 4. Headings/section
 // titles reference var(--font-display) throughout globals.css, so this is the
@@ -49,6 +52,18 @@ export default function RootLayout({
         {children}
         <WaFloat />
         <Analytics />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
