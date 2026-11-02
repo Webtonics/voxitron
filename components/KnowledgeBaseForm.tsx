@@ -330,7 +330,7 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
             placeholder="https://docs.google.com/spreadsheets/d/..."
           />
           <p className="lead-form-hint">
-            The sheet must already be shared with Voxitron&apos;s Google service account.
+            Share the sheet with Voxitron&apos;s Google account first. We read the first tab.
           </p>
         </div>
       )}

@@ -50,6 +50,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
     );
   }
 
+  if (!process.env.META_ACCESS_TOKEN) {
+    console.error("META_ACCESS_TOKEN is not set, takeover replies can't be sent.");
+    return NextResponse.json(
+      { error: "Replying from this page isn't set up yet. Message Voxitron and we'll switch it on." },
+      { status: 503 }
+    );
+  }
+
   const metaResponse = await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
     method: "POST",
     headers: {
@@ -73,6 +81,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
       direction: "outbound",
       body: `[DELIVERY FAILED] ${message}`,
     });
+
+    // 131047: WhatsApp only allows free-text replies within 24 hours of the
+    // customer's last message. Retrying can't fix that, so say what will.
+    if (errorBody.includes("131047")) {
+      return NextResponse.json(
+        {
+          error:
+            "It's been over 24 hours since this customer last messaged, so WhatsApp won't deliver a free-text reply. Call them, or wait for them to message again.",
+        },
+        { status: 422 }
+      );
+    }
 
     return NextResponse.json({ error: "Couldn't send that message. Try again." }, { status: 502 });
   }
