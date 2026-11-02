@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -12,6 +12,8 @@ import RepliedThread from "@/components/RepliedThread";
 import CalculatorTool from "@/components/CalculatorTool";
 import IndustryShowcase from "@/components/IndustryShowcase";
 import IntegrationsGrid from "@/components/IntegrationsGrid";
+import FaqList from "@/components/FaqList";
+import type { FaqItem } from "@/lib/structuredData";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
@@ -23,22 +25,37 @@ const INDUSTRIES_SERVED = [
   "E-commerce Brands",
 ];
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Voxitron: WhatsApp AI Agents for Lagos Businesses",
   description:
-    "Voxitron builds WhatsApp AI agents that reply, book, and sell for Lagos businesses, real estate agencies, and diagnostic centres, 24/7. Your data is isolated and private per business, exportable any time. NDPA-aware. No lock-in.",
-  openGraph: {
-    title: "Voxitron: WhatsApp AI Agents for Lagos Businesses",
-    description:
-      "Every WhatsApp message answered in seconds, day and night. Built for Nigerian businesses. Your data stays isolated and private to your business.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com",
-    type: "website",
+    "Voxitron builds WhatsApp AI agents that reply, book, and sell for Lagos businesses, 24/7. Your data stays isolated and exportable. NDPA-aware, no lock-in.",
+  path: "/",
+  socialDescription:
+    "Every WhatsApp message answered in seconds, day and night. Built for Nigerian businesses. Your data stays isolated and private to your business.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Does this work with the regular WhatsApp Business app?",
+    answer:
+      "Yes. It connects to WhatsApp Business, the app you already use. No need to switch to anything unfamiliar.",
   },
-  alternates: {
-    canonical: "https://voxitron.com",
+  {
+    question: "Who owns the data and conversation history?",
+    answer:
+      "You do. Your data is isolated and private to your business, exportable any time. NDPA-aware. No lock-in.",
   },
-};
+  {
+    question: "Is this compliant with Nigeria's data protection law?",
+    answer:
+      "We build with NDPA 2023 in mind: data minimisation, clear consent, and infrastructure you control rather than a foreign platform's black box.",
+  },
+  {
+    question: "What if a customer wants to negotiate or asks something complex?",
+    answer:
+      "It flags the chat with the full conversation. You take over, and the customer never feels ignored.",
+  },
+];
 
 export default function Home() {
   return (
@@ -648,51 +665,7 @@ export default function Home() {
               Questions people ask before they sign up.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does this work with the regular WhatsApp Business app?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It connects to WhatsApp Business, the app you already use. No need to
-                  switch to anything unfamiliar.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Who owns the data and conversation history?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  You do. Your data is isolated and private to your business, exportable
-                  any time. NDPA-aware. No lock-in.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Is this compliant with Nigeria&apos;s data protection law?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  We build with NDPA 2023 in mind: data minimisation, clear consent, and
-                  infrastructure you control rather than a foreign platform&apos;s black box.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if a customer wants to negotiate or asks something complex?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the chat with the full conversation. You take over, and the
-                  customer never feels ignored.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

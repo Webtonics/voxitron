@@ -1,32 +1,61 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron responds to every missed enquiry in under 60 seconds and sends a branded valuation or viewing quote. Built for real estate agents and brokers.";
+
+export const metadata = pageMetadata({
   title: "AI Agents for Real Estate Agents & Brokers | Voxitron",
-  description:
-    "Voxitron responds to every missed enquiry in under 60 seconds and sends a branded valuation or viewing quote automatically. Built for real estate agents and brokers.",
-  openGraph: {
-    title: "AI Agents for Real Estate: Voxitron",
-    description:
-      "Never lose a listing enquiry to a slower agent. Voxitron replies, qualifies, and books viewings, 24/7.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/real-estate",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/real-estate",
+  socialTitle: "AI Agents for Real Estate: Voxitron",
+  socialDescription:
+    "Never lose a listing enquiry to a slower agent. Voxitron replies, qualifies, and books viewings, 24/7.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Can it handle enquiries about multiple listings at once?",
+    answer:
+      "Yes. It matches each enquiry to the right listing and responds with the correct details automatically.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/real-estate",
+  {
+    question: "Does it work with my existing CRM?",
+    answer:
+      "We connect to your existing calendar and lead tracking, so nothing falls through the cracks.",
   },
-};
+  {
+    question: "What if a buyer wants to negotiate on price?",
+    answer:
+      "It flags the conversation with full context. You take over for anything that needs a human judgment call.",
+  },
+  {
+    question: "Do I need a new phone number?",
+    answer:
+      "No. It runs on your existing number, the one buyers already have.",
+  },
+];
 
 export default function RealEstatePage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "AI Agents for Real Estate",
+          description: DESCRIPTION,
+          path: "/real-estate",
+          serviceType: "AI lead response and quoting agent",
+        })}
+      />
       <Nav activePage="real-estate" />
 
       <main>
@@ -339,50 +368,7 @@ export default function RealEstatePage() {
               Questions from real estate agents and brokers.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Can it handle enquiries about multiple listings at once?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It matches each enquiry to the right listing and responds with the
-                  correct details automatically.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does it work with my existing CRM?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  We connect to your existing calendar and lead tracking, so nothing falls
-                  through the cracks.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if a buyer wants to negotiate on price?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the conversation with full context. You take over for anything
-                  that needs a human judgment call.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Do I need a new phone number?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  No. It runs on your existing number, the one buyers already have.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

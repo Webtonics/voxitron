@@ -2,7 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import JsonLd from "@/components/JsonLd";
 import WaFloat from "@/components/WaFloat";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { siteJsonLd } from "@/lib/structuredData";
 import "./globals.css";
 
 const GA_MEASUREMENT_ID = "G-4MHZ2D7DDF";
@@ -29,11 +32,16 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://voxitron.com"),
+  metadataBase: new URL(SITE_URL),
   title: "Voxitron: AI Agents for Service Businesses",
   description:
     "Voxitron builds AI agents that respond to leads in seconds, send quotes automatically, and reply on WhatsApp 24/7.",
-  robots: "index, follow",
+  applicationName: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
 };
 
 export const viewport: Viewport = {
@@ -49,6 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bricolage.variable} ${hanken.variable} ${spaceMono.variable}`}>
       <body>
+        <JsonLd data={siteJsonLd()} />
         {children}
         <WaFloat />
         <Analytics />

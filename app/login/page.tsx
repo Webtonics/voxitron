@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import LoginForm from "@/components/LoginForm";
+import { NOINDEX } from "@/lib/site";
 
 export const metadata: Metadata = {
+  robots: NOINDEX,
   title: "Log In | Voxitron",
   description: "Log in to your Voxitron dashboard.",
 };

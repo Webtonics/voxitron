@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Privacy Policy | Voxitron",
   description: "How Voxitron collects, uses, stores, and protects your information, including WhatsApp messages processed through our AI agents.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

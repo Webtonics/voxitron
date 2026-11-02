@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -8,30 +9,59 @@ import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
 import CalculatorTool from "@/components/CalculatorTool";
 import PhoneMockup from "@/components/PhoneMockup";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron books tests, answers pricing questions, and tells patients when results are ready, inside WhatsApp, 24/7. Built for Nigerian diagnostic centres.";
+
+export const metadata = pageMetadata({
   title: "WhatsApp Agent for Diagnostic Centres & Labs | Voxitron",
-  description:
-    "Voxitron books tests, answers pricing questions, and lets patients know when results are ready, inside WhatsApp, 24/7. Built for Nigerian diagnostic centres and labs.",
-  openGraph: {
-    title: "WhatsApp Agent for Diagnostic Centres: Voxitron",
-    description:
-      "Your front desk never closes. Voxitron books tests, answers pricing questions, and follows up on results.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/diagnostic-centre",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/diagnostic-centre",
+  socialTitle: "WhatsApp Agent for Diagnostic Centres: Voxitron",
+  socialDescription:
+    "Your front desk never closes. Voxitron books tests, answers pricing questions, and follows up on results.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Does this work with the regular WhatsApp Business app?",
+    answer:
+      "Yes. It connects to WhatsApp Business, the app you already use. No need to switch to anything unfamiliar.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/diagnostic-centre",
+  {
+    question: "Can it send sensitive results over WhatsApp?",
+    answer:
+      "It notifies patients that results are ready and directs them to collect or view them securely. It doesn't send clinical results directly in chat.",
   },
-};
+  {
+    question: "Can it handle multiple test packages and pricing tiers?",
+    answer:
+      "Yes. Load your full test catalog and it quotes the right package automatically, including corporate or bundled panels.",
+  },
+  {
+    question: "What if a patient asks something clinical or complex?",
+    answer:
+      "It flags the chat with the full conversation. You or your clinical team take over, and the patient never feels ignored.",
+  },
+];
 
 export default function DiagnosticCentrePage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "WhatsApp Agent for Diagnostic Centres",
+          description: DESCRIPTION,
+          path: "/diagnostic-centre",
+          serviceType: "WhatsApp AI booking agent",
+          areaServed: "Nigeria",
+        })}
+      />
       <Nav activePage="diagnostic-centre" />
 
       <main>
@@ -404,51 +434,7 @@ export default function DiagnosticCentrePage() {
               Questions about the WhatsApp Agent for labs.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does this work with the regular WhatsApp Business app?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It connects to WhatsApp Business, the app you already use. No need to
-                  switch to anything unfamiliar.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Can it send sensitive results over WhatsApp?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It notifies patients that results are ready and directs them to collect or
-                  view them securely. It doesn&apos;t send clinical results directly in chat.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Can it handle multiple test packages and pricing tiers?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. Load your full test catalog and it quotes the right package
-                  automatically, including corporate or bundled panels.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if a patient asks something clinical or complex?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the chat with the full conversation. You or your clinical team
-                  take over, and the patient never feels ignored.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

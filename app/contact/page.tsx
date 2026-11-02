@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import { pageMetadata } from "@/lib/site";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import LeadForm from "@/components/LeadForm";
@@ -7,14 +7,12 @@ import LeadForm from "@/components/LeadForm";
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20book%20a%20discovery%20call";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Contact Voxitron | Book a Discovery Call",
   description:
     "Reach Voxitron on WhatsApp or by email, or book a free discovery call to scope your WhatsApp AI agent.",
-  alternates: {
-    canonical: "https://voxitron.com/contact",
-  },
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

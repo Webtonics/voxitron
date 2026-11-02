@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -7,30 +8,59 @@ import Reveal from "@/components/Reveal";
 import PhoneMockup from "@/components/PhoneMockup";
 import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron confirms orders, answers 'where is my order' automatically, and recovers abandoned carts, inside WhatsApp, 24/7. Built for Nigerian e-commerce brands.";
+
+export const metadata = pageMetadata({
   title: "WhatsApp Agent for E-commerce Brands | Voxitron",
-  description:
-    "Voxitron confirms orders, answers 'where is my order' automatically, and recovers abandoned carts, inside WhatsApp, 24/7. Built for Nigerian e-commerce brands.",
-  openGraph: {
-    title: "WhatsApp Agent for E-commerce Brands: Voxitron",
-    description:
-      "Confirm every order, kill WISMO tickets, and win back abandoned carts. Voxitron runs it all inside WhatsApp.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/ecommerce",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/ecommerce",
+  socialTitle: "WhatsApp Agent for E-commerce Brands: Voxitron",
+  socialDescription:
+    "Confirm every order, kill WISMO tickets, and win back abandoned carts. Voxitron runs it all inside WhatsApp.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Does it connect to my store and courier?",
+    answer:
+      "Yes. It pulls real order and tracking data, so \"where is my order\" gets answered from facts, not guesses.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/ecommerce",
+  {
+    question: "How does cart recovery actually work?",
+    answer:
+      "When a customer leaves items unpaid for, it sends a timely, non-pushy WhatsApp reminder with a direct link back to checkout.",
   },
-};
+  {
+    question: "What if a customer has a complaint or wants a refund?",
+    answer:
+      "It flags the chat with full order context. You take over for anything that needs a judgment call.",
+  },
+  {
+    question: "Do I need a new phone number?",
+    answer:
+      "No. It runs on your existing number, the one customers already have saved.",
+  },
+];
 
 export default function EcommercePage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "WhatsApp Agent for E-commerce Brands",
+          description: DESCRIPTION,
+          path: "/ecommerce",
+          serviceType: "WhatsApp AI order and support agent",
+          areaServed: "Nigeria",
+        })}
+      />
       <Nav activePage="ecommerce" />
 
       <main>
@@ -389,50 +419,7 @@ export default function EcommercePage() {
               Questions from real <span className="nowrap">e-commerce</span> brands.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does it connect to my store and courier?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It pulls real order and tracking data, so &quot;where is my order&quot;
-                  gets answered from facts, not guesses.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  How does cart recovery actually work?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  When a customer leaves items unpaid for, it sends a timely, non-pushy
-                  WhatsApp reminder with a direct link back to checkout.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if a customer has a complaint or wants a refund?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the chat with full order context. You take over for anything that
-                  needs a judgment call.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Do I need a new phone number?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  No. It runs on your existing number, the one customers already have saved.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

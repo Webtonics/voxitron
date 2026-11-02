@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import { pageMetadata } from "@/lib/site";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import LeadForm from "@/components/LeadForm";
@@ -7,11 +7,13 @@ import LeadForm from "@/components/LeadForm";
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20get%20started";
 
-export const metadata: Metadata = {
+// The ?agent= variants all canonicalise to /get-started.
+export const metadata = pageMetadata({
   title: "Get Started | Voxitron",
   description:
-    "Message Voxitron on WhatsApp and see the agent reply live. Try it 2 weeks, only pay next month if it books. We build and connect it for you, live on your existing number in about a week.",
-};
+    "Message Voxitron on WhatsApp and watch the agent reply live. Try it 2 weeks, only pay next month if it books. Live on your number in about a week.",
+  path: "/get-started",
+});
 
 const VALID_AGENTS = ["speed-to-lead", "quoting-agent", "both"] as const;
 

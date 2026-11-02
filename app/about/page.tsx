@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -8,14 +8,12 @@ import ImagePlaceholder from "@/components/ImagePlaceholder";
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20know%20more%20about%20the%20team";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "About Voxitron | Lagos-Based AI Agency",
   description:
     "Voxitron is a Lagos-based team building WhatsApp AI agents for Nigerian businesses, with data isolated and private to each business. Founded by Emmanuel Ezema.",
-  alternates: {
-    canonical: "https://voxitron.com/about",
-  },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

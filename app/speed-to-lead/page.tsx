@@ -1,32 +1,61 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron's Speed to Lead Agent responds to every missed call with a personalised text in under 60 seconds, 24/7. The first business to respond wins the job.";
+
+export const metadata = pageMetadata({
   title: "Speed to Lead Agent: Respond in Under 60 Seconds | Voxitron",
-  description:
-    "Voxitron's Speed to Lead Agent responds to every missed call with a personalised text in under 60 seconds, 24/7. The first business to respond wins the job.",
-  openGraph: {
-    title: "Speed to Lead Agent: Voxitron",
-    description:
-      "Never lose a lead to a slower competitor. Voxitron texts back every missed call in under 60 seconds, automatically.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/speed-to-lead",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/speed-to-lead",
+  socialTitle: "Speed to Lead Agent: Voxitron",
+  socialDescription:
+    "Never lose a lead to a slower competitor. Voxitron texts back every missed call in under 60 seconds, automatically.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Will the text actually sound like it came from me?",
+    answer:
+      "Yes. We write and test the messages together during setup until they match your voice.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/speed-to-lead",
+  {
+    question: "What if the customer replies?",
+    answer:
+      "Voxitron qualifies the lead and books an appointment if you're available. You're notified when it's done, or when it needs you.",
   },
-};
+  {
+    question: "Does it work with my existing phone number?",
+    answer:
+      "Yes. It connects to your existing mobile or landline. No new device, no setup.",
+  },
+  {
+    question: "How is this different from a voicemail or auto-reply?",
+    answer:
+      "Voicemail waits for a message most people won't leave. Voxitron proactively texts, qualifies the lead, and can book the job automatically.",
+  },
+];
 
 export default function SpeedToLeadPage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "Speed to Lead Agent",
+          description: DESCRIPTION,
+          path: "/speed-to-lead",
+          serviceType: "AI missed-call text-back agent",
+        })}
+      />
       <Nav activePage="speed-to-lead" />
 
       <main>
@@ -393,51 +422,7 @@ export default function SpeedToLeadPage() {
               Questions about the Speed to Lead Agent.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Will the text actually sound like it came from me?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. We write and test the messages together during setup until they match
-                  your voice.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if the customer replies?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Voxitron qualifies the lead and books an appointment if you&apos;re
-                  available. You&apos;re notified when it&apos;s done, or when it needs you.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does it work with my existing phone number?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It connects to your existing mobile or landline. No new device, no
-                  setup.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  How is this different from a voicemail or auto-reply?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Voicemail waits for a message most people won&apos;t leave. Voxitron
-                  proactively texts, qualifies the lead, and can book the job automatically.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

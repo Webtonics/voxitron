@@ -1,8 +1,12 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { NOINDEX } from "@/lib/site";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers } from "@/lib/dashboard/activeCustomer";
 import { VOXITRON_CUSTOMER_ID } from "@/lib/dashboard/voxitron";
 import Sidebar from "@/components/dashboard/Sidebar";
+
+export const metadata: Metadata = { robots: NOINDEX };
 
 export default async function DashboardLayout({
   children,

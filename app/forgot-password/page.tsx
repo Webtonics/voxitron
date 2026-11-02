@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import ForgotPasswordForm from "@/components/ForgotPasswordForm";
+import { NOINDEX } from "@/lib/site";
 
 export const metadata: Metadata = {
+  robots: NOINDEX,
   title: "Reset Password | Voxitron",
   description: "Reset the password for your Voxitron dashboard.",
 };

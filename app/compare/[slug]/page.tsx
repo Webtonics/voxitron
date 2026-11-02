@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import FaqList from "@/components/FaqList";
+import JsonLd from "@/components/JsonLd";
 import { COMPETITORS, getCompetitor } from "@/lib/compareData";
+import { pageMetadata } from "@/lib/site";
+import { breadcrumbJsonLd } from "@/lib/structuredData";
 
 export function generateStaticParams() {
   return COMPETITORS.map((c) => ({ slug: c.slug }));
@@ -19,13 +23,11 @@ export async function generateMetadata({
   const competitor = getCompetitor(slug);
   if (!competitor) return {};
 
-  return {
+  return pageMetadata({
     title: `Voxitron vs ${competitor.name} | Voxitron`,
     description: competitor.intro,
-    alternates: {
-      canonical: `https://voxitron.com/compare/${competitor.slug}`,
-    },
-  };
+    path: `/compare/${competitor.slug}`,
+  });
 }
 
 export default async function ComparisonPage({
@@ -39,8 +41,32 @@ export default async function ComparisonPage({
 
   const waHref = `https://wa.me/2348120907050?text=${encodeURIComponent(competitor.waMessage)}`;
 
+  const faq = [
+    {
+      question: `Should I just go with ${competitor.shortName} instead?`,
+      answer: `If ${competitor.goodAt[0].toLowerCase()} is what matters most to you, it might be the better fit. Voxitron is built for businesses that want to own their infrastructure and qualification logic long-term.`,
+    },
+    {
+      question: "Can I use both?",
+      answer:
+        "Some businesses do, at least during a transition. We're happy to talk through how that would work for you.",
+    },
+    {
+      question: "What if I'm still not sure?",
+      answer:
+        "Book a free discovery call. We'll tell you honestly if Voxitron isn't the right fit for your business.",
+    },
+  ];
+
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Compare", path: "/compare" },
+          { name: `Voxitron vs ${competitor.name}`, path: `/compare/${competitor.slug}` },
+        ])}
+      />
       <Nav />
 
       <main>
@@ -175,41 +201,7 @@ export default async function ComparisonPage({
               Still deciding?
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Should I just go with {competitor.shortName} instead?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  If {competitor.goodAt[0].toLowerCase()} is what matters most to you, it
-                  might be the better fit. Voxitron is built for businesses that want to own
-                  their infrastructure and qualification logic long-term.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Can I use both?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Some businesses do, at least during a transition. We&apos;re happy to talk
-                  through how that would work for you.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if I&apos;m still not sure?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Book a free discovery call. We&apos;ll tell you honestly if Voxitron isn&apos;t
-                  the right fit for your business.
-                </p>
-              </details>
-            </div>
+            <FaqList items={faq} />
           </div>
         </Reveal>
 

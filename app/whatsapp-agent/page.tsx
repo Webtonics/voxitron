@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -7,30 +8,59 @@ import Reveal from "@/components/Reveal";
 import DashboardMockup from "@/components/DashboardMockup";
 import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron's WhatsApp Business Agent replies, checks stock, books appointments, and takes orders, 24/7. Built for Nigerian businesses, Lagos to Abuja.";
+
+export const metadata = pageMetadata({
   title: "WhatsApp Business Agent for Nigerian Businesses | Voxitron",
-  description:
-    "Voxitron's WhatsApp Business Agent replies to customers, checks stock, books appointments, and takes orders inside WhatsApp, 24/7. Built for Nigerian businesses, from Lagos to Abuja and beyond.",
-  openGraph: {
-    title: "WhatsApp Business Agent: Voxitron",
-    description:
-      "Never leave a customer on read. Voxitron replies, checks stock, and takes orders inside WhatsApp, day and night.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/whatsapp-agent",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/whatsapp-agent",
+  socialTitle: "WhatsApp Business Agent: Voxitron",
+  socialDescription:
+    "Never leave a customer on read. Voxitron replies, checks stock, and takes orders inside WhatsApp, day and night.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Does this work with the regular WhatsApp Business app?",
+    answer:
+      "Yes. It connects to WhatsApp Business, the app you already use. No need to switch to anything unfamiliar.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/whatsapp-agent",
+  {
+    question: "Do I need a new phone number?",
+    answer:
+      "No. It runs on your existing WhatsApp Business number, the one your customers already message.",
   },
-};
+  {
+    question: "Can it actually see my real stock levels?",
+    answer:
+      "Yes, once connected to your inventory. You decide how much it checks automatically versus flags for you.",
+  },
+  {
+    question: "What if a customer wants to negotiate or asks something complex?",
+    answer:
+      "It flags the chat with the full conversation. You take over, and the customer never feels ignored.",
+  },
+];
 
 export default function WhatsAppAgentPage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "WhatsApp Business Agent",
+          description: DESCRIPTION,
+          path: "/whatsapp-agent",
+          serviceType: "WhatsApp AI agent",
+          areaServed: "Nigeria",
+        })}
+      />
       <Nav activePage="whatsapp-agent" />
 
       <main>
@@ -515,51 +545,7 @@ export default function WhatsAppAgentPage() {
               Questions about the WhatsApp Business Agent.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does this work with the regular WhatsApp Business app?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It connects to WhatsApp Business, the app you already use. No need to
-                  switch to anything unfamiliar.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Do I need a new phone number?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  No. It runs on your existing WhatsApp Business number, the one your
-                  customers already message.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Can it actually see my real stock levels?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes, once connected to your inventory. You decide how much it checks
-                  automatically versus flags for you.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if a customer wants to negotiate or asks something complex?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the chat with the full conversation. You take over, and the
-                  customer never feels ignored.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

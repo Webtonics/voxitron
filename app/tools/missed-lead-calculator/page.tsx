@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -9,14 +9,12 @@ import CalculatorPreview from "@/components/CalculatorPreview";
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%20just%20used%20the%20missed%20lead%20calculator";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Missed Lead Calculator | Voxitron",
   description:
     "See what slow WhatsApp replies could be costing your business, and what's realistically recoverable with a response time under 60 seconds.",
-  alternates: {
-    canonical: "https://voxitron.com/tools/missed-lead-calculator",
-  },
-};
+  path: "/tools/missed-lead-calculator",
+});
 
 export default function MissedLeadCalculatorPage() {
   return (

@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -8,14 +8,12 @@ import { COMPETITORS } from "@/lib/compareData";
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20talk%20through%20my%20options";
 
-export const metadata: Metadata = {
-  title: "Compare Voxitron | Voxitron",
+export const metadata = pageMetadata({
+  title: "Voxitron vs the Alternatives: Honest Comparisons | Voxitron",
   description:
     "Honest comparisons: Voxitron versus hiring a receptionist, a DIY n8n build, generic chatbot SaaS, and GoHighLevel-reseller agencies.",
-  alternates: {
-    canonical: "https://voxitron.com/compare",
-  },
-};
+  path: "/compare",
+});
 
 export default function ComparePage() {
   return (

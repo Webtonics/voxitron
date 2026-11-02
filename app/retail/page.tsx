@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -7,30 +8,59 @@ import Reveal from "@/components/Reveal";
 import PhoneMockup from "@/components/PhoneMockup";
 import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
 const WA_CTA_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20see%20the%20WhatsApp%20agent%20in%20action";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron answers stock and price questions and takes orders inside WhatsApp, 24/7, so you stop retyping the same reply. Built for Nigerian retailers.";
+
+export const metadata = pageMetadata({
   title: "WhatsApp Agent for Retailers & Shop Owners | Voxitron",
-  description:
-    "Voxitron answers stock and price questions, takes orders, and stops you retyping the same reply all day, inside WhatsApp, 24/7. Built for Nigerian retailers and market sellers.",
-  openGraph: {
-    title: "WhatsApp Agent for Retailers: Voxitron",
-    description:
-      "Every 'is this available' answered instantly. Voxitron checks stock, quotes prices, and takes orders while you serve the customer in front of you.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/retail",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/retail",
+  socialTitle: "WhatsApp Agent for Retailers: Voxitron",
+  socialDescription:
+    "Every 'is this available' answered instantly. Voxitron checks stock, quotes prices, and takes orders while you serve the customer in front of you.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Does it know what's actually in stock?",
+    answer:
+      "Yes. It checks your real inventory before replying, so it never confirms something you've already sold out of.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/retail",
+  {
+    question: "I sell on Instagram too, does it help there?",
+    answer:
+      "It runs on your WhatsApp Business number. Customers who message you from Instagram or anywhere else still get an instant reply once they're on WhatsApp.",
   },
-};
+  {
+    question: "What if a customer wants to negotiate the price?",
+    answer:
+      "It flags the chat with full context. You take over for anything that needs a judgment call.",
+  },
+  {
+    question: "Do I need a new phone number?",
+    answer:
+      "No. It runs on your existing number, the one customers already have saved.",
+  },
+];
 
 export default function RetailPage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "WhatsApp Agent for Retailers",
+          description: DESCRIPTION,
+          path: "/retail",
+          serviceType: "WhatsApp AI sales agent",
+          areaServed: "Nigeria",
+        })}
+      />
       <Nav activePage="retail" />
 
       <main>
@@ -387,51 +417,7 @@ export default function RetailPage() {
               Questions from real retailers and shop owners.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does it know what&apos;s actually in stock?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. It checks your real inventory before replying, so it never confirms
-                  something you&apos;ve already sold out of.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  I sell on Instagram too, does it help there?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It runs on your WhatsApp Business number. Customers who message you from
-                  Instagram or anywhere else still get an instant reply once they&apos;re on
-                  WhatsApp.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if a customer wants to negotiate the price?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the chat with full context. You take over for anything that needs
-                  a judgment call.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Do I need a new phone number?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  No. It runs on your existing number, the one customers already have saved.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 

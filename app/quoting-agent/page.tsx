@@ -1,32 +1,61 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StepIcon from "@/components/StepIcon";
 import WhatIcon from "@/components/WhatIcon";
+import FaqList from "@/components/FaqList";
+import { serviceJsonLd, type FaqItem } from "@/lib/structuredData";
 
-export const metadata: Metadata = {
+const DESCRIPTION =
+  "Voxitron's Automated Quoting Agent collects job details and sends a branded, professional quote via SMS or email, 24/7, without you lifting a finger.";
+
+export const metadata = pageMetadata({
   title: "Automated Quoting Agent: Professional Quotes on Autopilot | Voxitron",
-  description:
-    "Voxitron's Automated Quoting Agent collects job details and sends a branded, professional quote via SMS or email, 24/7, without you lifting a finger.",
-  openGraph: {
-    title: "Automated Quoting Agent: Voxitron",
-    description:
-      "Turn every enquiry into a professional quote, automatically. Voxitron collects the details and delivers a branded quote before your competitor picks up the phone.",
-    images: ["/assets/images/og-image.jpg"],
-    url: "https://voxitron.com/quoting-agent",
-    type: "website",
+  description: DESCRIPTION,
+  path: "/quoting-agent",
+  socialTitle: "Automated Quoting Agent: Voxitron",
+  socialDescription:
+    "Turn every enquiry into a professional quote, automatically. Voxitron collects the details and delivers a branded quote before your competitor picks up the phone.",
+});
+
+const FAQ: FaqItem[] = [
+  {
+    question: "Can it quote accurately without me reviewing every one?",
+    answer:
+      "For standard jobs, yes, using rules you define. Unusual jobs get flagged for your review before sending.",
   },
-  alternates: {
-    canonical: "https://voxitron.com/quoting-agent",
+  {
+    question: "Will the quotes look professional enough to send to clients?",
+    answer:
+      "Yes. Your template is built with your logo and brand colours during setup. You sign off before it goes live.",
   },
-};
+  {
+    question: "What if the customer asks something the agent can't answer?",
+    answer:
+      "It flags the enquiry with a full transcript, and tells the customer to expect a call. You follow up on the complex ones personally.",
+  },
+  {
+    question: "Does it work with my existing CRM or job management software?",
+    answer:
+      "Not on the standard plan today. CRM, job management, and payment integrations are on our roadmap and available as part of an Enterprise build. Talk to us if that's what you need.",
+  },
+];
 
 export default function QuotingAgentPage() {
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "Automated Quoting Agent",
+          description: DESCRIPTION,
+          path: "/quoting-agent",
+          serviceType: "AI quoting agent",
+        })}
+      />
       <Nav activePage="quoting-agent" />
 
       <main>
@@ -394,52 +423,7 @@ export default function QuotingAgentPage() {
               Questions about the Quoting Agent.
             </h2>
 
-            <div className="faq-list" role="list">
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Can it quote accurately without me reviewing every one?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  For standard jobs, yes, using rules you define. Unusual jobs get flagged
-                  for your review before sending.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Will the quotes look professional enough to send to clients?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Yes. Your template is built with your logo and brand colours during setup.
-                  You sign off before it goes live.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  What if the customer asks something the agent can&apos;t answer?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  It flags the enquiry with a full transcript, and tells the customer to
-                  expect a call. You follow up on the complex ones personally.
-                </p>
-              </details>
-
-              <details className="faq-item" role="listitem">
-                <summary>
-                  Does it work with my existing CRM or job management software?
-                  <span className="faq-icon" aria-hidden="true">+</span>
-                </summary>
-                <p className="faq-body">
-                  Not on the standard plan today. CRM, job management, and payment
-                  integrations are on our roadmap and available as part of an Enterprise
-                  build. Talk to us if that&apos;s what you need.
-                </p>
-              </details>
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </Reveal>
 
