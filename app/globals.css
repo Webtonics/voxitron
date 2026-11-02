@@ -4068,6 +4068,16 @@ details[open] .faq-icon { transform: rotate(45deg); }
   gap: var(--space-2);
 }
 
+/* Honeypot field (SpamTrap in LeadForm.tsx). Moved off-screen rather than
+   display:none, since many form bots skip fields that aren't rendered. */
+.lead-form-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .lead-form-label {
   font-family: var(--font-body);
   font-size: var(--text-xs);

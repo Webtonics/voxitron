@@ -163,7 +163,7 @@ export default async function WhatsappButtonPage({
   const headerList = await headers();
   const host = headerList.get("host");
   const proto = headerList.get("x-forwarded-proto") || "https";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (host ? `${proto}://${host}` : "https://voxitron.com");
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (host ? `${proto}://${host}` : "https://www.voxitron.com");
   const snippet = button
     ? `<script src="${siteUrl}/wa-button.js" data-button="${button.id}" async></script>`
     : null;

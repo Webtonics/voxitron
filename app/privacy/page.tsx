@@ -19,7 +19,7 @@ export default function PrivacyPage() {
             <h1 className="section-title">How we handle your information.</h1>
             <div className="section-body">
               <p>
-                Last updated August 22, 2026. This covers both visitors to our website and
+                Last updated November 2, 2026. This covers both visitors to our website and
                 anyone who messages a WhatsApp number that runs on Voxitron.
               </p>
             </div>
@@ -52,11 +52,17 @@ export default function PrivacyPage() {
             a customer, to set up your account.
           </p>
           <p>
-            We use Vercel Analytics to understand overall site traffic (pages viewed,
-            approximate location by country, device type). This is privacy-focused,
-            cookieless analytics: it does not use tracking cookies, does not build an
-            individual profile of you, and does not share data with advertisers. We do not
-            use any advertising or cross-site tracking pixels on this site.
+            We use two analytics tools to understand overall site traffic (pages viewed,
+            approximate location by country, device type, how you found us). Vercel
+            Analytics is cookieless and does not build an individual profile of you.
+            Google Analytics does set cookies, which let it tell a returning visitor from a
+            new one; Google processes that data under its own privacy policy. You can block
+            these cookies in your browser settings or with Google&apos;s Analytics opt-out
+            browser add-on, and the site works the same without them.
+          </p>
+          <p>
+            We use analytics only to improve this website. We do not use advertising or
+            remarketing pixels, and we do not share analytics data with advertisers.
           </p>
 
           <h2>WhatsApp messaging: what happens when you message an agent</h2>
@@ -133,6 +139,11 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Vercel</strong>: hosts this website and its cookieless analytics.
+            </li>
+            <li>
+              <strong>Google (Google Analytics)</strong>: measures website traffic using
+              cookies. It sees visits to our public pages only, never what you type into a
+              form, WhatsApp conversations, or the customer dashboard.
             </li>
           </ul>
           <p>

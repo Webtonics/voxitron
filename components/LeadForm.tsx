@@ -21,6 +21,19 @@ const MONTHLY_LEAD_BRACKETS = [
   "More than 500",
 ] as const;
 
+// Honeypot: hidden from people and screen readers, but form bots fill every
+// field they find. /api/leads drops any submission where it isn't empty.
+function SpamTrap() {
+  return (
+    <div className="lead-form-trap" aria-hidden="true">
+      <label>
+        Leave this empty
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+      </label>
+    </div>
+  );
+}
+
 type LeadFormProps = {
   defaultAgent?: InterestedAgent;
   /**
@@ -58,6 +71,7 @@ export default function LeadForm({
       monthlyWhatsappLeads: String(data.get("monthlyWhatsappLeads") || ""),
       notes: String(data.get("notes") || ""),
       minimal: variant === "minimal",
+      website: String(data.get("website") || ""),
     };
 
     try {
@@ -126,6 +140,8 @@ export default function LeadForm({
         </div>
 
         <input type="hidden" name="interestedAgent" value={defaultAgent || "general"} />
+
+        <SpamTrap />
 
         {status === "error" && (
           <p className="lead-form-error" role="alert">{errorMessage}</p>
@@ -255,6 +271,8 @@ export default function LeadForm({
           <input type="hidden" name="interestedAgent" value={defaultAgent || "general"} />
         </>
       )}
+
+      <SpamTrap />
 
       {status === "error" && (
         <p className="lead-form-error" role="alert">{errorMessage}</p>

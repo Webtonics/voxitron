@@ -4,7 +4,9 @@ import type { Metadata } from "next";
 // crawlers. Page metadata, JSON-LD, the sitemap and llms.txt all read from
 // here, so the facts can't drift apart between them.
 
-export const SITE_URL = "https://voxitron.com";
+// www is the primary domain on Vercel (the bare domain 308s to it), so
+// canonicals and sitemap URLs must use www or Google sees every one as a redirect.
+export const SITE_URL = "https://www.voxitron.com";
 export const SITE_NAME = "Voxitron";
 export const CONTACT_EMAIL = "hello@voxitron.com";
 export const WHATSAPP_NUMBER = "+2348120907050";
@@ -174,6 +176,11 @@ export const SITE_SECTIONS: { title: string; pages: SitePage[] }[] = [
         path: "/privacy",
         name: "Privacy policy",
         summary: "How Voxitron collects, stores, and protects data, including WhatsApp messages its agents process.",
+      },
+      {
+        path: "/terms",
+        name: "Terms of service",
+        summary: "The terms businesses agree to when they use Voxitron's AI agents and dashboard.",
       },
     ],
   },

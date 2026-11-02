@@ -13,7 +13,7 @@ type SourceType = "paste" | "website" | "file" | "sheet";
 const SOURCE_TYPE_OPTIONS: (SourceTypeOption & { value: SourceType })[] = [
   { value: "paste", label: "Paste text", hint: "Type or paste it in" },
   { value: "website", label: "Website page", hint: "Pull from a live URL" },
-  { value: "file", label: "File, PDF or Word", hint: "Upload a document" },
+  { value: "file", label: "PDF file", hint: "Upload a document" },
   { value: "sheet", label: "Google Sheet", hint: "Sync a shared sheet" },
 ];
 
@@ -310,9 +310,12 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
             id="kb-file"
             name="file"
             type="file"
-            accept=".pdf,.docx"
+            accept=".pdf"
             className="lead-form-input"
           />
+          <p className="lead-form-hint">
+            Word document? Save it as a PDF first (File, Save As, PDF).
+          </p>
         </div>
       )}
 

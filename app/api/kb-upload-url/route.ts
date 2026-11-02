@@ -5,7 +5,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 
 const KB_UPLOADS_BUCKET = "kb-uploads";
-const ALLOWED_EXTENSIONS = [".pdf", ".docx"];
+// .docx is deliberately absent: the n8n ingest workflow has no Word-to-PDF
+// converter set up, so a Word upload would be accepted here and then fail.
+const ALLOWED_EXTENSIONS = [".pdf"];
 const MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024; // 25MB
 
 function extensionOf(filename: string): string {
@@ -39,7 +41,10 @@ export async function POST(request: Request) {
 
   const extension = extensionOf(filename);
   if (!ALLOWED_EXTENSIONS.includes(extension)) {
-    return NextResponse.json({ error: "Only .pdf and .docx files are supported." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Only PDF files are supported. Save Word documents as a PDF first." },
+      { status: 400 }
+    );
   }
 
   if (!Number.isFinite(size) || size <= 0) {
