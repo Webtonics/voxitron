@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
+import CookieConsent from "@/components/CookieConsent";
 import JsonLd from "@/components/JsonLd";
 import WaFloat from "@/components/WaFloat";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -59,7 +59,7 @@ export default function RootLayout({
         {children}
         <WaFloat />
         <Analytics />
-        <GoogleAnalytics />
+        <CookieConsent />
       </body>
     </html>
   );

@@ -30,8 +30,8 @@ export default function TermsPage() {
         <div className="article-body">
           <h2>Who we are</h2>
           <p>
-            Voxitron (&quot;Voxitron,&quot; &quot;we,&quot; &quot;us&quot;) is a product by
-            Digitalwebtonics. These terms are between us and the business that uses Voxitron
+            Voxitron (&quot;Voxitron,&quot; &quot;we,&quot; &quot;us&quot;) is a product of
+            Webtonics Ltd. These terms are between us and the business that uses Voxitron
             (&quot;you&quot;). By using the service, or by agreeing a proposal or invoice with
             us, you accept them.
           </p>

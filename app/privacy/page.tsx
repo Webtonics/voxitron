@@ -29,9 +29,9 @@ export default function PrivacyPage() {
         <div className="article-body">
           <h2>Who we are</h2>
           <p>
-            Voxitron (&quot;Voxitron,&quot; &quot;we,&quot; &quot;us&quot;) builds AI agents
-            that reply to customers, book appointments, and take orders for businesses in
-            Nigeria, primarily over WhatsApp. This policy explains what information we
+            Voxitron (&quot;Voxitron,&quot; &quot;we,&quot; &quot;us&quot;), a product of Webtonics
+            Ltd, builds AI agents that reply to customers, book appointments, and take
+            orders for businesses in Nigeria, primarily over WhatsApp. This policy explains what information we
             collect, why, where it&apos;s stored, who else sees it, and what rights you
             have over it, whether you&apos;re a business considering Voxitron, a business
             we already work with, or a customer messaging one of our clients on WhatsApp.
@@ -56,9 +56,10 @@ export default function PrivacyPage() {
             approximate location by country, device type, how you found us). Vercel
             Analytics is cookieless and does not build an individual profile of you.
             Google Analytics does set cookies, which let it tell a returning visitor from a
-            new one; Google processes that data under its own privacy policy. You can block
-            these cookies in your browser settings or with Google&apos;s Analytics opt-out
-            browser add-on, and the site works the same without them.
+            new one; Google processes that data under its own privacy policy. Google
+            Analytics only runs if you choose Allow in our cookie banner, and the site works
+            the same if you don&apos;t. You can change your choice any time with Cookie
+            settings at the bottom of every page.
           </p>
           <p>
             We use analytics only to improve this website. We do not use advertising or

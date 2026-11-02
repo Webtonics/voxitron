@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Tick from "@/components/Tick";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 const WA_CONTACT_HREF =
   "https://wa.me/2348120907050?text=Hi%20Voxitron%2C%20I%27d%20like%20to%20know%20more";
@@ -80,6 +81,7 @@ export default function Footer() {
             </li>
             <li><Link href="/privacy">Privacy Policy</Link></li>
             <li><Link href="/terms">Terms of Service</Link></li>
+            <li><CookieSettingsButton /></li>
           </ul>
         </div>
       </div>

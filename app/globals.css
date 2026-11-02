@@ -3887,6 +3887,21 @@ details[open] .faq-icon { transform: rotate(45deg); }
 
 .footer-link-list a:hover { color: var(--paper); }
 
+/* "Cookie settings" is a button (it reopens the consent banner), styled to
+   read as one more footer link. */
+.footer-link-button {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--paper-muted);
+  transition: color 0.2s ease;
+}
+
+.footer-link-button:hover { color: var(--paper); }
+
 .footer-link-list .footer-wa-link {
   display: inline-flex;
   align-items: center;
@@ -4022,6 +4037,65 @@ details[open] .faq-icon { transform: rotate(45deg); }
 @keyframes wa-ping {
   0% { transform: scale(1); opacity: 0.55; }
   75%, 100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* =============================================
+   COOKIE BANNER (CookieConsent.tsx)
+   Phones: full width, parked just above the WhatsApp float (58px tall,
+   20px from the bottom). From 640px: a card bottom-left, clear of the
+   float on the right.
+   ============================================= */
+.cookie-banner {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: calc(20px + 58px + var(--space-3));
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+
+.cookie-banner-text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.cookie-banner-text a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.cookie-banner-actions .btn {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 640px) {
+  .cookie-banner {
+    left: 20px;
+    right: auto;
+    bottom: 20px;
+    max-width: 380px;
+  }
+
+  .cookie-banner-actions .btn {
+    flex: 0 0 auto;
+  }
 }
 
 @media (max-width: 480px) {
