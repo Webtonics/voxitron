@@ -45,11 +45,10 @@ Qdrant vector database.
 | Meta Business / WhatsApp Cloud API | Sending and receiving WhatsApp messages | Yes, has a free test tier |
 | OpenAI | AI replies, embeddings, image/voice understanding | Pay-as-you-go, no free tier |
 | Qdrant | Stores the knowledge base as searchable vectors | Yes, free tier or self-hosted |
-| CloudConvert | Only needed if you'll upload `.docx` (Word) files to the knowledge base | Yes, small free tier |
 | Google Cloud (for Google Sheets) | Only needed if you'll feed the knowledge base from a Google Sheet | Yes, free |
 
-If you don't plan to use Word file uploads or Google Sheets as knowledge sources, skip
-CloudConvert and Google Cloud entirely, everything else still works.
+If you don't plan to use Google Sheets as a knowledge source, skip Google Cloud
+entirely, everything else still works. Word files need nothing extra: the app reads them.
 
 ---
 
@@ -172,7 +171,7 @@ In n8n: **Settings (or Credentials icon) > Credentials > Add Credential**.
 | 3 | `OpenAi account` | OpenAI API | Your OpenAI API key ([platform.openai.com/api-keys](https://platform.openai.com/api-keys)) | Both workflows, AI replies + embeddings + image/voice understanding |
 | 4 | `QdrantApi account` | Qdrant Api | Your Qdrant instance URL + API key | Both workflows, the knowledge base itself |
 | 5 | `Qdrant API Key (Header Auth)` | Header Auth | Header name: `api-key` (or whatever your Qdrant instance expects). Value: the same Qdrant API key as #4 | KB ingest workflow only, one specific node that can't use the Qdrant-specific credential type, see note below |
-| 6 | `CloudConvert API Key (Header Auth)` | Header Auth | Header name: `Authorization`. Value: `Bearer <your CloudConvert API key>` | KB ingest workflow only, **skip this if you won't upload `.docx` files** |
+| 6 | `CloudConvert API Key (Header Auth)` | Header Auth | Not needed: the app reads `.docx` text itself | Skip it |
 | 7 | `Voxitron Google Sheets` | Google Sheets OAuth2 API | Follow n8n's OAuth prompt (sign in with the Google account you'll use), needs a Google Cloud project with the Sheets API enabled | KB ingest workflow only, **skip this if you won't use Google Sheets as a source** |
 
 **Why #5 exists alongside #4**: one node in the KB ingest workflow (deleting old
@@ -193,7 +192,7 @@ which one Area50 (a related prior project) uses if you want to share the same in
 ### 4.1 Import
 
 In n8n: **Workflows > Add workflow > Import from File** (or the **⋯** menu, depending on
-your n8n version) → select `n8n/voxitron-whatsapp-agent.json` from this repo.
+your n8n version), then select `n8n/voxitron-whatsapp-agent.json` from this repo.
 
 You should see a workflow named **"Voxitron WhatsApp Agent"** appear with 39 nodes.
 
@@ -272,7 +271,7 @@ help" for everything.
 
 ### 5.1 Import
 
-Same as before: **Workflows > Add workflow > Import from File** → select
+Same as before: **Workflows > Add workflow > Import from File**, then select
 `n8n/voxitron-kb-ingest.json`.
 
 You'll see a workflow named **"Voxitron KB Ingest"** with 33 nodes.
@@ -285,8 +284,8 @@ You'll see a workflow named **"Voxitron KB Ingest"** with 33 nodes.
 | Upsert to Qdrant | Qdrant Api (#4), reuse the same one from Part 4 |
 | Delete Existing Chunks for This Title | Header Auth: `Qdrant API Key (Header Auth)` (#5) |
 | Embeddings OpenAI | OpenAI API (#3), reuse the same one from Part 4 |
-| Convert DOCX to PDF (CloudConvert) | Header Auth: `CloudConvert API Key (Header Auth)` (#6) — **only if you're using Word file uploads** |
-| Read Google Sheet | `Voxitron Google Sheets` (#7) — **only if you're using Google Sheets** |
+| Convert DOCX to PDF (CloudConvert) | Leave it, it's never reached |
+| Read Google Sheet | `Voxitron Google Sheets` (#7), **only if you're using Google Sheets** |
 
 ### 5.3 One manual edit required: the Qdrant host URL
 
@@ -322,7 +321,7 @@ actually use, bookmark it. It's not meant to be public or shared with customers.
 |---|---|
 | Paste text | The **Content** box: paste raw text directly |
 | Website page | **Page URL**: one exact page, e.g. `https://example.com/pricing`. Does not crawl the rest of the site, submit each page separately if you need more than one |
-| File (PDF or Word) | **File**: upload a `.pdf` or `.docx`. Word files take a few extra seconds (they're converted to PDF first) |
+| File (PDF or Word) | **File**: upload a `.pdf` or `.docx`. The app reads Word files before they reach n8n |
 | Google Sheet | **Google Sheet URL**: the full URL. The sheet must be shared with the Google account your credential #7 authenticates as, or the read comes back empty |
 
 ### 5.6 Confirm it worked
@@ -345,7 +344,7 @@ one giant paste).
 | Message sent, nothing happens at all | Webhook not subscribed to `messages`, or token missing a permission | Redo step 4.5's subscription, recheck step 2.4's token scopes |
 | Agent replies but says it can't help / no knowledge | That customer has no knowledge base content yet | Do Part 5 for that customer |
 | "No customer found with id..." on ingest | Wrong or mistyped Customer ID | Re-run `select id, business_name from customers;` and copy exactly |
-| Word file upload fails | CloudConvert credential missing or account issue | Check credential #6 exists and the CloudConvert account is active |
+| Word file upload fails | It's an old `.doc`, or the file is only pictures | Save it as `.docx`, or type the details into Paste text |
 | Google Sheet read returns nothing | Sheet not shared with the right Google account | Share the sheet with whichever account authorized credential #7 |
 | Customer gets a reply twice for one message | Should not happen (deduplication was added specifically for this), if it does, check `messages.wa_message_id` is actually populating | `select wa_message_id from messages order by sent_at desc limit 5;` |
 | n8n execution fails with "Referenced node is unexecuted" | A workflow file was hand-edited and a node reference broke | This means the underlying JSON changed since this guide was written, don't hand-edit the exported JSON, re-import fresh |

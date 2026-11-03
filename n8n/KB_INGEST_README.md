@@ -22,8 +22,8 @@ picked via the "Source Type" dropdown:
    JavaScript, a page whose real content loads client-side will extract as empty or
    near-empty.
 3. **File (PDF or Word).** Upload a `.pdf` or `.docx` directly. PDFs are extracted
-   natively; `.docx` files are converted to PDF first via CloudConvert (see "Credentials"
-   below), then extracted the same way.
+   natively. `.docx` files never reach this workflow as a file: the app reads their text
+   (`lib/docxText.ts`, free, no CloudConvert) and sends it down the Paste text path.
 4. **Google Sheet.** A shared spreadsheet URL. Reads the first sheet's rows (header row as
    column names) and flattens each row into a `column: value | column: value` text line,
    useful for a business that keeps its price list or catalog in a spreadsheet.
@@ -78,7 +78,7 @@ credentials created, reuse the same ones here rather than creating duplicates:
 | `REPLACE_WITH_QDRANT_CREDENTIAL_ID` | QdrantApi | Same Qdrant instance the WhatsApp agent workflow's vector store node points at. Must be the same instance, a chunk embedded into the wrong Qdrant host is invisible to the agent. |
 | `REPLACE_WITH_OPENAI_CREDENTIAL_ID` | OpenAI API | Same OpenAI account as the WhatsApp agent workflow's embeddings node. Must use the same embedding model (`text-embedding-ada-002`) both places, mismatched embedding models are not comparable in the same collection. |
 | `REPLACE_WITH_QDRANT_HTTP_HEADER_CREDENTIAL_ID` | Header Auth | Used only by the "Delete Existing Chunks for This Title" node. n8n's `QdrantApi` credential type isn't usable by a plain HTTP Request node, so this is a second, separate credential carrying the same Qdrant API key, header name typically `api-key`. **Also replace `YOUR_QDRANT_HOST` in that node's URL** with the actual Qdrant instance hostname, same host the `QdrantApi` credential points at. |
-| `REPLACE_WITH_CLOUDCONVERT_CREDENTIAL_ID` | Header Auth | Added 2026-08-13, used only by "Convert DOCX to PDF (CloudConvert)". Needs a [CloudConvert](https://cloudconvert.com) account and API key, header name `Authorization`, value `Bearer <your CloudConvert API key>`. This is a new external dependency and a real per-conversion cost, a deliberate tradeoff chosen over leaving `.docx` unsupported (n8n's built-in file-extraction node handles PDF but not Word documents). Only triggered when a customer's uploaded file is `.docx`, not used at all for `.pdf` uploads or any other source type. |
+| `REPLACE_WITH_CLOUDCONVERT_CREDENTIAL_ID` | Header Auth | **Not needed since 2026-11-03**: the app reads `.docx` text itself, so this node is never reached. Originally used only by "Convert DOCX to PDF (CloudConvert)". Needs a [CloudConvert](https://cloudconvert.com) account and API key, header name `Authorization`, value `Bearer <your CloudConvert API key>`. This is a new external dependency and a real per-conversion cost, a deliberate tradeoff chosen over leaving `.docx` unsupported (n8n's built-in file-extraction node handles PDF but not Word documents). Only triggered when a customer's uploaded file is `.docx`, not used at all for `.pdf` uploads or any other source type. |
 | `REPLACE_WITH_GOOGLE_SHEETS_OAUTH_CREDENTIAL_ID` | Google Sheets OAuth2 API | Added 2026-08-13, used only by "Read Google Sheet". **Different setup flow from every other credential in these two workflows**: it's OAuth2, not an API key, so it needs a Google Cloud project with the Sheets API enabled and an OAuth consent flow completed once in n8n's credential setup UI, not just a pasted key. See [n8n's Google Sheets credential docs](https://docs.n8n.io/integrations/builtin/credentials/google/). **The target spreadsheet must be shared with (or owned by) whichever Google account you authenticate this credential as**, otherwise the read returns empty rows rather than a clear permission error, worth checking manually the first time a given customer's sheet is used. |
 
 ### 2. Activate the workflow and get the form URL
@@ -91,10 +91,10 @@ it is not meant to be public (no customer-facing link to it exists anywhere in t
 1. Find the customer's `id` in Supabase: `select id, business_name from customers;`
 2. Open the form URL, enter the Customer ID and a document title (e.g. "Price List",
    "Delivery Policy"), pick a Source Type, and fill in only the matching field:
-   - **Paste text** → the Content field
-   - **Website page** → the Page URL field (one exact URL)
-   - **File (PDF or Word)** → the File field (upload a `.pdf` or `.docx`)
-   - **Google Sheet** → the Google Sheet URL field (must already be shared with the
+   - **Paste text**: the Content field
+   - **Website page**: the Page URL field (one exact URL)
+   - **File (PDF or Word)**: the File field (upload a `.pdf` or `.docx`)
+   - **Google Sheet**: the Google Sheet URL field (must already be shared with the
      Google account n8n's Google Sheets credential authenticates as)
 3. Submit. The response confirms how many chunks were ingested, or a specific error if
    something didn't resolve (bad URL, unshared sheet, wrong file type, etc.).
@@ -125,9 +125,8 @@ it is not meant to be public (no customer-facing link to it exists anywhere in t
   alongside the actual content, not a targeted content-only extraction. Fine for most
   small business pages; a page with heavy chrome may need the CSS selector in "Extract
   Webpage Text" tightened per customer if retrieval quality suffers.
-- **DOCX support depends on an external paid service (CloudConvert).** If that account
-  lapses or the API key is revoked, `.docx` uploads fail while `.pdf` uploads continue
-  working fine (they never touch CloudConvert).
+- **Only `.docx` Word files, not old binary `.doc`.** The app's reader (mammoth) can't
+  open `.doc`, so the upload form rejects it and asks for `.docx` or PDF.
 - **Google Sheets reads only the first sheet (`gid=0`)** of a multi-tab spreadsheet, and
   flattens rows into simple text lines, not a smarter per-row or per-column strategy. A
   very large sheet (hundreds of rows) may need each row to land inside one chunk for

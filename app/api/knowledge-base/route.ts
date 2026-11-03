@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
+import { docxToText } from "@/lib/docxText";
 
 const KB_UPLOADS_BUCKET = "kb-uploads";
 const SIGNED_URL_TTL_SECONDS = 600; // 10 minutes: enough for n8n to fetch, short enough to be safe
@@ -123,16 +124,51 @@ export async function POST(request: Request) {
     }
 
     const admin = createAdminClient();
-    const { data: signedUrlData, error: signedUrlError } = await admin.storage
-      .from(KB_UPLOADS_BUCKET)
-      .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS);
 
-    if (signedUrlError || !signedUrlData?.signedUrl) {
-      console.error("Failed to create a signed URL for the uploaded KB source file:", signedUrlError);
-      return NextResponse.json({ error: "Couldn't prepare the uploaded file. Try again." }, { status: 500 });
+    // n8n can't read Word files, so the app pulls the text out here and
+    // sends it down n8n's "Paste text" path instead. See lib/docxText.ts.
+    if (storagePath.toLowerCase().endsWith(".docx")) {
+      const { data: file, error: downloadError } = await admin.storage
+        .from(KB_UPLOADS_BUCKET)
+        .download(storagePath);
+
+      if (downloadError || !file) {
+        console.error("Failed to download the uploaded Word file:", downloadError);
+        return NextResponse.json({ error: "Couldn't read the uploaded file. Try again." }, { status: 500 });
+      }
+
+      let text: string;
+      try {
+        text = await docxToText(Buffer.from(await file.arrayBuffer()));
+      } catch (error) {
+        console.error("Failed to read text from an uploaded Word file:", error);
+        return NextResponse.json(
+          { error: "Couldn't read that Word file. Save it as a PDF and try again." },
+          { status: 400 }
+        );
+      }
+
+      if (!text) {
+        return NextResponse.json(
+          { error: "That Word file has no text in it. If it's only pictures, type the details into Paste text." },
+          { status: 400 }
+        );
+      }
+
+      payload.sourceType = "paste";
+      payload.content = text;
+    } else {
+      const { data: signedUrlData, error: signedUrlError } = await admin.storage
+        .from(KB_UPLOADS_BUCKET)
+        .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS);
+
+      if (signedUrlError || !signedUrlData?.signedUrl) {
+        console.error("Failed to create a signed URL for the uploaded KB source file:", signedUrlError);
+        return NextResponse.json({ error: "Couldn't prepare the uploaded file. Try again." }, { status: 500 });
+      }
+
+      payload.fileUrl = signedUrlData.signedUrl;
     }
-
-    payload.fileUrl = signedUrlData.signedUrl;
   }
   // sourceType === "delete": no extra fields, customerId + documentTitle are enough.
 
