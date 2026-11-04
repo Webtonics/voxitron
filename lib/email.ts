@@ -49,3 +49,35 @@ export async function sendLeadConfirmationEmail({
     console.error("Failed to send lead confirmation email:", error);
   }
 }
+
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/** Tells Voxitron's team which customers' tools just stopped working. See app/api/cron/check-connections. */
+export async function sendConnectionAlertEmail(
+  broken: { businessName: string; tool: string; problem: string }[]
+): Promise<void> {
+  const resend = getClient();
+  if (!resend) {
+    console.warn("RESEND_API_KEY is not set, skipping connection alert email:", broken);
+    return;
+  }
+
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: "hello@voxitron.com",
+    subject: `${broken.length} customer connection${broken.length === 1 ? "" : "s"} just broke`,
+    html: `
+      <p>These stopped working in last night's check. The agents behind them are telling customers the team will confirm instead of answering.</p>
+      <ul>${broken
+        .map((item) => `<li><strong>${escapeHtml(item.businessName)}</strong>, ${escapeHtml(item.tool)}: ${escapeHtml(item.problem)}</li>`)
+        .join("")}</ul>
+      <p>Fix them on the Build screen: <a href="https://www.voxitron.com/dashboard/build">voxitron.com/dashboard/build</a></p>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send connection alert email:", error);
+  }
+}

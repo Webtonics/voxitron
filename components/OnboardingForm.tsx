@@ -157,7 +157,7 @@ export default function OnboardingForm() {
           ))}
         </select>
         <p className="lead-form-hint">
-          The customer row must already exist (created via supabase/onboarding-template.sql Steps 0-1).
+          New customers are added on the Build screen.
         </p>
       </div>
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
+import { serviceAccountEmail } from "@/lib/blocks/googleAuth";
 import KnowledgeBaseForm from "@/components/KnowledgeBaseForm";
 import DocumentList, { type DocumentRow } from "@/components/dashboard/DocumentList";
 import EmptyState from "@/components/dashboard/EmptyState";
@@ -142,7 +143,7 @@ export default async function KnowledgeBasePage({
           <p className="lead-form-hint" style={{ marginBottom: "var(--space-5)" }}>
             Prices, policies, FAQs, anything the agent should know.
           </p>
-          <KnowledgeBaseForm customerId={active.id} />
+          <KnowledgeBaseForm customerId={active.id} sheetShareEmail={serviceAccountEmail()} />
         </div>
       </div>
     </div>

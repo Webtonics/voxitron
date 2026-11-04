@@ -6,7 +6,7 @@ landing.zip
 # next.js
 .next/
 out/
-build/
+/build/
 
 # vercel
 .vercel

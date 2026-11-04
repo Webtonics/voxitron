@@ -20,7 +20,13 @@ const SOURCE_TYPE_OPTIONS: (SourceTypeOption & { value: SourceType })[] = [
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60; // 60 * 2s = 2 minutes: generous for a large file/website fetch, but don't poll forever
 
-export default function KnowledgeBaseForm({ customerId }: { customerId: string }) {
+export default function KnowledgeBaseForm({
+  customerId,
+  sheetShareEmail,
+}: {
+  customerId: string;
+  sheetShareEmail: string | null;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [messageDebug, setMessageDebug] = useState<unknown>(null);
@@ -330,7 +336,7 @@ export default function KnowledgeBaseForm({ customerId }: { customerId: string }
             placeholder="https://docs.google.com/spreadsheets/d/..."
           />
           <p className="lead-form-hint">
-            Share the sheet with Voxitron&apos;s Google account first. We read the first tab.
+            Share the sheet with {sheetShareEmail || "Voxitron's Google account"} as a Viewer first. We read the first tab.
           </p>
         </div>
       )}

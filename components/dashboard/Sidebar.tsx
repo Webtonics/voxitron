@@ -12,17 +12,40 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: "overview" as const },
   { href: "/dashboard/inbox", label: "Inbox", icon: "inbox" as const },
   { href: "/dashboard/knowledge-base", label: "Knowledge base", icon: "kb" as const },
+  { href: "/dashboard/connections", label: "Connections", icon: "connections" as const },
   { href: "/dashboard/whatsapp-button", label: "WhatsApp button", icon: "button" as const },
   { href: "/dashboard/settings", label: "Settings", icon: "settings" as const },
 ];
 
 const TEAM_NAV_ITEMS = [
   { href: "/dashboard/leads", label: "Leads", icon: "leads" as const },
+  { href: "/dashboard/build", label: "Build", icon: "build" as const },
   { href: "/dashboard/onboarding", label: "Onboarding", icon: "onboarding" as const },
 ];
 
-function NavIcon({ name }: { name: "overview" | "inbox" | "leads" | "kb" | "button" | "onboarding" | "settings" }) {
+function NavIcon({
+  name,
+}: {
+  name: "overview" | "inbox" | "leads" | "kb" | "connections" | "button" | "build" | "onboarding" | "settings";
+}) {
   const paths: Record<typeof name, React.ReactNode> = {
+    connections: (
+      <path
+        d="M8 12L12 8M6.5 9.5L4.8 11.2C3.7 12.3 3.7 14 4.8 15.2C5.9 16.3 7.7 16.3 8.8 15.2L10.5 13.5M9.5 6.5L11.2 4.8C12.3 3.7 14 3.7 15.2 4.8C16.3 5.9 16.3 7.7 15.2 8.8L13.5 10.5"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+    build: (
+      <path
+        d="M3 8H17V16C17 16.55 16.55 17 16 17H4C3.45 17 3 16.55 3 16V8Z M6 8V5.5C6 5.22 6.22 5 6.5 5H8.5C8.78 5 9 5.22 9 5.5V8 M11 8V5.5C11 5.22 11.22 5 11.5 5H13.5C13.78 5 14 5.22 14 5.5V8"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinejoin="round"
+      />
+    ),
     overview: (
       <path
         d="M3 12L5 10L9 14L14 7L17 10M3 17H17"

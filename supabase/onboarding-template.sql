@@ -1,4 +1,6 @@
 -- Voxitron customer onboarding template.
+-- The normal way to add a customer is now "Add a customer" on /dashboard/build.
+-- This file stays for when the dashboard can't be reached.
 -- Copy this whole file into the Supabase SQL Editor for each new customer
 -- (including Voxitron itself, as tenant #1), fill in the placeholders marked
 -- <<LIKE_THIS>>, and run it top to bottom. Requires 002_conversations.sql to

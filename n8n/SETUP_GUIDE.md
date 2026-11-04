@@ -45,10 +45,10 @@ Qdrant vector database.
 | Meta Business / WhatsApp Cloud API | Sending and receiving WhatsApp messages | Yes, has a free test tier |
 | OpenAI | AI replies, embeddings, image/voice understanding | Pay-as-you-go, no free tier |
 | Qdrant | Stores the knowledge base as searchable vectors | Yes, free tier or self-hosted |
-| Google Cloud (for Google Sheets) | Only needed if you'll feed the knowledge base from a Google Sheet | Yes, free |
+| Google Cloud service account | Lets the app read customers' Sheets and Calendars. n8n never logs in to Google | Yes, free |
 
-If you don't plan to use Google Sheets as a knowledge source, skip Google Cloud
-entirely, everything else still works. Word files need nothing extra: the app reads them.
+Without the service account, everything still works except Google Sheets and Google
+Calendar. Word files need nothing extra: the app reads them.
 
 ---
 
@@ -172,7 +172,7 @@ In n8n: **Settings (or Credentials icon) > Credentials > Add Credential**.
 | 4 | `QdrantApi account` | Qdrant Api | Your Qdrant instance URL + API key | Both workflows, the knowledge base itself |
 | 5 | `Qdrant API Key (Header Auth)` | Header Auth | Header name: `api-key` (or whatever your Qdrant instance expects). Value: the same Qdrant API key as #4 | KB ingest workflow only, one specific node that can't use the Qdrant-specific credential type, see note below |
 | 6 | `CloudConvert API Key (Header Auth)` | Header Auth | Not needed: the app reads `.docx` text itself | Skip it |
-| 7 | `Voxitron Google Sheets` | Google Sheets OAuth2 API | Follow n8n's OAuth prompt (sign in with the Google account you'll use), needs a Google Cloud project with the Sheets API enabled | KB ingest workflow only, **skip this if you won't use Google Sheets as a source** |
+| 7 | `Voxitron Google Sheets` | Google Sheets OAuth2 API | Not needed: the app reads Sheets with its service account | Skip it |
 
 **Why #5 exists alongside #4**: one node in the KB ingest workflow (deleting old
 knowledge-base entries before replacing them) calls Qdrant's raw web API directly instead
@@ -285,7 +285,6 @@ You'll see a workflow named **"Voxitron KB Ingest"** with 33 nodes.
 | Delete Existing Chunks for This Title | Header Auth: `Qdrant API Key (Header Auth)` (#5) |
 | Embeddings OpenAI | OpenAI API (#3), reuse the same one from Part 4 |
 | Convert DOCX to PDF (CloudConvert) | Leave it, it's never reached |
-| Read Google Sheet | `Voxitron Google Sheets` (#7), **only if you're using Google Sheets** |
 
 ### 5.3 One manual edit required: the Qdrant host URL
 
@@ -322,7 +321,7 @@ actually use, bookmark it. It's not meant to be public or shared with customers.
 | Paste text | The **Content** box: paste raw text directly |
 | Website page | **Page URL**: one exact page, e.g. `https://example.com/pricing`. Does not crawl the rest of the site, submit each page separately if you need more than one |
 | File (PDF or Word) | **File**: upload a `.pdf` or `.docx`. The app reads Word files before they reach n8n |
-| Google Sheet | **Google Sheet URL**: the full URL. The sheet must be shared with the Google account your credential #7 authenticates as, or the read comes back empty |
+| Google Sheet | **Google Sheet URL**: the full URL. The sheet must be shared with the service account's email (shown on the form), or the app says so straight away |
 
 ### 5.6 Confirm it worked
 
@@ -345,7 +344,7 @@ one giant paste).
 | Agent replies but says it can't help / no knowledge | That customer has no knowledge base content yet | Do Part 5 for that customer |
 | "No customer found with id..." on ingest | Wrong or mistyped Customer ID | Re-run `select id, business_name from customers;` and copy exactly |
 | Word file upload fails | It's an old `.doc`, or the file is only pictures | Save it as `.docx`, or type the details into Paste text |
-| Google Sheet read returns nothing | Sheet not shared with the right Google account | Share the sheet with whichever account authorized credential #7 |
+| Google Sheet can't be read | Sheet not shared with the service account | Share it with the email shown on the form, as a Viewer |
 | Customer gets a reply twice for one message | Should not happen (deduplication was added specifically for this), if it does, check `messages.wa_message_id` is actually populating | `select wa_message_id from messages order by sent_at desc limit 5;` |
 | n8n execution fails with "Referenced node is unexecuted" | A workflow file was hand-edited and a node reference broke | This means the underlying JSON changed since this guide was written, don't hand-edit the exported JSON, re-import fresh |
 
@@ -364,3 +363,24 @@ one giant paste).
 If you hit something this guide doesn't explain, the deeper-detail docs are
 `n8n/README.md` (WhatsApp agent internals), `n8n/KB_INGEST_README.md` (ingest internals
 and known limitations), and `MASTER_PROMPT.md` (the full project history and decisions).
+
+---
+
+## Connecting a customer's own tools (Lego blocks)
+
+The agent's Stock, Bookings and Customer records tools are HTTP calls to the app
+(`/api/agent-tools/*`). The app decides which of the customer's tools answers, so n8n
+holds no Google or CRM logins and needs no change when a new tool is added. See
+`lib/blocks/types.ts`. Each customer's tools are plugged in on `/dashboard/build`.
+
+Set these once, in Vercel:
+
+| Variable | What it is |
+|---|---|
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | The whole key file of a Google Cloud service account, in a project with the Sheets API and Calendar API enabled |
+| `TOOL_CREDENTIALS_KEY` | Encrypts customers' API keys. Generate it once with `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
+| `CRON_SECRET` | Any long random string. Lets Vercel run the nightly connection check |
+| `VOXITRON_N8N_SHARED_SECRET` | Same value as the n8n environment variable of the same name |
+
+Customers then share their sheet (Viewer) or calendar ("Make changes to events") with the
+service account's email, which the Build screen shows.

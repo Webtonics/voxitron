@@ -395,6 +395,23 @@ yet-built code, same relationship `MASTER_PROMPT.md` has to the rest of the migr
 
 ---
 
+## Agent Blocks (Lego)
+
+Each customer's WhatsApp agent plugs into the tools that customer already uses. A block is
+something the agent can do (`stock`, `bookings`, `crm`). A provider is one tool that can do
+it (Google Sheets, Google Calendar, HubSpot). A `customer_tools` row is one provider plugged
+in for one customer, with one provider per block.
+
+- Providers live in `lib/blocks/`. A new tool means one provider file written against
+  `lib/blocks/types.ts` and one line in `registry.ts`. No schema, n8n or agent change.
+- n8n's tools are thin HTTP calls to `/api/agent-tools/*`. n8n holds no Google or CRM logins.
+- `customerId` and `phone` are fixed by n8n from the incoming message, never chosen by the AI.
+- Voxitron's team plugs blocks in on `/dashboard/build`. Customers see status on
+  `/dashboard/connections`. Customer API keys are encrypted (`lib/blocks/secrets.ts`).
+- Don't add per-tool columns to `customers`. That's what `customer_tools` exists to avoid.
+
+---
+
 ## Future Pages (Planned)
 
 Each niche gets its own landing page, same design system, different copy, as a new route

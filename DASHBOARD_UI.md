@@ -35,6 +35,8 @@ member on a client account for support purposes), see "Multi-customer switching"
 /dashboard                      Overview: stats strip + conversation list
 /dashboard/conversations/[id]   Single conversation thread
 /dashboard/leads                Leads list (only shown if the logged-in customer is Voxitron itself)
+/dashboard/connections          Which tools the customer's agent is plugged into, and whether each works
+/dashboard/build                Voxitron team only: add a customer, plug in their tools (see "Agent Blocks" in CLAUDE.md)
 /dashboard/whatsapp-button      WhatsApp button for the customer's website (built, see "WhatsApp button" below)
 /dashboard/embed                Embeddable website widget setup: register domains, copy snippet
 /widget                         The embeddable widget itself (public, unauthenticated, iframed on customer sites)

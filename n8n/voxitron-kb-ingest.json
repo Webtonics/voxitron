@@ -37,7 +37,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const sourceType = $json['Source Type'];\nconst content = ($json['Content'] || '').trim();\nconst pageUrl = ($json['Page URL'] || '').trim();\nconst sheetUrl = ($json['Google Sheet URL'] || '').trim();\nconst hasFile = Boolean($binary && $binary['File'] && $binary['File'].fileName) || Boolean(($json.fileUrl || '').trim());\n\nlet valid = false;\nlet reason = '';\n\nif (sourceType === 'Paste text') {\n  valid = content.length > 0;\n  reason = 'Source Type is \"Paste text\" but the Content field is empty.';\n} else if (sourceType === 'Website page') {\n  valid = /^https?:\\/\\//.test(pageUrl);\n  reason = 'Source Type is \"Website page\" but Page URL is empty or not a valid http(s) URL.';\n} else if (sourceType === 'File (PDF or Word)') {\n  valid = hasFile;\n  reason = 'Source Type is \"File (PDF or Word)\" but no file was attached.';\n} else if (sourceType === 'Google Sheet') {\n  valid = /^https?:\\/\\/docs\\.google\\.com\\/spreadsheets\\//.test(sheetUrl);\n  reason = 'Source Type is \"Google Sheet\" but Google Sheet URL is empty or not a docs.google.com/spreadsheets link.';\n} else if (sourceType === 'Delete Document') {\n  valid = true; // no extra fields needed, Customer ID + Document title already validated\n} else if (sourceType === 'Monday Board') {\n  valid = Boolean(($json.mondayApiToken || '').trim()) && Boolean(($json.mondayBoardId || '').trim());\n  if (!valid) reason = 'Monday Board requires mondayApiToken and mondayBoardId';\n} else {\n  reason = 'Unrecognized Source Type: ' + sourceType;\n}\n\nreturn [{ json: { ...$json, sourceValid: valid, sourceValidationReason: reason } }];"
+        "jsCode": "const sourceType = $json['Source Type'];\nconst content = ($json['Content'] || '').trim();\nconst pageUrl = ($json['Page URL'] || '').trim();\nconst sheetUrl = ($json['Google Sheet URL'] || '').trim();\nconst hasFile = Boolean($binary && $binary['File'] && $binary['File'].fileName) || Boolean(($json.fileUrl || '').trim());\n\nlet valid = false;\nlet reason = '';\n\nif (sourceType === 'Paste text') {\n  valid = content.length > 0;\n  reason = 'Source Type is \"Paste text\" but the Content field is empty.';\n} else if (sourceType === 'Website page') {\n  valid = /^https?:\\/\\//.test(pageUrl);\n  reason = 'Source Type is \"Website page\" but Page URL is empty or not a valid http(s) URL.';\n} else if (sourceType === 'File (PDF or Word)') {\n  valid = hasFile;\n  reason = 'Source Type is \"File (PDF or Word)\" but no file was attached.';\n} else if (sourceType === 'Google Sheet') {\n  valid = /^https?:\\/\\/docs\\.google\\.com\\/spreadsheets\\//.test(sheetUrl);\n  reason = 'Source Type is \"Google Sheet\" but Google Sheet URL is empty or not a docs.google.com/spreadsheets link.';\n} else if (sourceType === 'Google Sheet') {\n  valid = true; // connection itself is checked downstream, by Load Sheets Connection\n} else if (sourceType === 'Delete Document') {\n  valid = true; // no extra fields needed, Customer ID + Document title already validated\n} else if (sourceType === 'Monday Board') {\n  valid = Boolean(($json.mondayApiToken || '').trim()) && Boolean(($json.mondayBoardId || '').trim());\n  if (!valid) reason = 'Monday Board requires mondayApiToken and mondayBoardId';\n} else {\n  reason = 'Unrecognized Source Type: ' + sourceType;\n}\n\nreturn [{ json: { ...$json, sourceValid: valid, sourceValidationReason: reason } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -600,7 +600,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const rows = $input.all().map(item => item.json);\nif (rows.length === 0) {\n  return [{ json: { resolvedContent: '' } }];\n}\n\nconst columns = Object.keys(rows[0]).filter(k => k !== 'row_number');\n\n// Flatten each row into a plain-text line, e.g. \"Product: Widget | Price: 5000 | Stock: 12\"\n// rather than dumping raw JSON, since this text is what the AI reads at answer time,\n// not parsed as structured data downstream.\nconst lines = rows.map(row => columns.map(col => `${col}: ${row[col]}`).join(' | '));\n\nreturn [{ json: { resolvedContent: lines.join('\\n') }, pairedItem: { item: 0 } }];"
+        "jsCode": "const rows = $input.all().map(item => item.json);\nif (rows.length === 0) {\n  return [{ json: { resolvedContent: '' } }];\n}\n\nconst columns = Object.keys(rows[0]).filter(k => k !== 'row_number');\n\n// Flatten each row into a plain-text line, e.g. \"Product: Widget | Price: 5000 | Stock: 12\"\n// rather than dumping raw JSON, since this text is what the AI reads at answer time,\n// not parsed as structured data downstream.\nconst lines = rows.map(row => columns.map(col => `${col}: ${row[col]}`).join(' | '));\n\nreturn [{ json: { resolvedContent: lines.join('\\n') } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1292,6 +1292,45 @@
     },
     {
       "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT access_token, refresh_token, expires_at, sheet_id\nFROM customer_google_sheets_connections\nWHERE customer_id = $1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Load Customer').item.json.id }}",
+          "replaceEmptyStrings": true
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3104,
+        2432
+      ],
+      "id": "94202a3c-4c94-4e25-87e3-7d0c3e1202fa",
+      "name": "Load Sheets Connection",
+      "credentials": {
+        "postgres": {
+          "id": "vEHo1NsbynZbhKgi",
+          "name": "Postgres voxitron account"
+        }
+      },
+      "notes": "ADDED 2026-09-02: zero rows means this customer hasn't connected a sheet yet -- Fetch Customer's Sheet below handles that as a normal, expected case, not an error."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Real self-serve Google Sheets: refreshes the token if expired,\n// using Voxitron's own OAuth client credentials (env vars, not\n// per-customer) against the customer's stored refresh_token.\n\nconst rows = $input.all();\nif (rows.length === 0) {\n  return [{ json: { result: 'No Google Sheet connected for this business yet.' } }];\n}\n\nconst conn = rows[0].json;\nlet accessToken = conn.access_token;\nconst expiresAt = new Date(conn.expires_at);\nconst needsRefresh = expiresAt.getTime() < Date.now() + 60000; // refresh if expiring within a minute\n\ntry {\n  if (needsRefresh) {\n    const refreshResponse = await this.helpers.httpRequest({\n      method: 'POST',\n      url: 'https://oauth2.googleapis.com/token',\n      body: {\n        client_id: $env.GOOGLE_OAUTH_CLIENT_ID,\n        client_secret: $env.GOOGLE_OAUTH_CLIENT_SECRET,\n        refresh_token: conn.refresh_token,\n        grant_type: 'refresh_token',\n      },\n      form: true,\n      json: true,\n    });\n\n    accessToken = refreshResponse.access_token;\n    const newExpiresAt = new Date(Date.now() + refreshResponse.expires_in * 1000).toISOString();\n\n    // Save the refreshed token so the next call doesn't need to refresh again\n    await this.helpers.httpRequestWithAuthentication.call(\n      this, 'postgres',\n      {} // placeholder -- real update: UPDATE customer_google_sheets_connections SET access_token=..., expires_at=... WHERE customer_id=...\n    );\n  }\n\n  if (!conn.sheet_id) {\n    return [{ json: { result: 'A Google account is connected, but no sheet has been picked yet.' } }];\n  }\n\n  const sheetResponse = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `https://sheets.googleapis.com/v4/spreadsheets/${conn.sheet_id}/values/A:Z`,\n    headers: { Authorization: `Bearer ${accessToken}` },\n    json: true,\n  });\n\n  const values = sheetResponse.values || [];\n  if (values.length < 2) {\n    return [{ json: { result: 'The connected sheet is empty.' } }];\n  }\n\n  const headers = values[0];\n  const dataRows = values.slice(1);\n  // One item per row, column names as keys -- exact shape Resolve\n  // Content (Sheet) already expects, so that node needs no changes.\n  return dataRows.map(row => ({\n    json: Object.fromEntries(headers.map((h, i) => [h, row[i] || '']))\n  }));\n\n} catch (error) {\n  return [{ json: { result: 'Having trouble reaching the connected sheet right now.' } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        2432
+      ],
+      "id": "1dd07e56-af1c-43aa-a0c9-ae2366b58131",
+      "name": "Fetch Customer's Sheet",
+      "notes": "HONEST GAP, not hidden: the token-refresh save-back (the Postgres call inside the refresh branch) is a placeholder, same pattern as the connector engine's lookup step. The refresh call to Google itself is real and correct. Needs the actual UPDATE query wired in -- low risk, just needs the exact node config, didn't want to guess it here."
+    },
+    {
+      "parameters": {
         "jsCode": "// ADDED 2026-09-02: Load Customer's Postgres output is just\n// {id, business_name} -- same bug class as the earlier Create Ingest\n// Job issue, just further downstream. Everything after this point that\n// reads $json['Source Type'], $json['Content'], $json['Page URL'] etc.\n// was silently getting undefined. Re-attaching the original fields\n// here fixes every downstream node at once.\n\nreturn [{\n  json: {\n    ...$('Normalize Ingest Trigger').item.json,\n    id: $json.id,\n    business_name: $json.business_name,\n  },\n  pairedItem: { item: 0 },\n}];"
       },
       "type": "n8n-nodes-base.code",
@@ -1370,103 +1409,6 @@
       ],
       "id": "28d605b7-d942-4e3f-b233-c0c9f9b485d1",
       "notes": "DOCX ROUTING added 2026-09-12: .docx/.doc from the Is PDF? false branch go to CloudConvert; anything else falls through to the unsupported responder."
-    },
-    {
-      "parameters": {
-        "url": "={{ 'https://sheets.googleapis.com/v4/spreadsheets/' + ((($('Normalize Ingest Trigger').item.json['Google Sheet URL'] || '').match(/\\/d\\/([a-zA-Z0-9_-]+)/) || [])[1] || 'missing-sheet-id') + '/values/A:Z' }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "googleSheetsOAuth2Api",
-        "options": {
-          "timeout": 20000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "neverError": true
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        3104,
-        2432
-      ],
-      "id": "105048d9-24af-4664-8b0d-b7926a6de8f6",
-      "name": "Fetch Shared Sheet",
-      "notes": "ADDED 2026-11-02, replaces Load Sheets Connection + Fetch Customer's Sheet. Reads the first tab (A:Z) of the sheet URL the dashboard sends, using Voxitron's own Google Sheets credential, so the customer must share the sheet with that Google account first. Pick the Google Sheets OAuth2 credential on this node after importing."
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "loose",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "sheet-has-rows",
-              "leftValue": "={{ $json.statusCode === 200 && (($json.body && $json.body.values) || []).length > 1 }}",
-              "rightValue": true,
-              "operator": {
-                "type": "boolean",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        3328,
-        2432
-      ],
-      "id": "dc6066ad-4aad-4daf-9b09-c8831f34be82",
-      "name": "Sheet Read OK?",
-      "notes": "ADDED 2026-11-02. Needs a 200 and at least a header row plus one data row. Anything else (not shared, wrong URL, empty sheet) marks the job failed with a clear reason instead of ingesting an error message as if it were the business's data."
-    },
-    {
-      "parameters": {
-        "jsCode": "// One item per data row, header row as keys: the exact shape Resolve\n// Content (Sheet) already expects.\nconst values = $input.first().json.body.values;\nconst headers = values[0];\n\nreturn values.slice(1).map((row) => ({\n  json: Object.fromEntries(headers.map((h, i) => [h, row[i] || ''])),\n  pairedItem: { item: 0 },\n}));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3552,
-        2336
-      ],
-      "id": "410fd1bc-9426-49ef-ad4b-f524b0b3137e",
-      "name": "Sheet Rows to Items"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "UPDATE kb_ingest_jobs\nSET status = 'failed', error_message = $2, completed_at = now()\nWHERE id = $1::uuid",
-        "options": {
-          "queryReplacement": "={{ $('Create Ingest Job').isExecuted ? $('Create Ingest Job').item.json.id : null }},{{ \"Couldn't read that Google Sheet. Share it with Voxitron's Google account, check it has a header row and data, and try again.\" }}",
-          "replaceEmptyStrings": true
-        }
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        3552,
-        2528
-      ],
-      "id": "de75242f-9b08-40cf-a8fb-4b70948a6314",
-      "name": "Update Job Status: Sheet Failed",
-      "credentials": {
-        "postgres": {
-          "id": "vEHo1NsbynZbhKgi",
-          "name": "Postgres voxitron account"
-        }
-      },
-      "notes": "ADDED 2026-11-02. Same pattern as Update Job Status: Webpage Failed, so the dashboard shows the real reason."
     }
   ],
   "pinData": {},
@@ -2010,7 +1952,7 @@
         ],
         [
           {
-            "node": "Fetch Shared Sheet",
+            "node": "Load Sheets Connection",
             "type": "main",
             "index": 0
           }
@@ -2055,6 +1997,28 @@
         [
           {
             "node": "Acknowledge Job Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Sheets Connection": {
+      "main": [
+        [
+          {
+            "node": "Fetch Customer's Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Customer's Sheet": {
+      "main": [
+        [
+          {
+            "node": "Resolve Content (Sheet)",
             "type": "main",
             "index": 0
           }
@@ -2106,46 +2070,6 @@
         [
           {
             "node": "Respond: DOCX Not Supported",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch Shared Sheet": {
-      "main": [
-        [
-          {
-            "node": "Sheet Read OK?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Sheet Read OK?": {
-      "main": [
-        [
-          {
-            "node": "Sheet Rows to Items",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Update Job Status: Sheet Failed",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Sheet Rows to Items": {
-      "main": [
-        [
-          {
-            "node": "Resolve Content (Sheet)",
             "type": "main",
             "index": 0
           }

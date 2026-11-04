@@ -3,6 +3,8 @@ import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserCustomers, resolveActiveCustomer } from "@/lib/dashboard/activeCustomer";
 import { docxToText } from "@/lib/docxText";
+import { readSheetRows, sheetIdFrom, sheetRowsToText } from "@/lib/blocks/googleSheets";
+import { problemMessage } from "@/lib/blocks/store";
 
 const KB_UPLOADS_BUCKET = "kb-uploads";
 const SIGNED_URL_TTL_SECONDS = 600; // 10 minutes: enough for n8n to fetch, short enough to be safe
@@ -107,7 +109,31 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    payload.googleSheetUrl = googleSheetUrl;
+
+    // Like Word files below: the app reads the sheet with the service account
+    // (lib/blocks/googleAuth.ts) and n8n gets the text down its "Paste text"
+    // path, so a sharing problem is reported here, straight away.
+    const sheetId = sheetIdFrom(googleSheetUrl);
+    if (!sheetId) {
+      return NextResponse.json({ error: "That doesn't look like a Google Sheets URL." }, { status: 400 });
+    }
+
+    let text: string;
+    try {
+      text = sheetRowsToText(await readSheetRows(sheetId));
+    } catch (error) {
+      return NextResponse.json({ error: problemMessage(error) }, { status: 400 });
+    }
+
+    if (!text) {
+      return NextResponse.json(
+        { error: "That sheet needs a header row and at least one row of data." },
+        { status: 400 }
+      );
+    }
+
+    payload.sourceType = "paste";
+    payload.content = text;
   } else if (sourceType === "file") {
     const storagePath = field("storagePath");
     if (!storagePath) {
